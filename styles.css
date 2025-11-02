@@ -689,6 +689,20 @@ svg path.hovered { filter: brightness(1.15); transition: filter 120ms ease; curs
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
 }
 
+.nav-brand span {
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.r-grey   { color: #808080; } /* Grey */
+.r-red    { color: #da1414; } /* Red */
+.r-orange { color: #ff7f00; } /* Orange */
+.r-yellow { color: #d1d118; } /* Yellow */
+.r-green  { color: #20da20; } /* Green */
+.r-blue   { color: #1d1ddd; } /* Blue */
+.r-indigo { color: #6a10aa; } /* Indigo */
+.r-violet { color: #8f00ff; } /* Violet */
+
 .nav-brand {
   display: inline-flex;         /* line up logo + text horizontally */
   align-items: center;          /* vertically center them */
