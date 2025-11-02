@@ -94,13 +94,13 @@ body {
 }
 
 .r-grey   { color: #808080 !important; } /* Grey */
-.r-red    { color: #ff0000 !important; } /* Red */
-.r-orange { color: #ff7f00 !important; } /* Orange */
-.r-yellow { color: #ffff00 !important; } /* Yellow */
-.r-green  { color: #00ff00 !important; } /* Green */
-.r-blue   { color: #0000ff !important; } /* Blue */
-.r-indigo { color: #4b0082 !important; } /* Indigo */
-.r-violet { color: #8f00ff !important; } /* Violet */
+.r-red    { color: #dd1a1a !important; } /* Red */
+.r-orange { color: #cc741c !important; } /* Orange */
+.r-yellow { color: #caca16 !important; } /* Yellow */
+.r-green  { color: #20d120 !important; } /* Green */
+.r-blue   { color: #1846db !important; } /* Blue */
+.r-indigo { color: #4f25c4 !important; } /* Indigo */
+.r-violet { color: #a62acc !important; } /* Violet */
 
 .nav-links {
     display: flex;
