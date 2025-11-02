@@ -100,10 +100,10 @@ body {
     0 0 2px rgba(0, 0, 0, 0.1);
 }
 
-.r-grey   { color: #808080 !important; } /* Grey */
+.r-grey   { color: #4d4d4d !important; } /* Grey */
 .r-red    { color: #dd1a1a !important; } /* Red */
 .r-orange { color: #cc741c !important; } /* Orange */
-.r-yellow { color: #caca16 !important; } /* Yellow */
+.r-yellow { color: #d1d112 !important; } /* Yellow */
 .r-green  { color: #20d120 !important; } /* Green */
 .r-blue   { color: #1846db !important; } /* Blue */
 .r-indigo { color: #4f25c4 !important; } /* Indigo */
