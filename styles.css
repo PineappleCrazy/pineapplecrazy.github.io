@@ -710,7 +710,7 @@ svg path.hovered { filter: brightness(1.15); transition: filter 120ms ease; curs
 }
 
 .hero {
-  padding: 160px 0; /* Increase this number for a thicker banner */
+  padding: 70px 0; /* Increase this number for a thicker banner */
 }
 
 @keyframes fadeInUp {
