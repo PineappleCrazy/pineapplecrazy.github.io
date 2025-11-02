@@ -704,11 +704,9 @@ svg path.hovered { filter: brightness(1.15); transition: filter 120ms ease; curs
 }
 
 .nav-brand {
-  display: inline-block;
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 0;
-  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .nav-brand .nav-logo {
