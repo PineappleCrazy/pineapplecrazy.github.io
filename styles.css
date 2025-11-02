@@ -94,14 +94,8 @@ body {
     display: inline;           /* keep letters tight together */
 }
 
-.r-grey   { color: #4d4d4d !important; } /* Grey */
-.r-red    { color: #dd1a1a !important; } /* Red */
-.r-orange { color: #cc741c !important; } /* Orange */
-.r-yellow { color: #d1d112 !important; } /* Yellow */
-.r-green  { color: #20d120 !important; } /* Green */
+.r-light   { color: #3788f3 !important; } /* Grey */
 .r-blue   { color: #1846db !important; } /* Blue */
-.r-indigo { color: #4f25c4 !important; } /* Indigo */
-.r-violet { color: #a62acc !important; } /* Violet */
 
 .nav-links {
     display: flex;
