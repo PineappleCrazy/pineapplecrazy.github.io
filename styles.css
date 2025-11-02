@@ -105,10 +105,10 @@ body {
 }
 
 .hero {
-    background: linear-gradient(135deg, #4f5fa5 0%, #6c66a5 100%);
-    color: white;
-    padding: 120px 0 80px;
-    text-align: center;
+  background: 
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url("DSC_6604.png") center/cover no-repeat;
+  color: white;
 }
 
 .hero h1 {
