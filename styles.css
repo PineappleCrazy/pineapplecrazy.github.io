@@ -85,8 +85,22 @@ body {
 .nav-brand {
     font-size: 24px;
     font-weight: 700;
-    color: var(--primary);
+    letter-spacing: 0;         /* prevents extra spacing */
 }
+
+.nav-brand span {
+    color: inherit;            /* reset inheritance */
+    display: inline;           /* keep letters tight together */
+}
+
+.r-grey   { color: #808080 !important; } /* Grey */
+.r-red    { color: #ff0000 !important; } /* Red */
+.r-orange { color: #ff7f00 !important; } /* Orange */
+.r-yellow { color: #ffff00 !important; } /* Yellow */
+.r-green  { color: #00ff00 !important; } /* Green */
+.r-blue   { color: #0000ff !important; } /* Blue */
+.r-indigo { color: #4b0082 !important; } /* Indigo */
+.r-violet { color: #8f00ff !important; } /* Violet */
 
 .nav-links {
     display: flex;
@@ -688,20 +702,6 @@ svg path.hovered { filter: brightness(1.15); transition: filter 120ms ease; curs
     border-radius: 12px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
 }
-
-.nav-brand span {
-  font-weight: 700;
-  font-size: 24px;
-}
-
-.r-grey   { color: #808080; } /* Grey */
-.r-red    { color: #da1414; } /* Red */
-.r-orange { color: #ff7f00; } /* Orange */
-.r-yellow { color: #d1d118; } /* Yellow */
-.r-green  { color: #20da20; } /* Green */
-.r-blue   { color: #1d1ddd; } /* Blue */
-.r-indigo { color: #6a10aa; } /* Indigo */
-.r-violet { color: #8f00ff; } /* Violet */
 
 .nav-brand {
   display: inline-flex;         /* line up logo + text horizontally */
