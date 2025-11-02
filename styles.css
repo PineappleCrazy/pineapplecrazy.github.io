@@ -83,9 +83,10 @@ body {
 }
 
 .nav-brand {
+    display: inline-block;
     font-size: 24px;
     font-weight: 700;
-    letter-spacing: 0;         /* prevents extra spacing */
+    letter-spacing: 0;
 }
 
 .nav-brand span {
@@ -701,12 +702,6 @@ svg path.hovered { filter: brightness(1.15); transition: filter 120ms ease; curs
     border: 1px solid var(--border);
     border-radius: 12px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
-}
-
-.nav-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
 }
 
 .nav-brand .nav-logo {
