@@ -688,6 +688,26 @@ svg path.hovered { filter: brightness(1.15); transition: filter 120ms ease; curs
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
 }
 
+.nav-brand {
+  display: inline-flex;         /* line up logo + text horizontally */
+  align-items: center;          /* vertically center them */
+  gap: 8px;                     /* spacing between logo and text */
+  text-decoration: none;        /* if it's an <a> element */
+  color: var(--primary);        /* keep your existing color */
+}
+
+.nav-brand .nav-logo {
+  width: 28px;                  /* adjust as desired (20–32px) */
+  height: 28px;
+  object-fit: contain;
+  display: inline-block;
+}
+
+.nav-brand .nav-title {
+  font-weight: 700;
+  font-size: 24px;              /* matches existing .nav-brand font size */
+}
+
 @keyframes fadeInUp {
     0% {
         opacity: 0;
