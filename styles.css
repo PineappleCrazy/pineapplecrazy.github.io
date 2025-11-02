@@ -644,3 +644,91 @@ svg path.hovered { filter: brightness(1.15); transition: filter 120ms ease; curs
     height: 26px;
   }
 }
+
+
+/* === Data Contribution Form Section (matches other sections, responsive + animated) === */
+.data-form {
+    padding: 80px 0;
+    background: var(--bg);
+}
+
+.data-form h2 {
+    text-align: center;
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text);
+}
+
+.data-form p {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 18px;
+    margin-bottom: 48px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.data-form .form-embed {
+    display: flex;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease forwards;
+}
+
+.data-form .form-embed iframe {
+    width: 100%;
+    max-width: 900px;
+    height: 75vh;
+    min-height: 500px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 1024px) {
+    .data-form .form-embed iframe {
+        height: 70vh;
+        min-height: 450px;
+    }
+}
+
+@media (max-width: 768px) {
+    .data-form {
+        padding: 60px 0;
+    }
+
+    .data-form h2 {
+        font-size: 32px;
+    }
+
+    .data-form p {
+        font-size: 16px;
+        margin-bottom: 32px;
+    }
+
+    .data-form .form-embed iframe {
+        height: 65vh;
+        min-height: 400px;
+    }
+}
+
+@media (max-width: 480px) {
+    .data-form .form-embed iframe {
+        height: 60vh;
+        min-height: 350px;
+    }
+}
