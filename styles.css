@@ -217,7 +217,7 @@ body {
 
 .feature-card {
     background: var(--bg-alt);
-    padding: 32px;
+    padding: 22px;
     border-radius: 12px;
     border: 1px solid var(--border);
     transition: transform 0.2s, box-shadow 0.2s;
