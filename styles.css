@@ -709,6 +709,10 @@ svg path.hovered { filter: brightness(1.15); transition: filter 120ms ease; curs
   font-size: 24px;              /* matches existing .nav-brand font size */
 }
 
+.hero {
+  padding: 160px 0; /* Increase this number for a thicker banner */
+}
+
 @keyframes fadeInUp {
     0% {
         opacity: 0;
