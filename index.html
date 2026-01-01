@@ -1,22 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simple Modern Page</title>
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Routelog - Flight Route Tracker</title>
+<link rel="icon" href="favicon-new.png" type="image/png">
+<link href="styles.css" rel="stylesheet"/>
+<style>
+.map-tooltip {
+  position: fixed !important;
+}
+.hero h1, .hero .subtitle {
+text-align: center;
+}
+</style>
 </head>
 <body>
-  <header class="header">
-    <h1>My Webpage</h1>
-  </header>
-
-  <main class="content">
-    <h2>Welcome</h2>
-    <p>
-      This is a simple, modern webpage layout with a clean header and a
-      comfortable reading area for subtext or content.
-    </p>
-  </main>
+<nav class="navbar">
+<div class="container">
+<div class="nav-brand"><span class="r-light">R</span><span class="r-blue">outelog</span></div>
+<div class="nav-links">
+<a href="#features">Features</a>
+<a href="#supported">Coverage</a>
+<a href="#download">Download</a>
+<a href="#data-form">Contribute</a>
+<a aria-label="GitHub Repository" class="github-link" href="https://github.com/PineappleCrazy/routelog" target="_blank"><img alt="GitHub" class="github-icon" src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg"/></a></div>
+</div>
+</nav>
+<section class="hero">
+<div class="container">
+<h1>Make Data YOURS with Routelog</h1>
+<p class="subtitle">A comprehensive program to store and manage your flight data, progress and other important tools</p>
+<div class="hero-stats">
+<div class="stat">
+<span class="stat-number">1200+</span>
+<span class="stat-label">Routes</span>
+</div>
+<div class="stat">
+<span class="stat-number">50+</span>
+<span class="stat-label">Aerodromes</span>
+</div>
+<div class="stat">
+<span class="stat-number">6</span>
+<span class="stat-label">Countries</span>
+</div>
+</div>
+<div class="hero-buttons">
+<a class="btn-primary" href="#download">Get Started</a>
+<div class="launch-section">
+<a class="btn-primary" href="https://github.com/PineappleCrazy/Routelog/blob/main/localdata/shuttle.txt" target="_blank">
+                        Download the Newest Data
+                    </a>
+</div>
+</div>
+</div>
+</section>
+<section class="features" id="features">
+<div class="container">
+<h2>Key Features</h2>
+<div class="feature-grid">
+<div class="feature-card">
+<div class="feature-icon">✈️</div>
+<h3>Your Data</h3>
+<p>Add, view, and manage your own data, or import ours officially</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">📊</div>
+<h3>Progress Tracking</h3>
+<p>Mark routes as complete or incomplete and view your completion statistics in real-time</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">🔍</div>
+<h3>Advanced Filtering</h3>
+<p>Filter routes by airport, airline, aircraft type, country, city, or control position</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">📍</div>
+<h3>Distance Calculation</h3>
+<p>Automatically calculate distances between airports using geodesic coordinates</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">🛫</div>
+<h3>Flight Numbers</h3>
+<p>Assign and manage route numbers for better organization and identification</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">🗺️</div>
+<h3>Gate Finder</h3>
+<p>View parking charts for selected airports and airlines at supported locations</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">📡</div>
+<h3>Navaid Info</h3>
+<p>Access information on navigation aids including type, frequency, and location</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">🌍</div>
+<h3>Customisation</h3>
+<p>Set your home FIR &amp; aircraft in use to view only relevant routes for your operation</p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">📃</div>
+<h3>Regular Data Updates</h3>
+<p>Access regularly-updated route data through our shuttle importation tools</p>
+</div>
+</div>
+</div>
+</section>
+<section class="coverage" id="supported">
+<div class="container">
+<h2>Geographic Coverage</h2>
+<p class="section-subtitle">Routelog provides comprehensive coverage across Europe and North Africa</p>
+<div class="coverage-grid">
+<div class="coverage-section">
+<h3>Supported</h3>
+<div class="country-list">
+<span class="country-tag">Estonia</span>
+<span class="country-tag">Latvia</span>
+<span class="country-tag">Lithuania</span>
+<span class="country-tag">Finland</span>
+<span class="country-tag">Sweden</span>
+</div>
+</div>
+<div class="coverage-section">
+<h3>Partially Supported</h3>
+<div class="country-list">
+<span class="country-tag partial">Poland</span>
+</div>
+</div>
+<div class="coverage-section">
+<h3>Coming Soon</h3>
+<div class="country-list">
+<span class="country-tag upcoming">N/A</span>
+</div>
+</div>
+</div>
+<!-- START: Interactive Coverage Map -->
+<div class="coverage-map-wrap" id="coverageMap">
+<style>.coverage-map-wrap{position:relative;}.legend-tab-top-left{position:absolute;top:0;left:50%;transform:translate(-50%,0);}</style>
+<style>#svg2{position:relative; top:90px !important; display:block;}</style>
+<!-- START: Legend Tab (top-left floating card) -->
+<div aria-hidden="true" class="legend-tab legend-tab-top-left">
+<div class="legend-inner">
+<span class="legend-group">
+<span class="legend-box supported"></span><span class="legend-label">Supported</span>
+</span>
+<span class="legend-group">
+<span class="legend-box partial"></span><span class="legend-label">Partially Supported</span>
+</span>
+<span class="legend-group">
+<span class="legend-box upcoming"></span><span class="legend-label">Coming Soon</span>
+</span>
+</div>
+</div>
+<!-- END: Legend Tab -->
+</div>
+</section>
+<section class="how-it-works">
+<div class="container">
+<h2>How It Works</h2>
+<div class="steps">
+<div class="step">
+<div class="step-number">1</div>
+<h3>Select Aircraft &amp; FIR</h3>
+<p>Choose which aircraft types and which locations you want to track and manage</p>
+</div>
+<div class="step">
+<div class="step-number">2</div>
+<h3>Import Routes</h3>
+<p>Import official routes from the shuttle or add your own custom routes</p>
+</div>
+<div class="step">
+<div class="step-number">3</div>
+<h3>Track Progress</h3>
+<p>Mark routes as complete and monitor your overall completion statistics</p>
+</div>
+<div class="step">
+<div class="step-number">4</div>
+<h3>Filter &amp; View</h3>
+<p>Use advanced filtering to find specific routes and view detailed information</p>
+</div>
+</div>
+</div>
+</section>
+<section class="download" id="download">
+<div class="container">
+<h2>Download Routelog</h2>
+<p class="section-subtitle">Get started with tracking your flight routes today</p>
+<div class="download-card">
+<h3>Requirements</h3>
+<ul class="requirements-list">
+<li>Windows 10-11</li>
+<li>Python 3.13+</li>
+<li>PIP modules: pillow, geopy, pythonnet<br><small>Ensure you have PIP installed. Download modules by entering "pip install pillow geopy pythonnet" into CMD</small></li>
+</ul>
+<h3>Installation Steps</h3>
+<ol class="installation-steps">
+<li>Download the newest version and extract</li>
+<li>Right click <strong>RouteProcessor.dll</strong>, select <strong>properties</strong> and check the box to <strong>unblock</strong><br><small>This dll file contains the C# function for reading your route data. Doing this tells Windows to trust it</small></li>
+<li>Run <code>_routelog.bat</code> to launch the program</li>
+<li>Select your aircraft types using function 9</li>
+<li>Import official routes through Data Settings (function 13)</li>
+<li>Set your home FIR using function 10</li>
+</ol>
+<div class="download-buttons">
+<a class="btn-secondary" href="https://github.com/PineappleCrazy/Routelog/releases/tag/v0.2.4" target="_blank">Download Latest Release via GitHub</a>
+</div>
+</div>
+</div>
+</section>
+<section class="data-form" id="data-form">
+<div class="container">
+<h2>Data Contribution Form</h2>
+<p>If you'd like to contribute to our dataset, follow the form below:</p>
+<div class="form-embed" style="margin-top: 20px;">
+<iframe
+src="https://forms.gle/o2Uce2kKx4HHe7XV8"
+width="100%"
+height="400"
+frameborder="0"
+marginheight="0"
+marginwidth="0"
+allowfullscreen>
+Loading…
+</iframe>
+</div>
+</div>
+</section>
+<section class="additional-tools">
+<div class="container">
+<h2>Additional Tools</h2>
+<div class="tools-grid">
+<div class="tool-card">
+<h3>Gatefinder (DISABLED)</h3>
+<p>View parking charts for airports and airlines. Currently supports ELLX only.</p>
+</div>
+<div class="tool-card">
+<h3>Navaid Info</h3>
+<p>Get detailed information about navigation aids including name, type, frequency, and country. Currently supports Belgium, Ireland, and Luxembourg.</p>
+</div>
+</div>
+</div>
+</section>
+<footer>
+<div class="container">
+<p>Routelog - Comprehensive Flight Route Tracking</p>
+<p class="footer-note">Official routes are updated regularly. For questions or contributions, reach out to <strong>pineapplecrazyav@gmail.com</strong>.</p>
+</div>
+</footer>
+<!-- START: Hover Grouping Script -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const svg = document.querySelector('#coverageMap svg');
+  if (!svg) return;
+  const paths = svg.querySelectorAll('path');
+  function setHover(name, on) {
+    paths.forEach(p => {
+      if ((p.getAttribute('data-name')||'').toLowerCase() === (name||'').toLowerCase()) {
+        if (on) p.classList.add('hovered');
+        else p.classList.remove('hovered');
+      }
+    });
+  }
+  paths.forEach(p => {
+    p.addEventListener('mouseenter', e => {
+      const name = p.getAttribute('data-name') || '';
+      setHover(name, true);
+    });
+    p.addEventListener('mouseleave', e => {
+      const name = p.getAttribute('data-name') || '';
+      setHover(name, false);
+    });
+  });
+});
+</script>
+<!-- END: Hover Grouping Script -->
 </body>
 </html>
