@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minima - Aviation Minima Calculator</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e0e0e0;
+            --accent: #485BAB;
+            --accent-hover: #5a6fc4;
+            --error: #ff5252;
+            --border: #333;
+            --warning: #ffa726;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+            background-image: 
+                linear-gradient(45deg, rgba(255, 255, 255, 0.1) 1px, rgba(255, 255, 255, 0.01) 1px),
+                linear-gradient(-45deg, rgba(255, 255, 255, 0.1) 1px, rgba(255, 255, 255, 0.01) 1px);
+            background-size: 40px 40px;
+            background-attachment: fixed;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .info-box {
+            background: #2c2c2c;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            color: #888;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            background: #252525;
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 6px;
+            appearance: none;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .input-group select {
+            margin-bottom: 0;
+            flex-grow: 1;
+        }
+
+        .magic-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            background: #2c2c2c;
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .magic-icon {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+        .magic-btn:hover {
+            background: var(--accent);
+            border-color: white;
+        }
+
+        .magic-btn.loading {
+            animation: spin 1s linear infinite;
+            cursor: wait;
+            opacity: 0.5;
+        }
+
+        @keyframes spin { 
+            100% { transform: rotate(360deg); } 
+        }
+
+        button.main-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--accent);
+            color: black;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button.main-btn:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result.show { display: block; }
+        .red { border: 2px solid var(--error); background: rgba(255, 82, 82, 0.1); }
+        .green { border: 2px solid var(--accent); background: rgba(0, 230, 118, 0.1); }
+        .neutral { border: 2px solid #555; background: #222; }
+        .warning { border: 2px solid var(--warning); background: rgba(255, 167, 38, 0.1); }
+
+        .visibility-box {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(72, 91, 171, 0.15);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+        }
+
+        .visibility-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .visibility-label {
+            font-size: 0.8em;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .visibility-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .wind-components {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            border: 1px solid #333;
+        }
+
+        .wind-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wind-label {
+            font-size: 0.75em;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .wind-value {
+            font-size: 1.0em;
+            font-weight: bold;
+        }
+
+        .headwind { color: #4CAF50; }
+        .tailwind { color: #ff5252; }
+        .crosswind { color: #ffa726; }
+
+        pre {
+            background: #000;
+            padding: 10px;
+            color: #0f0;
+            font-size: 0.8em;
+            overflow-x: auto;
+            border-radius: 4px;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #888;
+            border-top: 1px solid var(--border);
+            width: 100%;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✈️ Minima</h1>
+            <p style="margin:0; color:#888;">Aviation Minima Calculator</p>
+        </div>
+
+        <div class="info-box">
+            <strong>ℹ️ How to use:</strong>
+            <br>Select your airport, aircraft, runway, and approach to check if current weather meets landing minima.
+        </div>
+
+        <div class="card">
+            <label>Airport (ICAO Code)</label>
+            <select id="airport">
+                <option value="">Select Airport</option>
+            </select>
+
+            <label>Aircraft</label>
+            <select id="aircraft">
+                <option value="">Select Aircraft</option>
+            </select>
+
+            <label>Runway</label>
+            <select id="runway" disabled>
+                <option value="">Select Airport First</option>
+            </select>
+
+            <div class="input-group">
+                <div style="flex-grow: 1;">
+                    <label>Approach</label>
+                    <select id="approach" disabled>
+                        <option value="">Select Runway First</option>
+                    </select>
+                </div>
+                <div style="padding-top: 28px;">
+                    <button class="magic-btn" id="magicWand" title="Recommend best approach">
+                        <svg class="magic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8L19 13M17.8 6.2L19 5M3 21l9-9M12.2 6.2L11 5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button class="main-btn" id="checkBtn" disabled>Check Minima</button>
+
+            <div class="result" id="result"></div>
+        </div>
+    </div>
+
+    <footer>
+        Static Version - No Server Required
+    </footer>
+
+    <script>
+        // ============================================
+        // EMBEDDED DATA
+        // ============================================
+        
+        // Aircraft categories mapping
+        const AIRCRAFT_MAP = {
+            "A20N": "c", "A21N": "c", "A319": "c", "A320": "c", "A321": "c",
+            "A332": "d", "A333": "d", "A338": "d", "A339": "d", "A343": "d",
+            "A346": "d", "A359": "d", "A35K": "d", "A388": "d", "AT76": "b",
+            "B38M": "c", "B39M": "c", "B737": "c", "B738": "c", "B739": "c",
+            "B763": "d", "B764": "d", "B77F": "d", "B77L": "d", "B77W": "d",
+            "B772": "d", "B788": "d", "B789": "d", "B78X": "d", "C172": "a",
+            "C25B": "c", "C750": "c", "DA40": "a", "DA42": "a", "DH8D": "b",
+            "E190": "c", "E175": "c", "MD11": "d", "MD82": "c", "PA28": "a",
+            "TBM8": "b"
+        };
+
+        // Airport data - ADD MORE AIRPORTS HERE
+        const AIRPORT_DATA = {
+            "ebaw": {
+                "name": "Antwerp",
+                "rnp11-lpv": { "a": "900", "b": "900", "c": "900", "d": "0" },
+                "rnp11-lvnav": { "a": "1100", "b": "1100", "c": "1200", "d": "0" },
+                "vor11": { "a": "1500", "b": "1500", "c": "1900", "d": "0" },
+                "il129": { "a": "750", "b": "750", "c": "750", "d": "0" },
+                "rnp29-lpv": { "a": "750", "b": "750", "c": "750", "d": "0" },
+                "rnp29-lvnav": { "a": "900", "b": "900", "c": "900", "d": "0" },
+                "vor29": { "a": "1500", "b": "1500", "c": "1500", "d": "0" }
+            }
+            // Add more airports here in the same format
+        };
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+
+        function parseWindData(metar) {
+            if (!metar) return { direction: null, speed: null, gust: null };
+            
+            const windPattern = /(\d{3}|VRB)(\d{2,3})(G(\d{2,3}))?KT/;
+            const match = metar.match(windPattern);
+            
+            if (match) {
+                const directionStr = match[1];
+                const speed = parseInt(match[2]);
+                const gust = match[4] ? parseInt(match[4]) : null;
+                
+                if (directionStr === "VRB") {
+                    return { direction: null, speed, gust };
+                }
+                
+                return { 
+                    direction: parseInt(directionStr), 
+                    speed, 
+                    gust 
+                };
+            }
+            
+            return { direction: null, speed: null, gust: null };
+        }
+
+        function calculateWindComponents(windSpeed, windFromDirection, runwayHeading) {
+            if (windFromDirection === null || windSpeed === null) {
+                return { headwind: null, crosswind: null };
+            }
+            
+            const angleDiff = windFromDirection - runwayHeading;
+            const angleRad = (angleDiff * Math.PI) / 180;
+
+            const headwind = windSpeed * Math.cos(angleRad);
+            const crosswind = windSpeed * Math.sin(angleRad);
+            
+            return { headwind, crosswind };
+        }
+
+        function getRunwayHeading(runway) {
+            const match = runway.match(/(\d{2})/);
+            if (match) {
+                return parseInt(match[1]) * 10;
+            }
+            return null;
+        }
+
+        function getVisibility(metar, runway) {
+            if (!metar) return "N/A";
+
+            if (metar.includes("CAVOK")) {
+                return "9999";
+            }
+
+            // RVR (e.g. R27R/0600)
+            const rw = runway.padStart(2, '0');
+            const rvrPattern = new RegExp(`R${rw}[LCR]?/(\\d{4})`);
+            const rvrMatch = metar.match(rvrPattern);
+            if (rvrMatch) {
+                return rvrMatch[1];
+            }
+
+            // Statute miles (e.g. 3SM)
+            const smMatch = metar.match(/(\d+)SM/);
+            if (smMatch) {
+                return String(parseInt(smMatch[1]) * 1609);
+            }
+
+            // Plain visibility (e.g. 4000)
+            const visMatch = metar.match(/\b(\d{4})\b/);
+            if (visMatch) {
+                return visMatch[1];
+            }
+
+            return "N/A";
+        }
+
+        async function fetchMETAR(icao) {
+            const url = `https://metar.vatsim.net/${icao}`;
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    const metarText = await response.text();
+                    if (metarText && metarText.trim() && !metarText.startsWith("No METAR")) {
+                        return metarText;
+                    }
+                }
+            } catch (error) {
+                console.error('METAR fetch error:', error);
+            }
+            return null;
+        }
+
+        function loadAirportData(airport) {
+            return AIRPORT_DATA[airport.toLowerCase()] || null;
+        }
+
+        // ============================================
+        // CORE LOGIC
+        // ============================================
+
+        function calculateMinima(airport, runway, aircraft, approach) {
+            airport = airport.toLowerCase();
+            aircraft = aircraft.toUpperCase();
+
+            const data = loadAirportData(airport);
+            if (!data) return { error: "Unknown airport" };
+            
+            if (!AIRCRAFT_MAP[aircraft]) return { error: "Unknown aircraft" };
+
+            const category = AIRCRAFT_MAP[aircraft];
+
+            // Reconstruct the JSON key
+            let key;
+            if (approach.startsWith("rnp-")) {
+                const suffix = approach.split("-")[1];
+                key = suffix === "approach" ? `rnp${runway}` : `rnp${runway}-${suffix}`;
+            } else {
+                key = `${approach}${runway}`;
+            }
+
+            if (!data[key] || !data[key][category]) {
+                return { error: `Minima not defined for ${key} (Cat ${category})` };
+            }
+
+            const val = data[key][category];
+            const required = String(val).match(/^\d+$/) ? parseInt(val) : 0;
+
+            return {
+                airport: airport.toUpperCase(),
+                runway,
+                required,
+                key,
+                category
+            };
+        }
+
+        async function checkMinimaWithWeather(airport, runway, aircraft, approach) {
+            const minimaData = calculateMinima(airport, runway, aircraft, approach);
+            
+            if (minimaData.error) {
+                return minimaData;
+            }
+
+            const metar = await fetchMETAR(airport.toUpperCase());
+            
+            if (metar === null) {
+                return {
+                    ...minimaData,
+                    visibility: "N/A",
+                    status: "METAR UNAVAILABLE",
+                    metar: "No METAR data available for this aerodrome",
+                    wind: null
+                };
+            }
+
+            const visibility = getVisibility(metar, runway);
+            const windParsed = parseWindData(metar);
+            const runwayHeading = getRunwayHeading(runway);
+            
+            let windData = null;
+            if (windParsed.direction !== null && windParsed.speed !== null && runwayHeading !== null) {
+                const { headwind, crosswind } = calculateWindComponents(
+                    windParsed.speed, 
+                    windParsed.direction, 
+                    runwayHeading
+                );
+                
+                windData = {
+                    direction: windParsed.direction,
+                    speed: windParsed.speed,
+                    gust: windParsed.gust,
+                    headwind: Math.round(headwind * 10) / 10,
+                    crosswind: Math.round(crosswind * 10) / 10,
+                    variable: false
+                };
+            } else if (windParsed.speed !== null) {
+                windData = {
+                    direction: "VRB",
+                    speed: windParsed.speed,
+                    gust: windParsed.gust,
+                    headwind: null,
+                    crosswind: null,
+                    variable: true
+                };
+            }
+
+            let status;
+            if (minimaData.required === 0) {
+                status = "UNAVAILABLE";
+            } else {
+                status = "ABOVE MINIMA";
+                if (visibility.match(/^\d+$/) && parseInt(visibility) < minimaData.required) {
+                    status = "BELOW MINIMA";
+                }
+            }
+
+            return {
+                ...minimaData,
+                visibility,
+                status,
+                metar,
+                wind: windData
+            };
+        }
+
+        async function recommendApproach(airport, runway, aircraft) {
+            airport = airport.toLowerCase();
+            runway = runway.toUpperCase();
+            aircraft = aircraft.toUpperCase();
+
+            const data = loadAirportData(airport);
+            if (!data) return { error: "Unknown airport" };
+
+            if (!AIRCRAFT_MAP[aircraft]) return { error: "Unknown aircraft" };
+
+            const category = AIRCRAFT_MAP[aircraft];
+
+            const ilsGls = [];
+            const others = [];
+
+            // Collect approaches
+            for (const key in data) {
+                if (!data[key][category]) continue;
+
+                // RNP approaches
+                const rnpMatch = key.match(new RegExp(`^rnp${runway}(?:-(.+))?$`));
+                if (rnpMatch) {
+                    const suffix = rnpMatch[1] || "approach";
+                    others.push(`rnp-${suffix.toLowerCase()}`);
+                    continue;
+                }
+
+                // ILS / GLS
+                if ((key.startsWith("il") || key.startsWith("gl")) && key.endsWith(runway)) {
+                    const prefix = key.slice(0, -runway.length);
+                    ilsGls.push(prefix);
+                } else if (key.endsWith(runway)) {
+                    const prefix = key.slice(0, -runway.length);
+                    others.push(prefix);
+                }
+            }
+
+            if (ilsGls.length === 0 && others.length === 0) {
+                return { error: "No approaches available for this runway" };
+            }
+
+            // Test if METAR is available
+            const testPrefix = ilsGls.length > 0 ? ilsGls[0] : others[0];
+            const testResult = await checkMinimaWithWeather(airport, runway, aircraft, testPrefix);
+            
+            const metarUnavailable = testResult.status === "METAR UNAVAILABLE";
+
+            // If METAR unavailable, recommend lowest requirement
+            if (metarUnavailable) {
+                const allApproaches = [];
+                
+                const catRank = (prefix) => {
+                    if (prefix.startsWith("il")) return parseInt(prefix[2]);
+                    if (prefix.startsWith("gl")) return parseInt(prefix[3]);
+                    return 999;
+                };
+                
+                for (const prefix of ilsGls) {
+                    const result = calculateMinima(airport, runway, aircraft, prefix);
+                    if (result.required > 0) {
+                        allApproaches.push([catRank(prefix), result.required, prefix]);
+                    }
+                }
+                
+                for (const prefix of others) {
+                    const result = calculateMinima(airport, runway, aircraft, prefix);
+                    if (result.required > 0) {
+                        allApproaches.push([999, result.required, prefix]);
+                    }
+                }
+                
+                if (allApproaches.length > 0) {
+                    allApproaches.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+                    return {
+                        recommended: allApproaches[0][2],
+                        metar_unavailable: true,
+                        message: "No METAR available - recommended approach has lowest visibility requirement"
+                    };
+                }
+                
+                return { error: "No approaches available with defined minima" };
+            }
+
+            // ILS / GLS logic (CAT I → CAT III)
+            if (ilsGls.length > 0) {
+                const catRank = (p) => {
+                    if (p.startsWith("il")) return parseInt(p[2]);
+                    if (p.startsWith("gl")) return parseInt(p[3]);
+                    return 9;
+                };
+
+                ilsGls.sort((a, b) => catRank(a) - catRank(b));
+
+                for (const prefix of ilsGls) {
+                    const result = await checkMinimaWithWeather(airport, runway, aircraft, prefix);
+                    if (result.status === "ABOVE MINIMA") {
+                        return { recommended: prefix };
+                    }
+                }
+            }
+
+            // No ILS/GLS → lowest RVR requirement wins
+            const candidates = [];
+
+            for (const prefix of others) {
+                const result = await checkMinimaWithWeather(airport, runway, aircraft, prefix);
+                
+                if (result.status !== "ABOVE MINIMA") continue;
+                if (!result.required || result.required <= 0) continue;
+                
+                candidates.push([result.required, prefix]);
+            }
+
+            if (candidates.length > 0) {
+                candidates.sort((a, b) => a[0] - b[0]);
+                return { recommended: candidates[0][1] };
+            }
+
+            return { error: "No suitable approach above minima" };
+        }
+
+        // ============================================
+        // UI FUNCTIONS
+        // ============================================
+
+        const airportSel = document.getElementById('airport');
+        const aircraftSel = document.getElementById('aircraft');
+        const runwaySel = document.getElementById('runway');
+        const approachSel = document.getElementById('approach');
+        const checkBtn = document.getElementById('checkBtn');
+        const magicWand = document.getElementById('magicWand');
+        const resultDiv = document.getElementById('result');
+
+        function loadAirports() {
+            airportSel.innerHTML = '<option value="">Select Airport</option>';
+            const airports = Object.keys(AIRPORT_DATA).map(code => ({
+                code: code.toUpperCase(),
+                name: AIRPORT_DATA[code].name || ""
+            }));
+            airports.sort((a, b) => a.code.localeCompare(b.code));
+            airports.forEach(ap => {
+                const option = new Option(`${ap.code}${ap.name ? ' - ' + ap.name : ''}`, ap.code);
+                airportSel.add(option);
+            });
+        }
+
+        function loadAircraft() {
+            aircraftSel.innerHTML = '<option value="">Select Aircraft</option>';
+            const aircraft = Object.keys(AIRCRAFT_MAP).sort();
+            aircraft.forEach(ac => aircraftSel.add(new Option(ac, ac)));
+        }
+
+        function loadRunways() {
+            approachSel.innerHTML = '<option value="">Select Approach</option>';
+            approachSel.disabled = true;
+            runwaySel.value = "";
+            runwaySel.disabled = true;
+            runwaySel.innerHTML = '<option value="">Loading...</option>';
+            
+            if (!airportSel.value) return;
+
+            const data = loadAirportData(airportSel.value);
+            if (!data) {
+                runwaySel.innerHTML = '<option value="">No data</option>';
+                return;
+            }
+
+            const runways = new Set();
+
+            for (const key in data) {
+                const match = key.match(/(\d{2}[LRC]?)(?:-[a-z0-9]+)?$/);
+                if (match) {
+                    runways.add(match[1]);
+                }
+            }
+
+            runwaySel.innerHTML = '<option value="">Select Runway</option>';
+            Array.from(runways).sort().forEach(rw => runwaySel.add(new Option(rw, rw)));
+            runwaySel.disabled = false;
+            updateUI();
+        }
+
+        function loadApproaches() {
+            if (!aircraftSel.value) {
+                approachSel.innerHTML = '<option value="">Select Aircraft First</option>';
+                return;
+            }
+
+            approachSel.disabled = true;
+            approachSel.innerHTML = '<option value="">Loading...</option>';
+
+            const airport = airportSel.value.toLowerCase();
+            const runway = runwaySel.value.toUpperCase();
+            const aircraft = aircraftSel.value.toUpperCase();
+
+            const data = loadAirportData(airport);
+            if (!data || !runway) {
+                approachSel.innerHTML = '<option value="">No data</option>';
+                return;
+            }
+
+            const category = AIRCRAFT_MAP[aircraft];
+            const approaches = [];
+
+            for (const key in data) {
+                const minima = data[key];
+
+                // RNP approaches
+                const rnpMatch = key.match(new RegExp(`^rnp${runway}(?:-(.+))?$`));
+                if (rnpMatch) {
+                    const suffix = rnpMatch[1] || "approach";
+                    approaches.push({
+                        type: "RNP",
+                        label: `RNP ${suffix.toUpperCase()}`,
+                        value: `rnp-${suffix.toLowerCase()}`,
+                        required: category ? minima[category] : null
+                    });
+                    continue;
+                }
+
+                // ILS / GLS / others
+                const match = key.match(/^([a-z]{2,4}[123]?)(\d{2}[LRC]?)$/);
+                if (!match || match[2] !== runway) continue;
+
+                const prefix = match[1];
+                let label, type;
+
+                if (prefix.startsWith("il")) {
+                    label = `ILS CAT ${prefix[2]}`;
+                    type = "ILS";
+                } else if (prefix.startsWith("gl")) {
+                    label = `GLS CAT ${prefix[prefix.length - 1]}`;
+                    type = "GLS";
+                } else {
+                    label = prefix.toUpperCase();
+                    type = label;
+                }
+
+                approaches.push({
+                    type,
+                    label,
+                    value: prefix,
+                    required: category ? minima[category] : null
+                });
+            }
+
+            approachSel.innerHTML = '<option value="">Select Approach</option>';
+            approaches.forEach(ap => approachSel.add(new Option(ap.label, ap.value)));
+
+            approachSel.disabled = false;
+            updateUI();
+        }
+
+        function updateUI() {
+            const allSelected = airportSel.value && runwaySel.value && aircraftSel.value && approachSel.value;
+            checkBtn.disabled = !allSelected;
+
+            const canRecommend = airportSel.value && runwaySel.value && aircraftSel.value && approachSel.options.length > 1;
+            magicWand.style.display = canRecommend ? "flex" : "none";
+        }
+
+        async function onRecommendApproach() {
+            if (magicWand.classList.contains("loading")) return;
+
+            magicWand.classList.add("loading");
+
+            try {
+                const data = await recommendApproach(
+                    airportSel.value,
+                    runwaySel.value,
+                    aircraftSel.value
+                );
+
+                if (data.recommended) {
+                    approachSel.value = data.recommended;
+                    updateUI();
+                    
+                    if (data.metar_unavailable) {
+                        resultDiv.className = "result show warning";
+                        resultDiv.innerHTML = `
+                            <p style="font-size: 1.1em; margin-top:0;"><strong>⚠️ No weather data</strong></p>
+                            <p style="margin: 10px 0;">${data.message || 'No METAR available - recommended approach has lowest visibility requirement'}</p>
+                        `;
+                    }
+                } else if (data.error) {
+                    alert("Error: " + data.error);
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Error recommending approach");
+            } finally {
+                magicWand.classList.remove("loading");
+            }
+        }
+
+        function formatWindComponents(wind) {
+            if (!wind) return '';
+            
+            if (wind.variable) {
+                let windText = `<div class="wind-components">
+                    <div class="wind-item">
+                        <span class="wind-label">Wind</span>
+                        <span class="wind-value">VRB ${wind.speed}kt</span>
+                    </div>`;
+                
+                if (wind.gust) {
+                    windText += `
+                    <div class="wind-item">
+                        <span class="wind-label">Gusting</span>
+                        <span class="wind-value">${wind.gust}kt</span>
+                    </div>`;
+                }
+                
+                windText += `</div>
+                    <p style="font-size: 0.85em; color: #ffa726; margin: 10px 0;">⚠️ Wind is variable - component calculations unavailable</p>`;
+                return windText;
+            }
+            
+            let html = '<div class="wind-components">';
+            
+            // Headwind/Tailwind
+            const hw = wind.headwind;
+            if (hw >= 0) {
+                html += `
+                    <div class="wind-item">
+                        <span class="wind-label">Headwind</span>
+                        <span class="wind-value headwind">${Math.abs(hw).toFixed(1)}kt</span>
+                    </div>`;
+            } else {
+                html += `
+                    <div class="wind-item">
+                        <span class="wind-label">Tailwind</span>
+                        <span class="wind-value tailwind">${Math.abs(hw).toFixed(1)}kt</span>
+                    </div>`;
+            }
+            
+            // Crosswind
+            const xw = wind.crosswind;
+            const xwDir = xw > 0 ? 'Right' : xw < 0 ? 'Left' : '';
+            html += `
+                <div class="wind-item">
+                    <span class="wind-label">Crosswind ${xwDir}</span>
+                    <span class="wind-value crosswind">${Math.abs(xw).toFixed(1)}kt</span>
+                </div>`;
+            
+            // Wind direction and speed
+            html += `
+                <div class="wind-item">
+                    <span class="wind-label">Wind From</span>
+                    <span class="wind-value">${wind.direction}°</span>
+                </div>`;
+            
+            html += `
+                <div class="wind-item">
+                    <span class="wind-label">Wind Speed</span>
+                    <span class="wind-value">${wind.speed}kt</span>
+                </div>`;
+            
+            html += '</div>';
+            
+            if (wind.gust) {
+                html += `<p style="font-size: 0.85em; color: #ffa726; margin: 10px 0;">Gusting to ${wind.gust}kt</p>`;
+            }
+            
+            return html;
+        }
+
+        async function onCheckMinima() {
+            resultDiv.innerHTML = "Fetching weather...";
+            resultDiv.className = "result show neutral";
+
+            const data = await checkMinimaWithWeather(
+                airportSel.value,
+                runwaySel.value,
+                aircraftSel.value,
+                approachSel.value
+            );
+
+            if (data.error) {
+                resultDiv.innerHTML = `<p style="color:var(--error)">${data.error}</p>`;
+                return;
+            }
+
+            let colorClass = "neutral";
+            if (data.status.includes("BELOW")) colorClass = "red";
+            if (data.status.includes("ABOVE")) colorClass = "green";
+            if (data.status === "UNAVAILABLE") colorClass = "neutral";
+            if (data.status === "METAR UNAVAILABLE") colorClass = "warning";
+
+            resultDiv.className = `result show ${colorClass}`;
+            
+            if (data.status === "METAR UNAVAILABLE") {
+                resultDiv.innerHTML = `
+                    <p style="font-size: 1.2em; margin-top:0;"><strong>${data.status}</strong></p>
+                    <p style="margin: 10px 0;">No current weather data is available for this aerodrome. You can still proceed with your flight planning, but verify actual weather conditions through other sources.</p>
+                    <div style="margin-top: 15px;">
+                        <span>Required visibility: <strong>${data.required}m</strong></span>
+                    </div>
+                    <label style="margin-top: 15px;">METAR Status</label>
+                    <pre>${data.metar}</pre>
+                `;
+            } else {
+                const displayStatus = data.status === "ABOVE MINIMA" ? "GO FOR IT!" : data.status;
+                
+                resultDiv.innerHTML = `
+                    <p style="font-size: 1.2em; margin-top:0;"><strong>${displayStatus}</strong></p>
+                    <div class="visibility-box">
+                        <div class="visibility-item">
+                            <span class="visibility-label">Required</span>
+                            <span class="visibility-value">${data.required}m</span>
+                        </div>
+                        <div class="visibility-item">
+                            <span class="visibility-label">Actual</span>
+                            <span class="visibility-value">${data.visibility}m</span>
+                        </div>
+                    </div>
+                    ${formatWindComponents(data.wind)}
+                    <label>Current METAR</label>
+                    <pre>${data.metar}</pre>
+                `;
+            }
+        }
+
+        // Event listeners
+        airportSel.addEventListener('change', loadRunways);
+        runwaySel.addEventListener('change', loadApproaches);
+        aircraftSel.addEventListener('change', () => {
+            if (runwaySel.value) loadApproaches();
+        });
+        approachSel.addEventListener('change', updateUI);
+        magicWand.addEventListener('click', onRecommendApproach);
+        checkBtn.addEventListener('click', onCheckMinima);
+
+        // Initialize
+        loadAirports();
+        loadAircraft();
+    </script>
+</body>
+</html>
