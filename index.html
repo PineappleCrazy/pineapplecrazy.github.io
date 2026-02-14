@@ -74,6 +74,43 @@
             margin-bottom: 5px;
         }
 
+        /* Language Dropdown in Corner */
+        .language-selector {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+        }
+
+        .language-selector select {
+            padding: 6px 10px;
+            background: rgba(30, 30, 30, 0.9);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            border-radius: 6px;
+            font-size: 0.85em;
+            cursor: pointer;
+            appearance: auto;
+            min-width: 80px;
+            backdrop-filter: blur(10px);
+        }
+
+        .language-selector select:hover {
+            border-color: var(--accent);
+        }
+
+        .language-selector select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        @media (max-width: 600px) {
+            .language-selector {
+                top: 10px;
+                right: 10px;
+            }
+        }
+
         .info-box {
             background: #2c2c2c;
             padding: 15px;
@@ -300,9 +337,17 @@
     </style>
 </head>
 <body>
+    <!-- Language Dropdown in Corner -->
+    <div class="language-selector">
+        <select id="langSelect">
+            <option value="en">English</option>
+            <option value="no">Norsk</option>
+        </select>
+    </div>
+
     <div class="container">
         <div class="header">
-            <h1 style="color:#FFFFFF;">Minima</h1>
+            <h1 style="color:#FFFFFF;" data-i18n="title">Minima</h1>
             <p style="margin:0; color:#888;">Fly aware, Fly safe  ┋  89 Aerodromes</p>
         </div>
 
@@ -311,24 +356,24 @@
         </div>
 
         <div class="card">
-            <label>Aerodrome</label>
+            <label data-i18n="selectAirport">Aerodrome</label>
             <select id="airport">
                 <option value="">Select Airport</option>
             </select>
 
-            <label>Aircraft</label>
+            <label data-i18n="selectAircraft">Aircraft</label>
             <select id="aircraft">
                 <option value="">Select Aircraft</option>
             </select>
 
-            <label>Runway</label>
+            <label data-i18n="selectRunway">Runway</label>
             <select id="runway" disabled>
                 <option value="">Select Airport First</option>
             </select>
 
             <div class="input-group">
                 <div style="flex-grow: 1;">
-                    <label>Approach</label>
+                    <label data-i18n="selectApproach">Approach</label>
                     <select id="approach" disabled>
                         <option value="">Select Runway First</option>
                     </select>
@@ -342,7 +387,7 @@
                 </div>
             </div>
 
-            <button class="main-btn" id="checkBtn" disabled>Check Minima</button>
+            <button class="main-btn" id="checkBtn" disabled data-i18n="checkMinima">Check Minima</button>
 
             <div class="result" id="result"></div>
         </div>
@@ -352,13 +397,112 @@
         </div>
     </div>
     <footer>
-        pineapplecrazyav@gmail.com
+        <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ee9e87808b8f9e9e828b8d9c8f94978f98ae89838f8782c08d8183">[email&#160;protected]</a>
+    </footer>
+
+    <footer>
+        <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="02726b6c676372726e67617063787b637442656f636b6e2c616d6f">[email&#160;protected]</a>
     </footer>
 
     <!-- Load airport data from external file -->
-    <script src="airports-data.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="airports-data.js"></script>
 
     <script>
+        // ============================================
+        // TRANSLATIONS
+        // ============================================
+        
+        const translations = {
+            en: {
+                title: "Minima",
+                selectAirport: "Select Airport",
+                selectRunway: "Select Runway",
+                selectAircraft: "Select Aircraft",
+                selectApproach: "Select Approach",
+                checkMinima: "Check Minima",
+                required: "Required",
+                actual: "Actual",
+                headwind: "Headwind",
+                tailwind: "Tailwind",
+                crosswind: "Crosswind",
+                windFrom: "Wind From",
+                windSpeed: "Wind Speed",
+                gusting: "Gusting",
+                currentMetar: "Current METAR",
+                metarStatus: "METAR Status",
+                aboveMinima: "GO FOR IT!",
+                belowMinima: "BELOW MINIMA",
+                metarUnavailable: "METAR UNAVAILABLE",
+                noWeatherData: "⚠️ No weather data",
+                noWeatherMessage: "No METAR available - recommended approach has lowest visibility requirement",
+                noCurrentWeather: "No current weather data is available for this aerodrome. You can still proceed with your flight planning, but verify actual weather conditions through other sources.",
+                windVariable: "⚠️ Wind is variable - component calculations unavailable",
+                errorRecommending: "Error recommending approach",
+                airports: {
+                    EGLL: "London Heathrow",
+                    EGKK: "London Gatwick",
+                    EHAM: "Amsterdam Schiphol",
+                    EDDF: "Frankfurt",
+                    EDDM: "Munich",
+                    LFPG: "Paris Charles de Gaulle",
+                    LEMD: "Madrid Barajas",
+                    LIRF: "Rome Fiumicino",
+                    LPPT: "Lisbon",
+                    ESSA: "Stockholm Arlanda",
+                    ENGM: "Oslo Gardermoen",
+                    ENBR: "Bergen Flesland",
+                    ENZV: "Stavanger Sola",
+                    ENTC: "Tromsø",
+                    ENVA: "Trondheim Værnes",
+                }
+            },
+            no: {
+                title: "Minima",
+                selectAirport: "Velg flyplass",
+                selectRunway: "Velg rullebane",
+                selectAircraft: "Velg fly",
+                selectApproach: "Velg innflyging",
+                checkMinima: "Sjekk minima",
+                required: "Påkrevd",
+                actual: "Faktisk",
+                headwind: "Motvind",
+                tailwind: "Medvind",
+                crosswind: "Sidevind",
+                windFrom: "Vind fra",
+                windSpeed: "Vindhastighet",
+                gusting: "Kast til",
+                currentMetar: "Gjeldende METAR",
+                metarStatus: "METAR-status",
+                aboveMinima: "KLART FOR LANDING!",
+                belowMinima: "UNDER MINIMA",
+                metarUnavailable: "METAR IKKE TILGJENGELIG",
+                noWeatherData: "⚠️ Ingen værdata",
+                noWeatherMessage: "Ingen METAR tilgjengelig - anbefalt innflyging har laveste siktekrav",
+                noCurrentWeather: "Ingen værdata er tilgjengelig for denne flyplassen. Du kan fortsette med flightplanleggingen, men verifiser faktiske værforhold gjennom andre kilder.",
+                windVariable: "⚠️ Vinden er variabel - komponentberegninger ikke tilgjengelig",
+                errorRecommending: "Feil ved anbefaling av innflyging",
+                airports: {
+                    EGLL: "London Heathrow",
+                    EGKK: "London Gatwick",
+                    EHAM: "Amsterdam Schiphol",
+                    EDDF: "Frankfurt",
+                    EDDM: "München",
+                    LFPG: "Paris Charles de Gaulle",
+                    LEMD: "Madrid Barajas",
+                    LIRF: "Roma Fiumicino",
+                    LPPT: "Lisboa",
+                    ESSA: "Stockholm Arlanda",
+                    ENGM: "Oslo Gardermoen",
+                    ENBR: "Bergen Flesland",
+                    ENZV: "Stavanger Sola",
+                    ENTC: "Tromsø",
+                    ENVA: "Trondheim Værnes",
+                }
+            }
+        };
+
+        let currentLang = 'en';
+
         // ============================================
         // EMBEDDED DATA
         // ============================================
@@ -712,6 +856,53 @@
         }
 
         // ============================================
+        // TRANSLATION FUNCTIONS
+        // ============================================
+
+        function translate() {
+            const t = translations[currentLang];
+            
+            // Update all elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (t[key]) {
+                    element.textContent = t[key];
+                }
+            });
+            
+            // Reload dropdowns to update airport names
+            if (airportSel.options.length > 0) {
+                loadAirports();
+            }
+            if (aircraftSel.options.length > 0) {
+                loadAircraft();
+            }
+            
+            // Update placeholder options
+            updateDropdownPlaceholders();
+        }
+
+        function updateDropdownPlaceholders() {
+            const t = translations[currentLang];
+            if (airportSel.options[0]) airportSel.options[0].textContent = t.selectAirport;
+            if (runwaySel.options[0]) runwaySel.options[0].textContent = t.selectRunway;
+            if (aircraftSel.options[0]) aircraftSel.options[0].textContent = t.selectAircraft;
+            if (approachSel.options[0]) approachSel.options[0].textContent = t.selectApproach;
+        }
+
+        function getTranslatedAirportName(code) {
+            const t = translations[currentLang];
+            if (t.airports[code]) {
+                return t.airports[code];
+            }
+            // Fallback to data if not in translations
+            if (AIRPORT_DATA[code] && AIRPORT_DATA[code].name) {
+                return AIRPORT_DATA[code].name;
+            }
+            return "";
+        }
+
+        // ============================================
         // UI FUNCTIONS
         // ============================================
 
@@ -724,22 +915,28 @@
         const resultDiv = document.getElementById('result');
 
         function loadAirports() {
-            airportSel.innerHTML = '<option value="">Select Airport</option>';
+            const t = translations[currentLang];
+            const currentValue = airportSel.value;
+            airportSel.innerHTML = `<option value="">${t.selectAirport}</option>`;
             const airports = Object.keys(AIRPORT_DATA).map(code => ({
                 code: code.toUpperCase(),
-                name: AIRPORT_DATA[code].name || ""
+                name: getTranslatedAirportName(code)
             }));
             airports.sort((a, b) => a.code.localeCompare(b.code));
             airports.forEach(ap => {
                 const option = new Option(`${ap.code}${ap.name ? ' - ' + ap.name : ''}`, ap.code);
                 airportSel.add(option);
             });
+            airportSel.value = currentValue;
         }
 
         function loadAircraft() {
-            aircraftSel.innerHTML = '<option value="">Select Aircraft</option>';
+            const t = translations[currentLang];
+            const currentValue = aircraftSel.value;
+            aircraftSel.innerHTML = `<option value="">${t.selectAircraft}</option>`;
             const aircraft = Object.keys(AIRCRAFT_MAP).sort();
             aircraft.forEach(ac => aircraftSel.add(new Option(ac, ac)));
+            aircraftSel.value = currentValue;
         }
 
         function loadRunways() {
@@ -858,6 +1055,7 @@
         }
 
         async function onRecommendApproach() {
+            const t = translations[currentLang];
             if (magicWand.classList.contains("loading")) return;
 
             magicWand.classList.add("loading");
@@ -876,8 +1074,8 @@
                     if (data.metar_unavailable) {
                         resultDiv.className = "result show warning";
                         resultDiv.innerHTML = `
-                            <p style="font-size: 1.1em; margin-top:0;"><strong>⚠️ No weather data</strong></p>
-                            <p style="margin: 10px 0;">${data.message || 'No METAR available - recommended approach has lowest visibility requirement'}</p>
+                            <p style="font-size: 1.1em; margin-top:0;"><strong>${t.noWeatherData}</strong></p>
+                            <p style="margin: 10px 0;">${data.message || t.noWeatherMessage}</p>
                         `;
                     }
                 } else if (data.error) {
@@ -885,32 +1083,33 @@
                 }
             } catch (e) {
                 console.error(e);
-                alert("Error recommending approach");
+                alert(t.errorRecommending);
             } finally {
                 magicWand.classList.remove("loading");
             }
         }
 
         function formatWindComponents(wind) {
+            const t = translations[currentLang];
             if (!wind) return '';
             
             if (wind.variable) {
                 let windText = `<div class="wind-components">
                     <div class="wind-item">
-                        <span class="wind-label">Wind</span>
+                        <span class="wind-label">${t.windSpeed}</span>
                         <span class="wind-value">VRB ${wind.speed}kt</span>
                     </div>`;
                 
                 if (wind.gust) {
                     windText += `
                     <div class="wind-item">
-                        <span class="wind-label">Gusting</span>
+                        <span class="wind-label">${t.gusting}</span>
                         <span class="wind-value">${wind.gust}kt</span>
                     </div>`;
                 }
                 
                 windText += `</div>
-                    <p style="font-size: 0.85em; color: #ffa726; margin: 10px 0;">⚠️ Wind is variable - component calculations unavailable</p>`;
+                    <p style="font-size: 0.85em; color: #ffa726; margin: 10px 0;">${t.windVariable}</p>`;
                 return windText;
             }
             
@@ -921,13 +1120,13 @@
             if (hw >= 0) {
                 html += `
                     <div class="wind-item">
-                        <span class="wind-label">Headwind</span>
+                        <span class="wind-label">${t.headwind}</span>
                         <span class="wind-value headwind">${Math.abs(hw).toFixed(1)}kt</span>
                     </div>`;
             } else {
                 html += `
                     <div class="wind-item">
-                        <span class="wind-label">Tailwind</span>
+                        <span class="wind-label">${t.tailwind}</span>
                         <span class="wind-value tailwind">${Math.abs(hw).toFixed(1)}kt</span>
                     </div>`;
             }
@@ -937,33 +1136,34 @@
             const xwDir = xw > 0 ? 'Right' : xw < 0 ? 'Left' : '';
             html += `
                 <div class="wind-item">
-                    <span class="wind-label">Crosswind ${xwDir}</span>
+                    <span class="wind-label">${t.crosswind} ${xwDir}</span>
                     <span class="wind-value crosswind">${Math.abs(xw).toFixed(1)}kt</span>
                 </div>`;
             
             // Wind direction and speed
             html += `
                 <div class="wind-item">
-                    <span class="wind-label">Wind From</span>
+                    <span class="wind-label">${t.windFrom}</span>
                     <span class="wind-value">${wind.direction}°</span>
                 </div>`;
             
             html += `
                 <div class="wind-item">
-                    <span class="wind-label">Wind Speed</span>
+                    <span class="wind-label">${t.windSpeed}</span>
                     <span class="wind-value">${wind.speed}kt</span>
                 </div>`;
             
             html += '</div>';
             
             if (wind.gust) {
-                html += `<p style="font-size: 0.85em; color: #ffa726; margin: 10px 0;">Gusting to ${wind.gust}kt</p>`;
+                html += `<p style="font-size: 0.85em; color: #ffa726; margin: 10px 0;">${t.gusting} ${wind.gust}kt</p>`;
             }
             
             return html;
         }
 
         async function onCheckMinima() {
+            const t = translations[currentLang];
             resultDiv.innerHTML = "Fetching weather...";
             resultDiv.className = "result show neutral";
 
@@ -989,31 +1189,31 @@
             
             if (data.status === "METAR UNAVAILABLE") {
                 resultDiv.innerHTML = `
-                    <p style="font-size: 1.2em; margin-top:0;"><strong>${data.status}</strong></p>
-                    <p style="margin: 10px 0;">No current weather data is available for this aerodrome. You can still proceed with your flight planning, but verify actual weather conditions through other sources.</p>
+                    <p style="font-size: 1.2em; margin-top:0;"><strong>${t.metarUnavailable}</strong></p>
+                    <p style="margin: 10px 0;">${t.noCurrentWeather}</p>
                     <div style="margin-top: 15px;">
-                        <span>Required visibility: <strong>${data.required}m</strong></span>
+                        <span>${t.required}: <strong>${data.required}m</strong></span>
                     </div>
-                    <label style="margin-top: 15px;">METAR Status</label>
+                    <label style="margin-top: 15px;">${t.metarStatus}</label>
                     <pre>${data.metar}</pre>
                 `;
             } else {
-                const displayStatus = data.status === "ABOVE MINIMA" ? "GO FOR IT!" : data.status;
+                const displayStatus = data.status === "ABOVE MINIMA" ? t.aboveMinima : t.belowMinima;
                 
                 resultDiv.innerHTML = `
                     <p style="font-size: 1.2em; margin-top:0;"><strong>${displayStatus}</strong></p>
                     <div class="visibility-box">
                         <div class="visibility-item">
-                            <span class="visibility-label">Required</span>
+                            <span class="visibility-label">${t.required}</span>
                             <span class="visibility-value">${data.required}m</span>
                         </div>
                         <div class="visibility-item">
-                            <span class="visibility-label">Actual</span>
+                            <span class="visibility-label">${t.actual}</span>
                             <span class="visibility-value">${data.visibility}m</span>
                         </div>
                     </div>
                     ${formatWindComponents(data.wind)}
-                    <label>Current METAR</label>
+                    <label>${t.currentMetar}</label>
                     <pre>${data.metar}</pre>
                 `;
             }
@@ -1023,28 +1223,29 @@
         airportSel.addEventListener('change', loadRunways);
         runwaySel.addEventListener('change', loadApproaches);
         aircraftSel.addEventListener('change', () => {
-            if (runwaySel.value) loadApproaches();
+            if (r            if (runwaySel.value) loadApproaches();
         });
         approachSel.addEventListener('change', updateUI);
-        magicWand.addEventListener('click', onRecommendApproach);
         checkBtn.addEventListener('click', onCheckMinima);
+        magicWand.addEventListener('click', onRecommendApproach);
 
-        // Initialize
-        loadAirports();
-        loadAircraft();
+        // Language dropdown event listener
+        document.getElementById('langSelect').addEventListener('change', function() {
+            currentLang = this.value;
+            translate();
+            localStorage.setItem('language', currentLang);
+        });
+
+        // Load saved language preference and initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('language') || 'en';
+            currentLang = savedLang;
+            document.getElementById('langSelect').value = savedLang;
+            
+            loadAirports();
+            loadAircraft();
+            translate();
+        });
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
