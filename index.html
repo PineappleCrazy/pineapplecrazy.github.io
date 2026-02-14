@@ -861,20 +861,24 @@
 
         function translate() {
             const t = translations[currentLang];
+            console.log('Translating to:', currentLang);
             
             // Update all elements with data-i18n attribute
             document.querySelectorAll('[data-i18n]').forEach(element => {
                 const key = element.getAttribute('data-i18n');
                 if (t[key]) {
                     element.textContent = t[key];
+                    console.log('Updated', key, 'to', t[key]);
                 }
             });
             
             // Reload dropdowns to update airport names
             if (airportSel.options.length > 0) {
+                console.log('Reloading airports');
                 loadAirports();
             }
             if (aircraftSel.options.length > 0) {
+                console.log('Reloading aircraft');
                 loadAircraft();
             }
             
@@ -940,7 +944,8 @@
         }
 
         function loadRunways() {
-            approachSel.innerHTML = '<option value="">Select Approach</option>';
+            const t = translations[currentLang];
+            approachSel.innerHTML = `<option value="">${t.selectApproach}</option>`;
             approachSel.disabled = true;
             runwaySel.value = "";
             runwaySel.disabled = true;
@@ -963,15 +968,16 @@
                 }
             }
 
-            runwaySel.innerHTML = '<option value="">Select Runway</option>';
+            runwaySel.innerHTML = `<option value="">${t.selectRunway}</option>`;
             Array.from(runways).sort().forEach(rw => runwaySel.add(new Option(rw, rw)));
             runwaySel.disabled = false;
             updateUI();
         }
 
         function loadApproaches() {
+            const t = translations[currentLang];
             if (!aircraftSel.value) {
-                approachSel.innerHTML = '<option value="">Select Aircraft First</option>';
+                approachSel.innerHTML = `<option value="">${t.selectAircraft}</option>`;
                 return;
             }
 
@@ -1039,7 +1045,7 @@
                 });
             }
 
-            approachSel.innerHTML = '<option value="">Select Approach</option>';
+            approachSel.innerHTML = `<option value="">${t.selectApproach}</option>`;
             approaches.forEach(ap => approachSel.add(new Option(ap.label, ap.value)));
 
             approachSel.disabled = false;
@@ -1231,6 +1237,7 @@
 
         // Language dropdown event listener
         document.getElementById('langSelect').addEventListener('change', function() {
+            console.log('Language dropdown changed from', currentLang, 'to', this.value);
             currentLang = this.value;
             translate();
             localStorage.setItem('language', currentLang);
