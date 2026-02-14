@@ -405,7 +405,7 @@
     </footer>
 
     <!-- Load airport data from external file -->
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="airports-data.js"></script>
+    <script src="airports-data.js"></script>
 
     <script>
         // ============================================
@@ -1229,7 +1229,7 @@
         airportSel.addEventListener('change', loadRunways);
         runwaySel.addEventListener('change', loadApproaches);
         aircraftSel.addEventListener('change', () => {
-            if (r            if (runwaySel.value) loadApproaches();
+            if (runwaySel.value) loadApproaches();
         });
         approachSel.addEventListener('change', updateUI);
         checkBtn.addEventListener('click', onCheckMinima);
