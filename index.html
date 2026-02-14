@@ -802,6 +802,12 @@
                 } else if (prefix.startsWith("gl")) {
                     label = `GLS CAT ${prefix[prefix.length - 1]}`;
                     type = "GLS";
+                } else if (prefix.toLowerCase().startsWith("crc")) {
+                    label = "CIRCLING";
+                    type = "CIRCLING";
+                } else if (prefix.toLowerCase().startsWith("vis")) {
+                    label = "VISUAL";
+                    type = "VISUAL";
                 } else {
                     label = prefix.toUpperCase();
                     type = label;
@@ -1008,6 +1014,7 @@
     </script>
 </body>
 </html>
+
 
 
 
