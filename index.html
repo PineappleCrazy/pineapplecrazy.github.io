@@ -437,7 +437,8 @@
                 noWeatherMessage: "No METAR available - recommended approach has lowest visibility requirement",
                 noCurrentWeather: "No current weather data is available for this aerodrome. You can still proceed with your flight planning, but verify actual weather conditions through other sources.",
                 windVariable: "⚠️ Wind is variable - component calculations unavailable",
-                errorRecommending: "Error recommending approach"
+                errorRecommending: "Error recommending approach",
+                airports: {}
             },
             no: {
                 title: "Minima",
@@ -886,8 +887,9 @@
 
         function getTranslatedAirportName(code) {
             const t = translations[currentLang];
-            if (t.airports[code]) {
-                return t.airports[code];
+            const upperCode = code.toUpperCase();
+            if (t.airports && t.airports[upperCode]) {
+                return t.airports[upperCode];
             }
             // Fallback to data if not in translations
             if (AIRPORT_DATA[code] && AIRPORT_DATA[code].name) {
@@ -1246,6 +1248,3 @@
     </script>
 </body>
 </html>
-
-
-
