@@ -337,11 +337,10 @@
     </style>
 </head>
 <body>
-    <!-- Language Dropdown in Corner -->
     <div class="language-selector">
         <select id="langSelect">
-            <option value="en">English</option>
-            <option value="no">Norsk</option>
+            <option value="en">EN</option>
+            <option value="no">NO</option>
         </select>
     </div>
 
@@ -399,7 +398,6 @@
         pineapplecrazyav@gmail.com
     </footer>
 
-    <!-- Load airport data from external file -->
     <script src="airports-data.js"></script>
 
     <script>
@@ -488,10 +486,6 @@
         };
 
         let currentLang = 'en';
-
-        // ============================================
-        // EMBEDDED DATA
-        // ============================================
         
         // Aircraft categories mapping
         const AIRCRAFT_MAP = {
@@ -506,12 +500,6 @@
             "TBM8": "b", "E170": "c", "E195": "c", "E290": "c", "E295": "c",
             "B350": "b", "PC21": "b", "BSC1": "c", "BSC3": "c"
         };
-
-        // Airport data is loaded from airports-data.js
-
-        // ============================================
-        // UTILITY FUNCTIONS
-        // ============================================
 
         function parseWindData(metar) {
             if (!metar) return { direction: null, speed: null, gust: null };
@@ -1243,5 +1231,6 @@
     </script>
 </body>
 </html>
+
 
 
