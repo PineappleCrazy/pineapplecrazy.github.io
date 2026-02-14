@@ -279,7 +279,23 @@
         .container {
             width: 100%;
             max-width: 500px;
-            position: relative; /* Ensures content stays above the pseudo-element */
+            position: relative;
+        }
+
+        .image-box {
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            line-height: 0;
+        }
+
+        .image-box img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
     </style>
 </head>
@@ -331,6 +347,13 @@
             <div class="result" id="result"></div>
         </div>
     </div>
+    <div class="image-box">
+            <img src="box.png" alt="Box Decoration">
+        </div>
+    </div>
+    <footer>
+        pineapplecrazyav@gmail.com
+    </footer>
 
     <footer>
         pineapplecrazyav@gmail.com
@@ -1016,6 +1039,7 @@
     </script>
 </body>
 </html>
+
 
 
 
