@@ -1473,32 +1473,31 @@
         </div>
     </div>
     <script>
-    // Update your existing Discord integration code with these changes:
         const API_URL = 'https://minima-discord-backend-production.up.railway.app';
         
         // Discord connection state
         let discordUser = null;
         let notificationsEnabled = true;
-        let sessionToken = null; // NEW: Store session token
+        let sessionToken = null;
         
-        // NEW: Get session token from localStorage
+        // Get session token from localStorage
         function getSessionToken() {
             return localStorage.getItem('minima_session_token');
         }
         
-        // NEW: Save session token to localStorage
+        // Save session token to localStorage
         function saveSessionToken(token) {
             localStorage.setItem('minima_session_token', token);
             sessionToken = token;
         }
         
-        // NEW: Clear session token
+        // Clear session token
         function clearSessionToken() {
             localStorage.removeItem('minima_session_token');
             sessionToken = null;
         }
         
-        // NEW: Add token to fetch requests
+        // Add token to fetch requests
         function fetchWithAuth(url, options = {}) {
             const token = getSessionToken();
             
@@ -1514,7 +1513,7 @@
             return fetch(url, options);
         }
         
-        // UPDATED: Check auth status with token
+        // Check if user is authenticated on page load
         window.addEventListener('DOMContentLoaded', () => {
             checkAuthStatus();
             
@@ -1527,6 +1526,7 @@
                 // Save token to localStorage
                 if (token) {
                     saveSessionToken(token);
+                    console.log('Session token saved!');
                 }
                 
                 alert(`Successfully connected to Discord! Welcome, ${username}!`);
@@ -1538,16 +1538,16 @@
             }
         });
         
-        // UPDATED: Check auth with token
         async function checkAuthStatus() {
             try {
                 const response = await fetchWithAuth(`${API_URL}/api/user/me`);
                 
                 if (response.ok) {
                     discordUser = await response.json();
+                    console.log('User authenticated:', discordUser.username);
                     updateDiscordUI(true);
                 } else {
-                    // Token might be expired, clear it
+                    console.log('Not authenticated, clearing token');
                     clearSessionToken();
                     updateDiscordUI(false);
                 }
@@ -1604,7 +1604,6 @@
             }
         }
         
-        // UPDATED: Disconnect with token cleanup
         async function disconnectDiscord() {
             if (!confirm('Are you sure you want to disconnect your Discord account?')) {
                 return;
@@ -1617,7 +1616,7 @@
                 
                 if (response.ok) {
                     discordUser = null;
-                    clearSessionToken(); // Clear token
+                    clearSessionToken();
                     updateDiscordUI(false);
                     alert('Discord account disconnected successfully.');
                 }
@@ -1627,7 +1626,6 @@
             }
         }
         
-        // UPDATED: Toggle notifications with token
         async function toggleNotifications() {
             if (!discordUser) return;
             
@@ -1651,7 +1649,6 @@
             }
         }
         
-        // UPDATED: Send test DM with token
         async function sendTestDM() {
             try {
                 const response = await fetchWithAuth(`${API_URL}/api/discord/test-dm`, {
@@ -1685,26 +1682,10 @@
                 closeSettings();
             }
         });
-        
-        // NEW: Add logout button (optional)
-        // You can add this to your settings modal if you want a manual logout option
-        async function logout() {
-            try {
-                await fetchWithAuth(`${API_URL}/api/auth/logout`, {
-                    method: 'POST'
-                });
-                
-                clearSessionToken();
-                discordUser = null;
-                updateDiscordUI(false);
-                alert('Logged out successfully.');
-            } catch (error) {
-                console.error('Error logging out:', error);
-            }
-        }
     </script>
 
 </body>
 </html>
+
 
 
