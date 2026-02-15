@@ -533,9 +533,17 @@
         </div>
 
         <div class="info-box">
-            <strong>How it works:</strong><br>Check the status of any supported approach. We'll reference it to <strong>current weather conditions</strong> and your <strong>aircraft's capabilities</strong> to let you know if it's safe to fly.<br><br>Put in an aerodrome, runway and aircraft, then press the wand - we'll <strong>recommend</strong> the approach we think best suited.
+            <strong data-i18n="howItWorksTitle">How it works:</strong><br>
+            <span data-i18n="howItWorksDesc1">Check the status of any supported approach. We'll reference it to</span> 
+            <strong data-i18n="currentWeatherConditions">current weather conditions</strong> 
+            <span data-i18n="howItWorksDesc2">and your</span> 
+            <strong data-i18n="aircraftCapabilities">aircraft's capabilities</strong> 
+            <span data-i18n="howItWorksDesc3">to let you know if it's safe to fly.</span>
+            <br><br>
+            <span data-i18n="howItWorksDesc4">Put in an aerodrome, runway and aircraft, then press the wand - we'll</span> 
+            <strong data-i18n="recommend">recommend</strong> 
+            <span data-i18n="howItWorksDesc5">the approach we think best suited.</span>
         </div>
-
         <div class="card">
             <label data-i18n="selectAirport">Aerodrome</label>
             <select id="airport">
@@ -645,6 +653,15 @@
                 noCurrentWeather: "Ingen værdata er tilgjengelig for denne flyplassen. Du kan fortsette med flightplanleggingen, men verifiser faktiske værforhold gjennom andre kilder.",
                 windVariable: "⚠️ Vinden er variabel - komponentberegninger ikke tilgjengelig",
                 errorRecommending: "Feil ved anbefaling av innflyging",
+                howItWorksTitle: "Slik fungerer det:",
+                howItWorksDesc1: "Sjekk statusen til enhver støttet innflyging. Vi vil referere den til",
+                currentWeatherConditions: "gjeldende værforhold",
+                howItWorksDesc2: "og ditt",
+                aircraftCapabilities: "flys kapasitet",
+                howItWorksDesc3: "for å la deg vite om det er trygt å fly.",
+                howItWorksDesc4: "Fyll inn en flyplass, rullebane og fly, deretter trykk på tryllestaven - vi vil",
+                recommend: "anbefale",
+                howItWorksDesc5: "innflygingen vi mener passer best.",
                 airports: {
                     EBAW: "Antwerpen",
                     EBBR: "Brussel",
@@ -1686,6 +1703,7 @@
 
 </body>
 </html>
+
 
 
 
