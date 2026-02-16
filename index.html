@@ -1105,7 +1105,7 @@
                 noCurrentWeather: "No current weather data is available for this aerodrome. You can still proceed with your flight planning, but verify actual weather conditions through other sources.",
                 windVariable: "⚠️ Wind is variable - component calculations unavailable",
                 errorRecommending: "Error recommending approach",
-                vatsimTrackerTitle: "VATSIM Flight Tracker",
+                vatsimTrackerTitle: "Live Tracking",
                 vatsimTrackerInfoTitle: "✈️ Track Your Flight:",
                 vatsimTrackerInfoDesc: "Enter your VATSIM callsign and runway. We'll monitor your position and send Discord alerts at 50nm and if weather deteriorates!",
                 trackerStatusLabel: "Tracker Status",
@@ -2343,7 +2343,7 @@ async function onRunwayChange() {
     if (!runway || !flightPlanData) {
         document.getElementById('approachChips').innerHTML = `
             <div class="approach-chip auto selected" onclick="selectAutoApproach()">
-                🪄 Auto-Recommend
+                Auto-Recommend
             </div>
         `;
         autoRecommend = true;
@@ -2424,7 +2424,7 @@ function showApproachChips(approaches) {
     
     let html = `
         <div class="approach-chip auto selected" onclick="selectAutoApproach()">
-            🪄 Auto-Recommend
+            Auto-Recommend
         </div>
     `;
     
@@ -2608,7 +2608,7 @@ function updateTrackerUI(isTracking) {
         document.getElementById('infoRunway').textContent = trackedFlight.runway;
         
         const approachText = trackedFlight.auto_recommend 
-            ? '🪄 Auto' 
+            ? 'Auto' 
             : `${trackedFlight.approach_type?.toUpperCase() || '—'}`;
         document.getElementById('infoApproach').textContent = approachText;
         
@@ -2722,6 +2722,7 @@ if (typeof checkAuthStatus !== 'undefined') {
 </script>
 </body>
 </html>
+
 
 
 
