@@ -2415,6 +2415,7 @@ async function onRunwayChange() {
     if (approaches.length === 0) {
         showTrackerMessage('info', `No approaches available for runway ${runway} with your aircraft`);
     }
+    checkTrackingRequirements();
 }
 
 function showApproachChips(approaches) {
@@ -2465,12 +2466,23 @@ function checkTrackingRequirements() {
     const callsign = document.getElementById('vatsimCallsign').value.trim();
     const runway = selectedRunway;
     const startBtn = document.getElementById('startTrackingBtn');
+    const hasCallsign = callsign.length > 0;
+    const hasDiscord = discordUser !== null;
+    const hasFlightPlan = flightPlanData !== null;
+    const hasRunway = runway && runway.length > 0;
     
-    if (callsign && runway && discordUser && flightPlanData) {
-        startBtn.disabled = false;
-    } else {
-        startBtn.disabled = true;
-    }
+    const canStart = hasCallsign && hasDiscord && hasFlightPlan && hasRunway;
+    
+    startBtn.disabled = !canStart;
+    
+    // Debug logging (remove after testing)
+    console.log('Tracking requirements:', {
+        callsign: hasCallsign,
+        discord: hasDiscord,
+        flightPlan: hasFlightPlan,
+        runway: hasRunway,
+        canStart
+    });
 }
 
 async function startTracking() {
@@ -2702,6 +2714,7 @@ if (typeof checkAuthStatus !== 'undefined') {
 </script>
 </body>
 </html>
+
 
 
 
