@@ -580,6 +580,479 @@
 
             <div class="result" id="result"></div>
         </div>
+        <style>
+            
+        .vatsim-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+            margin-top: 30px;
+            position: relative;
+        }
+        
+        .vatsim-card::before {
+            content: "✈️ LIVE";
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: #00ff00;
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: bold;
+            letter-spacing: 1px;
+            animation: pulse-live 2s infinite;
+        }
+        
+        @keyframes pulse-live {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.98); }
+        }
+        
+        .vatsim-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        .vatsim-header svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--accent);
+        }
+        
+        .vatsim-header h2 {
+            margin: 0;
+            color: var(--accent);
+            font-size: 1.3em;
+        }
+        
+        .vatsim-info-box {
+            background: rgba(72, 91, 171, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+        
+        .tracker-status {
+            background: #2c2c2c;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        
+        .tracker-status.active {
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.05);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+        }
+        
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-badge.inactive {
+            background: #444;
+            color: #999;
+        }
+        
+        .status-badge.tracking {
+            background: #00ff00;
+            color: #000;
+            animation: pulse-live 2s infinite;
+        }
+        
+        .flight-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .flight-info-item {
+            background: #1a1a1a;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        
+        .flight-info-label {
+            font-size: 0.7em;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .flight-info-value {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--accent);
+            margin-top: 2px;
+        }
+        
+        .distance-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(72, 91, 171, 0.1);
+            border-radius: 6px;
+        }
+        
+        .distance-bar {
+            flex: 1;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .distance-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, var(--accent));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .distance-text {
+            font-weight: bold;
+            color: var(--accent);
+            min-width: 70px;
+            text-align: right;
+            font-size: 1.1em;
+        }
+        
+        .input-with-icon {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .input-with-icon input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            background: #252525;
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 6px;
+            font-size: 1em;
+            text-transform: uppercase;
+        }
+        
+        .input-with-icon input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: #2a2a2a;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            width: 20px;
+            height: 20px;
+            fill: #666;
+        }
+        
+        .runway-select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background: #252525;
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        
+        .runway-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .approach-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            min-height: 40px;
+        }
+        
+        .approach-chip {
+            padding: 8px 16px;
+            background: #2c2c2c;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        .approach-chip:hover {
+            border-color: var(--accent);
+            background: rgba(72, 91, 171, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .approach-chip.selected {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #000;
+        }
+        
+        .approach-chip.auto {
+            background: linear-gradient(135deg, #00ff00, var(--accent));
+            border-color: #00ff00;
+            color: #000;
+        }
+        
+        .tracker-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .tracker-actions button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1em;
+        }
+        
+        .btn-start {
+            background: #00ff00;
+            color: #000;
+        }
+        
+        .btn-start:hover {
+            background: #00cc00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+        }
+        
+        .btn-start:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-stop {
+            background: var(--error);
+            color: white;
+        }
+        
+        .btn-stop:hover {
+            background: #cc0000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 82, 82, 0.3);
+        }
+        
+        .tracker-message {
+            margin-top: 15px;
+        }
+        
+        .error-message {
+            background: rgba(255, 82, 82, 0.1);
+            border: 1px solid var(--error);
+            padding: 12px;
+            border-radius: 6px;
+            color: var(--error);
+            font-size: 0.9em;
+        }
+        
+        .success-message {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            padding: 12px;
+            border-radius: 6px;
+            color: #00ff00;
+            font-size: 0.9em;
+        }
+        
+        .info-message {
+            background: rgba(72, 91, 171, 0.1);
+            border: 1px solid var(--accent);
+            padding: 12px;
+            border-radius: 6px;
+            color: var(--accent);
+            font-size: 0.9em;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid #444;
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 600px) {
+            .flight-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .tracker-actions {
+                flex-direction: column;
+            }
+            
+            .distance-indicator {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .distance-text {
+                text-align: center;
+                margin-top: 8px;
+            }
+        }
+        </style>
+        
+        <!-- VATSIM Tracker Card HTML -->
+        <div class="vatsim-card" id="vatsimCard">
+            <div class="vatsim-header">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+                </svg>
+                <h2 data-i18n="vatsimTrackerTitle">VATSIM Flight Tracker</h2>
+            </div>
+        
+            <div class="vatsim-info-box">
+                <strong data-i18n="vatsimTrackerInfoTitle">✈️ Track Your Flight:</strong><br>
+                <span data-i18n="vatsimTrackerInfoDesc">Enter your VATSIM callsign and runway. We'll monitor your position and send Discord alerts at 50nm and if weather deteriorates!</span>
+            </div>
+        
+            <!-- Tracker Status Display -->
+            <div class="tracker-status" id="trackerStatus">
+                <div class="status-header">
+                    <strong data-i18n="trackerStatusLabel">Tracker Status</strong>
+                    <span class="status-badge inactive" id="statusBadge" data-i18n="statusNotTracking">NOT TRACKING</span>
+                </div>
+                <p style="margin: 5px 0 0 0; font-size: 0.85em; color: #888;" id="statusMessage">
+                    <span data-i18n="statusMessageDefault">Connect Discord and enter callsign to start tracking</span>
+                </p>
+                
+                <!-- Flight info (hidden until tracking) -->
+                <div id="flightInfo" style="display: none;">
+                    <div class="flight-info">
+                        <div class="flight-info-item">
+                            <div class="flight-info-label" data-i18n="infoCallsignLabel">Callsign</div>
+                            <div class="flight-info-value" id="infoCallsign">—</div>
+                        </div>
+                        <div class="flight-info-item">
+                            <div class="flight-info-label" data-i18n="infoDestinationLabel">Destination</div>
+                            <div class="flight-info-value" id="infoDestination">—</div>
+                        </div>
+                        <div class="flight-info-item">
+                            <div class="flight-info-label" data-i18n="infoRunwayLabel">Runway</div>
+                            <div class="flight-info-value" id="infoRunway">—</div>
+                        </div>
+                        <div class="flight-info-item">
+                            <div class="flight-info-label" data-i18n="infoApproachLabel">Approach</div>
+                            <div class="flight-info-value" id="infoApproach">—</div>
+                        </div>
+                        <div class="flight-info-item">
+                            <div class="flight-info-label" data-i18n="infoSpeedLabel">Speed</div>
+                            <div class="flight-info-value" id="infoSpeed">—</div>
+                        </div>
+                        <div class="flight-info-item">
+                            <div class="flight-info-label" data-i18n="infoAircraftLabel">Aircraft</div>
+                            <div class="flight-info-value" id="infoAircraft">—</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Distance indicator -->
+                    <div class="distance-indicator">
+                        <span style="font-size: 0.8em; color: #888;" data-i18n="distanceToDestLabel">Distance to destination:</span>
+                        <div class="distance-bar">
+                            <div class="distance-fill" id="distanceFill" style="width: 0%"></div>
+                        </div>
+                        <span class="distance-text" id="distanceText">—</span>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Input Form -->
+            <div id="trackerForm">
+                <label style="display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.85em; text-transform: uppercase; color: #888;">
+                    <span data-i18n="callsignInputLabel">Your VATSIM Callsign</span>
+                </label>
+                <div class="input-with-icon">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M7.07,18.28C7.5,17.38 10.12,16.5 12,16.5C13.88,16.5 16.5,17.38 16.93,18.28C15.57,19.36 13.86,20 12,20C10.14,20 8.43,19.36 7.07,18.28M18.36,16.83C16.93,15.09 13.46,14.5 12,14.5C10.54,14.5 7.07,15.09 5.64,16.83C4.62,15.5 4,13.82 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,13.82 19.38,15.5 18.36,16.83M12,6C10.06,6 8.5,7.56 8.5,9.5C8.5,11.44 10.06,13 12,13C13.94,13 15.5,11.44 15.5,9.5C15.5,7.56 13.94,6 12,6M12,11A1.5,1.5 0 0,1 10.5,9.5A1.5,1.5 0 0,1 12,8A1.5,1.5 0 0,1 13.5,9.5A1.5,1.5 0 0,1 12,11Z"/>
+                    </svg>
+                    <input type="text" id="vatsimCallsign" placeholder="e.g., BAW123" maxlength="12">
+                </div>
+        
+                <div id="flightPlanInfo" style="display: none;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.85em; text-transform: uppercase; color: #888;">
+                        <span data-i18n="runwaySelectLabel">Select Arrival Runway</span>
+                    </label>
+                    <select class="runway-select" id="runwaySelect">
+                        <option value="" data-i18n="runwaySelectPlaceholder">Select runway...</option>
+                    </select>
+        
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.85em; text-transform: uppercase; color: #888;">
+                        <span data-i18n="approachSelectLabel">Select Approach (Optional)</span>
+                    </label>
+                    <div class="approach-chips" id="approachChips">
+                        <div class="approach-chip auto" onclick="selectAutoApproach()">
+                            <span data-i18n="autoRecommendChip">🪄 Auto-Recommend</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.8em; color: #888; margin-top: -10px;" data-i18n="approachOptionalText">
+                        Leave as auto-recommend for best approach at 50nm
+                    </p>
+                </div>
+        
+                <div id="trackerMessage" class="tracker-message"></div>
+        
+                <!-- Action Buttons -->
+                <div class="tracker-actions">
+                    <button class="btn-start" id="startTrackingBtn" disabled onclick="startTracking()">
+                        <span data-i18n="startTrackingBtn">🛫 Start Tracking</span>
+                    </button>
+                    <button class="btn-stop" id="stopTrackingBtn" style="display: none;" onclick="stopTracking()">
+                        <span data-i18n="stopTrackingBtn">🛑 Stop Tracking</span>
+                    </button>
+                </div>
+            </div>
+        </div>
         <div class="image-box">
             <img src="box.png" alt="Box Decoration">
         </div>
@@ -596,10 +1069,6 @@
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="airports-data.js"></script>
 
     <script>
-        // ============================================
-        // TRANSLATIONS
-        // ============================================
-        
         const translations = {
             en: {
                 title: "Minima",
@@ -635,6 +1104,28 @@
                 noCurrentWeather: "No current weather data is available for this aerodrome. You can still proceed with your flight planning, but verify actual weather conditions through other sources.",
                 windVariable: "⚠️ Wind is variable - component calculations unavailable",
                 errorRecommending: "Error recommending approach",
+                vatsimTrackerTitle: "VATSIM Flight Tracker",
+                vatsimTrackerInfoTitle: "✈️ Track Your Flight:",
+                vatsimTrackerInfoDesc: "Enter your VATSIM callsign and runway. We'll monitor your position and send Discord alerts at 50nm and if weather deteriorates!",
+                trackerStatusLabel: "Tracker Status",
+                statusNotTracking: "NOT TRACKING",
+                statusTracking: "TRACKING",
+                statusMessageDefault: "Connect Discord and enter callsign to start tracking",
+                infoCallsignLabel: "Callsign",
+                infoDestinationLabel: "Destination",
+                infoRunwayLabel: "Runway",
+                infoApproachLabel: "Approach",
+                infoSpeedLabel: "Speed",
+                infoAircraftLabel: "Aircraft",
+                distanceToDestLabel: "Distance to destination:",
+                callsignInputLabel: "Your VATSIM Callsign",
+                runwaySelectLabel: "Select Arrival Runway",
+                runwaySelectPlaceholder: "Select runway...",
+                approachSelectLabel: "Select Approach (Optional)",
+                autoRecommendChip: "Auto-Recommend",
+                approachOptionalText: "Leave as auto-recommend for best approach at 50nm",
+                startTrackingBtn: "🛫 Start Tracking",
+                stopTrackingBtn: "🛑 Stop Tracking",
                 airports: {}
             },
             no: {
@@ -671,6 +1162,28 @@
                 howItWorksDesc4: "Fyll inn en flyplass, rullebane og fly, deretter trykk på tryllestaven - vi vil",
                 recommend: "anbefale",
                 howItWorksDesc5: "innflygingen vi mener passer best.",
+                vatsimTrackerTitle: "VATSIM Flysporin",
+                vatsimTrackerInfoTitle: "✈️ Spor din flyging:",
+                vatsimTrackerInfoDesc: "Skriv inn ditt VATSIM kallesignal og rullebane. Vi vil overvåke din posisjon og sende Discord-varsler på 50nm og hvis været forverres!",
+                trackerStatusLabel: "Sporingsstatus",
+                statusNotTracking: "IKKE SPORING",
+                statusTracking: "SPORING",
+                statusMessageDefault: "Koble til Discord og skriv inn kallesignal for å starte sporing",
+                infoCallsignLabel: "Kallesignal",
+                infoDestinationLabel: "Destinasjon",
+                infoRunwayLabel: "Rullebane",
+                infoApproachLabel: "Innflyging",
+                infoSpeedLabel: "Hastighet",
+                infoAircraftLabel: "Fly",
+                distanceToDestLabel: "Avstand til destinasjon:",
+                callsignInputLabel: "Ditt VATSIM Kallesignal",
+                runwaySelectLabel: "Velg Ankomstrullebane",
+                runwaySelectPlaceholder: "Velg rullebane...",
+                approachSelectLabel: "Velg Innflyging (Valgfritt)",
+                autoRecommendChip: "Auto-Anbefal",
+                approachOptionalText: "La stå som auto-anbefal for beste innflyging på 50nm",
+                startTrackingBtn: "🛫 Start Sporing",
+                stopTrackingBtn: "🛑 Stopp Sporing",
                 airports: {
                     EBAW: "Antwerpen",
                     EBBR: "Brussel",
@@ -1717,8 +2230,426 @@
         });
     </script>
 
+<script>
+let trackedFlight = null;
+let updateInterval = null;
+let selectedRunway = null;
+let selectedApproach = null;
+let autoRecommend = true;
+let flightPlanData = null;
+
+// Initialize tracker on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const callsignInput = document.getElementById('vatsimCallsign');
+    
+    callsignInput.addEventListener('input', (e) => {
+        e.target.value = e.target.value.toUpperCase().trim();
+    });
+    
+    callsignInput.addEventListener('blur', fetchFlightPlan);
+    
+    const runwaySelect = document.getElementById('runwaySelect');
+    runwaySelect.addEventListener('change', onRunwayChange);
+    
+    // Check if already tracking
+    checkExistingTracking();
+});
+
+async function fetchFlightPlan() {
+    const callsign = document.getElementById('vatsimCallsign').value.trim();
+    if (!callsign) {
+        document.getElementById('flightPlanInfo').style.display = 'none';
+        return;
+    }
+    
+    showTrackerMessage('loading', 'Fetching flight plan from VATSIM...');
+    
+    try {
+        const response = await fetchWithAuth(`${API_URL}/api/vatsim/flight/${callsign}`);
+        const data = await response.json();
+        
+        if (data.found && data.flight_plan && data.flight_plan.arrival) {
+            flightPlanData = data;
+            const destination = data.flight_plan.arrival;
+            const aircraft = data.flight_plan.aircraft_short;
+            
+            showTrackerMessage('success', `✈️ Flight found! Flying to ${destination} in ${aircraft}`);
+            
+            // Load runways for destination
+            await loadRunwaysForAirport(destination, aircraft);
+            
+            document.getElementById('flightPlanInfo').style.display = 'block';
+            checkTrackingRequirements();
+        } else {
+            showTrackerMessage('error', 'Flight not found on VATSIM. Make sure you\'re connected with a filed flight plan.');
+            document.getElementById('flightPlanInfo').style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error fetching flight plan:', error);
+        showTrackerMessage('error', 'Error connecting to VATSIM. Please try again.');
+    }
+}
+
+async function loadRunwaysForAirport(airport, aircraft) {
+    try {
+        const response = await fetch(`${API_URL}/api/airport/${airport}`);
+        const data = await response.json();
+        
+        if (data.runways && data.runways.length > 0) {
+            const runwaySelect = document.getElementById('runwaySelect');
+            runwaySelect.innerHTML = '<option value="">Select runway...</option>';
+            
+            data.runways.forEach(rwy => {
+                const option = document.createElement('option');
+                option.value = rwy.runway;
+                option.textContent = `Runway ${rwy.runway}`;
+                runwaySelect.appendChild(option);
+            });
+        } else {
+            showTrackerMessage('error', `No runway data available for ${airport}`);
+        }
+    } catch (error) {
+        console.error('Error loading runways:', error);
+        showTrackerMessage('error', 'Error loading runway data');
+    }
+}
+
+async function onRunwayChange() {
+    const runway = document.getElementById('runwaySelect').value;
+    selectedRunway = runway;
+    
+    if (!runway || !flightPlanData) {
+        document.getElementById('approachChips').innerHTML = `
+            <div class="approach-chip auto selected" onclick="selectAutoApproach()">
+                🪄 Auto-Recommend
+            </div>
+        `;
+        autoRecommend = true;
+        checkTrackingRequirements();
+        return;
+    }
+    
+    // Load approaches for this runway
+    const airport = flightPlanData.flight_plan.arrival;
+    const aircraft = flightPlanData.flight_plan.aircraft_short;
+    
+    try {
+        const response = await fetch(`${API_URL}/api/airport/${airport}`);
+        const data = await response.json();
+        
+        const selectedRwy = data.runways.find(r => r.runway === runway);
+        if (!selectedRwy || !selectedRwy.approaches) {
+            showApproachChips([]);
+            return;
+        }
+        
+        const approaches = [];
+        const category = AIRCRAFT_MAP[aircraft] || 'c';
+        
+        Object.keys(selectedRwy.approaches).forEach(appr => {
+            const approach = selectedRwy.approaches[appr];
+            if (approach.minima && approach.minima[category]) {
+                approaches.push({
+                    id: appr,
+                    label: `${appr.toUpperCase()} ${runway}`,
+                    type: appr,
+                    runway: runway
+                });
+            }
+        });
+        
+        showApproachChips(approaches);
+    } catch (error) {
+        console.error('Error loading approaches:', error);
+    }
+}
+
+function showApproachChips(approaches) {
+    const container = document.getElementById('approachChips');
+    
+    let html = `
+        <div class="approach-chip auto selected" onclick="selectAutoApproach()">
+            🪄 Auto-Recommend
+        </div>
+    `;
+    
+    approaches.forEach(app => {
+        html += `
+            <div class="approach-chip" onclick="selectApproach('${app.type}', '${app.label}')">
+                ${app.label}
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+    autoRecommend = true;
+    selectedApproach = null;
+}
+
+function selectAutoApproach() {
+    document.querySelectorAll('.approach-chip').forEach(chip => {
+        chip.classList.remove('selected');
+    });
+    event.target.classList.add('selected');
+    
+    autoRecommend = true;
+    selectedApproach = null;
+    checkTrackingRequirements();
+}
+
+function selectApproach(type, label) {
+    document.querySelectorAll('.approach-chip').forEach(chip => {
+        chip.classList.remove('selected');
+    });
+    event.target.classList.add('selected');
+    
+    autoRecommend = false;
+    selectedApproach = { type, label };
+    checkTrackingRequirements();
+}
+
+function checkTrackingRequirements() {
+    const callsign = document.getElementById('vatsimCallsign').value.trim();
+    const runway = selectedRunway;
+    const startBtn = document.getElementById('startTrackingBtn');
+    
+    if (callsign && runway && discordUser && flightPlanData) {
+        startBtn.disabled = false;
+    } else {
+        startBtn.disabled = true;
+    }
+}
+
+async function startTracking() {
+    const callsign = document.getElementById('vatsimCallsign').value.trim();
+    
+    if (!discordUser) {
+        showTrackerMessage('error', 'Please connect your Discord account first!');
+        openSettings();
+        return;
+    }
+    
+    if (!selectedRunway) {
+        showTrackerMessage('error', 'Please select a runway first!');
+        return;
+    }
+    
+    try {
+        const response = await fetchWithAuth(`${API_URL}/api/vatsim/track/start`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                callsign: callsign,
+                runway: selectedRunway,
+                approach_type: selectedApproach ? selectedApproach.type : null,
+                auto_recommend: autoRecommend
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            trackedFlight = data.tracking;
+            showTrackerMessage('success', `🛫 Now tracking ${callsign}! You'll receive Discord alerts at 50nm and if weather deteriorates.`);
+            updateTrackerUI(true);
+            startLiveUpdates();
+        } else {
+            showTrackerMessage('error', data.error || 'Failed to start tracking');
+        }
+    } catch (error) {
+        console.error('Error starting tracking:', error);
+        showTrackerMessage('error', 'Error starting tracking. Please try again.');
+    }
+}
+
+async function stopTracking() {
+    if (!confirm('Are you sure you want to stop tracking this flight?')) {
+        return;
+    }
+    
+    try {
+        const response = await fetchWithAuth(`${API_URL}/api/vatsim/track/stop`, {
+            method: 'POST'
+        });
+        
+        if (response.ok) {
+            trackedFlight = null;
+            updateTrackerUI(false);
+            stopLiveUpdates();
+            showTrackerMessage('info', 'Tracking stopped.');
+            
+            // Reset form
+            document.getElementById('vatsimCallsign').value = '';
+            document.getElementById('flightPlanInfo').style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error stopping tracking:', error);
+    }
+}
+
+async function checkExistingTracking() {
+    try {
+        const response = await fetchWithAuth(`${API_URL}/api/vatsim/track/status`);
+        
+        if (response.ok) {
+            const data = await response.json();
+            if (data.tracking) {
+                trackedFlight = data.tracking;
+                updateTrackerUI(true);
+                startLiveUpdates();
+                
+                // Pre-fill form
+                document.getElementById('vatsimCallsign').value = data.tracking.callsign;
+                document.getElementById('vatsimCallsign').disabled = true;
+            }
+        }
+    } catch (error) {
+        console.error('Error checking tracking status:', error);
+    }
+}
+
+function updateTrackerUI(isTracking) {
+    const statusBadge = document.getElementById('statusBadge');
+    const statusMessage = document.getElementById('statusMessage');
+    const flightInfo = document.getElementById('flightInfo');
+    const trackerStatus = document.getElementById('trackerStatus');
+    const startBtn = document.getElementById('startTrackingBtn');
+    const stopBtn = document.getElementById('stopTrackingBtn');
+    const trackerForm = document.getElementById('trackerForm');
+    
+    if (isTracking && trackedFlight) {
+        statusBadge.textContent = 'TRACKING';
+        statusBadge.classList.remove('inactive');
+        statusBadge.classList.add('tracking');
+        statusMessage.textContent = `Monitoring ${trackedFlight.callsign} - Will alert at 50nm and if weather deteriorates`;
+        trackerStatus.classList.add('active');
+        flightInfo.style.display = 'block';
+        startBtn.style.display = 'none';
+        stopBtn.style.display = 'block';
+        trackerForm.style.opacity = '0.5';
+        trackerForm.style.pointerEvents = 'none';
+        
+        // Update flight info
+        document.getElementById('infoCallsign').textContent = trackedFlight.callsign;
+        document.getElementById('infoDestination').textContent = trackedFlight.destination_airport;
+        document.getElementById('infoRunway').textContent = trackedFlight.runway;
+        
+        const approachText = trackedFlight.auto_recommend 
+            ? '🪄 Auto' 
+            : `${trackedFlight.approach_type?.toUpperCase() || '—'}`;
+        document.getElementById('infoApproach').textContent = approachText;
+        
+        document.getElementById('infoSpeed').textContent = trackedFlight.current_speed ? `${trackedFlight.current_speed}kts` : '—';
+        document.getElementById('infoAircraft').textContent = trackedFlight.aircraft_type || '—';
+    } else {
+        statusBadge.textContent = 'NOT TRACKING';
+        statusBadge.classList.add('inactive');
+        statusBadge.classList.remove('tracking');
+        statusMessage.textContent = 'Connect Discord and enter callsign to start tracking';
+        trackerStatus.classList.remove('active');
+        flightInfo.style.display = 'none';
+        startBtn.style.display = 'block';
+        stopBtn.style.display = 'none';
+        trackerForm.style.opacity = '1';
+        trackerForm.style.pointerEvents = 'auto';
+        document.getElementById('vatsimCallsign').disabled = false;
+    }
+}
+
+function startLiveUpdates() {
+    updateFlightData(); // Initial update
+    updateInterval = setInterval(updateFlightData, 15000); // Every 15 seconds
+}
+
+function stopLiveUpdates() {
+    if (updateInterval) {
+        clearInterval(updateInterval);
+        updateInterval = null;
+    }
+}
+
+async function updateFlightData() {
+    if (!trackedFlight) return;
+    
+    try {
+        const response = await fetchWithAuth(`${API_URL}/api/vatsim/track/status`);
+        
+        if (response.ok) {
+            const data = await response.json();
+            if (data.tracking) {
+                const distance = data.tracking.distance_to_destination;
+                const speed = data.tracking.current_speed;
+                
+                // Update distance
+                if (distance !== null) {
+                    document.getElementById('distanceText').textContent = `${distance}nm`;
+                    
+                    // Update progress bar (200nm = 0%, 0nm = 100%)
+                    const progress = Math.max(0, Math.min(100, ((200 - distance) / 200) * 100));
+                    document.getElementById('distanceFill').style.width = `${progress}%`;
+                }
+                
+                // Update speed
+                if (speed !== null) {
+                    document.getElementById('infoSpeed').textContent = `${speed}kts`;
+                }
+                
+                // Update aircraft type if available
+                if (data.tracking.aircraft_type) {
+                    document.getElementById('infoAircraft').textContent = data.tracking.aircraft_type;
+                }
+                
+                // Update approach if auto-recommended
+                if (data.tracking.recommended_approach) {
+                    document.getElementById('infoApproach').textContent = 
+                        `${data.tracking.recommended_approach} (Auto)`;
+                }
+            } else {
+                // Tracking ended
+                trackedFlight = null;
+                updateTrackerUI(false);
+                stopLiveUpdates();
+                showTrackerMessage('info', 'Tracking ended - Flight completed or disconnected from VATSIM');
+            }
+        }
+    } catch (error) {
+        console.error('Error updating flight data:', error);
+    }
+}
+
+function showTrackerMessage(type, message) {
+    const container = document.getElementById('trackerMessage');
+    
+    const classMap = {
+        'error': 'error-message',
+        'success': 'success-message',
+        'info': 'info-message',
+        'loading': 'info-message'
+    };
+    
+    const icon = type === 'loading' ? '<span class="loading-spinner"></span>' : '';
+    
+    container.innerHTML = `<div class="${classMap[type]}">${icon}${message}</div>`;
+    
+    if (type !== 'loading') {
+        setTimeout(() => {
+            container.innerHTML = '';
+        }, 5000);
+    }
+}
+
+// Update requirements check when Discord status changes
+const originalCheckAuthStatusVatsim = checkAuthStatus;
+if (typeof checkAuthStatus !== 'undefined') {
+    checkAuthStatus = async function() {
+        await originalCheckAuthStatusVatsim();
+        checkTrackingRequirements();
+    };
+}
+</script>
 </body>
 </html>
+
 
 
 
