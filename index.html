@@ -2292,22 +2292,42 @@ async function fetchFlightPlan() {
 
 async function loadRunwaysForAirport(airport, aircraft) {
     try {
-        const response = await fetch(`${API_URL}/api/airport/${airport}`);
-        const data = await response.json();
+        airport = airport.toLowerCase();
         
-        if (data.runways && data.runways.length > 0) {
-            const runwaySelect = document.getElementById('runwaySelect');
-            runwaySelect.innerHTML = '<option value="">Select runway...</option>';
-            
-            data.runways.forEach(rwy => {
-                const option = document.createElement('option');
-                option.value = rwy.runway;
-                option.textContent = `Runway ${rwy.runway}`;
-                runwaySelect.appendChild(option);
-            });
-        } else {
-            showTrackerMessage('error', `No runway data available for ${airport}`);
+        // Check if airport exists in frontend data
+        if (!AIRPORT_DATA[airport]) {
+            showTrackerMessage('error', `No runway data available for ${airport.toUpperCase()}`);
+            return;
         }
+        
+        // Extract unique runways from approach names
+        const runways = new Set();
+        const airportData = AIRPORT_DATA[airport];
+        
+        Object.keys(airportData).forEach(key => {
+            if (key === 'name') return;
+            
+            // Extract runway number from approach name
+            const match = key.match(/(\d{2}[LCR]?)/);
+            if (match) {
+                runways.add(match[1].toUpperCase());
+            }
+        });
+        
+        const runwaySelect = document.getElementById('runwaySelect');
+        runwaySelect.innerHTML = '<option value="">Select runway...</option>';
+        
+        Array.from(runways).sort().forEach(rwy => {
+            const option = document.createElement('option');
+            option.value = rwy;
+            option.textContent = `Runway ${rwy}`;
+            runwaySelect.appendChild(option);
+        });
+        
+        if (runways.size === 0) {
+            showTrackerMessage('error', `No runways found for ${airport.toUpperCase()}`);
+        }
+        
     } catch (error) {
         console.error('Error loading runways:', error);
         showTrackerMessage('error', 'Error loading runway data');
@@ -2329,38 +2349,47 @@ async function onRunwayChange() {
         return;
     }
     
-    // Load approaches for this runway
-    const airport = flightPlanData.flight_plan.arrival;
+    // Load approaches for this runway from frontend data
+    const airport = flightPlanData.flight_plan.arrival.toLowerCase();
     const aircraft = flightPlanData.flight_plan.aircraft_short;
     
-    try {
-        const response = await fetch(`${API_URL}/api/airport/${airport}`);
-        const data = await response.json();
+    if (!AIRPORT_DATA[airport]) {
+        showApproachChips([]);
+        return;
+    }
+    
+    const airportData = AIRPORT_DATA[airport];
+    const approaches = [];
+    const category = AIRCRAFT_MAP[aircraft] || 'c';
+    
+    // Find approaches for this runway
+    Object.keys(airportData).forEach(approachKey => {
+        if (approachKey === 'name') return;
         
-        const selectedRwy = data.runways.find(r => r.runway === runway);
-        if (!selectedRwy || !selectedRwy.approaches) {
-            showApproachChips([]);
-            return;
-        }
-        
-        const approaches = [];
-        const category = AIRCRAFT_MAP[aircraft] || 'c';
-        
-        Object.keys(selectedRwy.approaches).forEach(appr => {
-            const approach = selectedRwy.approaches[appr];
-            if (approach.minima && approach.minima[category]) {
+        // Check if this approach is for the selected runway
+        const runwayMatch = approachKey.match(/(\d{2}[LCR]?)/);
+        if (runwayMatch && runwayMatch[1].toUpperCase() === runway.toUpperCase()) {
+            const minima = airportData[approachKey];
+            
+            // Check if this aircraft category has minima
+            if (minima[category] && minima[category] !== "0") {
+                // Extract approach type (ILS, VOR, RNP, etc.)
+                let approachType = approachKey.replace(/\d+[LCR]?/g, '').toUpperCase();
+                
                 approaches.push({
-                    id: appr,
-                    label: `${appr.toUpperCase()} ${runway}`,
-                    type: appr,
+                    id: approachKey,
+                    label: `${approachType} ${runway}`,
+                    type: approachKey,
                     runway: runway
                 });
             }
-        });
-        
-        showApproachChips(approaches);
-    } catch (error) {
-        console.error('Error loading approaches:', error);
+        }
+    });
+    
+    showApproachChips(approaches);
+    
+    if (approaches.length === 0) {
+        showTrackerMessage('info', `No approaches found for runway ${runway}`);
     }
 }
 
@@ -2649,6 +2678,7 @@ if (typeof checkAuthStatus !== 'undefined') {
 </script>
 </body>
 </html>
+
 
 
 
