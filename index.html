@@ -434,7 +434,7 @@
         }
 
         .status-indicator.connected {
-            background: #00ff00;
+            background: #485BAB;
         }
 
         .discord-info {
@@ -597,7 +597,7 @@
             position: absolute;
             top: -10px;
             right: 20px;
-            background: #00ff00;
+            background: #485BAB;
             color: #000;
             padding: 4px 12px;
             border-radius: 12px;
@@ -652,7 +652,7 @@
         }
         
         .tracker-status.active {
-            border-color: #00ff00;
+            border-color: #485BAB;
             background: rgba(0, 255, 0, 0.05);
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
         }
@@ -679,7 +679,7 @@
         }
         
         .status-badge.tracking {
-            background: #00ff00;
+            background: #485BAB;
             color: #000;
             animation: pulse-live 2s infinite;
         }
@@ -825,8 +825,8 @@
         }
         
         .approach-chip.auto {
-            background: linear-gradient(135deg, #00ff00, var(--accent));
-            border-color: #00ff00;
+            background: linear-gradient(135deg, #485BAB, var(--accent));
+            border-color: #485BAB;
             color: #000;
         }
         
@@ -847,8 +847,9 @@
         }
         
         .btn-start {
-            background: #00ff00;
+            background: #485BAB;
             color: #000;
+            cursor: pointer;
         }
         
         .btn-start:hover {
@@ -858,7 +859,7 @@
         }
         
         .btn-start:disabled {
-            background: #00ff00;
+            background: #485BAB;
             color: #000;
             cursor: pointer;
             opacity: 1;
@@ -2465,32 +2466,36 @@ function selectApproach(type, label) {
 function checkTrackingRequirements() {
     const callsign = document.getElementById('vatsimCallsign').value.trim();
     const runway = selectedRunway;
+    
+    window.trackingReady = {
+        hasCallsign: callsign.length > 0,
+        hasDiscord: discordUser !== null,
+        hasFlightPlan: flightPlanData !== null,
+        hasRunway: runway && runway.length > 0
+    };
+    
     const startBtn = document.getElementById('startTrackingBtn');
-    const hasCallsign = callsign.length > 0;
-    const hasDiscord = discordUser !== null;
-    const hasFlightPlan = flightPlanData !== null;
-    const hasRunway = runway && runway.length > 0;
-    
-    const canStart = hasCallsign && hasDiscord && hasFlightPlan && hasRunway;
-    
-    startBtn.disabled = !canStart;
-    
-    // Debug logging (remove after testing)
-    console.log('Tracking requirements:', {
-        callsign: hasCallsign,
-        discord: hasDiscord,
-        flightPlan: hasFlightPlan,
-        runway: hasRunway,
-        canStart
-    });
+    startBtn.disabled = false;
 }
 
 async function startTracking() {
     const callsign = document.getElementById('vatsimCallsign').value.trim();
     
+    // Check requirements and show helpful errors
+    if (!callsign) {
+        showTrackerMessage('error', 'Please enter your VATSIM callsign!');
+        document.getElementById('vatsimCallsign').focus();
+        return;
+    }
+    
     if (!discordUser) {
         showTrackerMessage('error', 'Please connect your Discord account first!');
         openSettings();
+        return;
+    }
+    
+    if (!flightPlanData) {
+        showTrackerMessage('error', 'Loading flight plan... Please wait.');
         return;
     }
     
@@ -2499,7 +2504,10 @@ async function startTracking() {
         return;
     }
     
+    // All requirements met - start tracking!
     try {
+        showTrackerMessage('loading', 'Starting tracking...');
+        
         const response = await fetchWithAuth(`${API_URL}/api/vatsim/track/start`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -2714,6 +2722,7 @@ if (typeof checkAuthStatus !== 'undefined') {
 </script>
 </body>
 </html>
+
 
 
 
