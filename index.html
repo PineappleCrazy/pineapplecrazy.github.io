@@ -2307,13 +2307,14 @@ async function loadRunwaysForAirport(airport, aircraft) {
         Object.keys(airportData).forEach(key => {
             if (key === 'name') return;
             
-            // Extract runway number from approach name
-            const match = key.match(/(\d{2}[LCR]?)/);
+            // Extract runway from END of string (handles IL207R correctly as 07R, not 20)
+            const match = key.match(/(\d{2}[LRC]?)(?:-[a-z0-9]+)?$/);
             if (match) {
                 runways.add(match[1].toUpperCase());
             }
         });
         
+        // Populate runway dropdown
         const runwaySelect = document.getElementById('runwaySelect');
         runwaySelect.innerHTML = '<option value="">Select runway...</option>';
         
@@ -2363,33 +2364,56 @@ async function onRunwayChange() {
     const category = AIRCRAFT_MAP[aircraft] || 'c';
     
     // Find approaches for this runway
-    Object.keys(airportData).forEach(approachKey => {
-        if (approachKey === 'name') return;
+    Object.keys(airportData).forEach(key => {
+        if (key === 'name') return;
         
-        // Check if this approach is for the selected runway
-        const runwayMatch = approachKey.match(/(\d{2}[LCR]?)/);
-        if (runwayMatch && runwayMatch[1].toUpperCase() === runway.toUpperCase()) {
-            const minima = airportData[approachKey];
-            
-            // Check if this aircraft category has minima
+        // Match approaches using the same pattern as original code
+        // RNP approaches
+        const rnpMatch = key.match(new RegExp(`^rnp${runway}(?:-(.+))?$`, 'i'));
+        if (rnpMatch) {
+            const minima = airportData[key];
             if (minima[category] && minima[category] !== "0") {
-                // Extract approach type (ILS, VOR, RNP, etc.)
-                let approachType = approachKey.replace(/\d+[LCR]?/g, '').toUpperCase();
-                
+                const suffix = rnpMatch[1] || "approach";
                 approaches.push({
-                    id: approachKey,
-                    label: `${approachType} ${runway}`,
-                    type: approachKey,
+                    id: key,
+                    label: `RNP ${suffix.toUpperCase()} ${runway}`,
+                    type: key,
                     runway: runway
                 });
             }
+            return;
         }
+        
+        // ILS / GLS / VOR / others
+        const match = key.match(/^([a-z]{2,4}[123]?)(\d{2}[LRC]?)$/i);
+        if (!match || match[2].toUpperCase() !== runway.toUpperCase()) return;
+        
+        const minima = airportData[key];
+        if (!minima[category] || minima[category] === "0") return;
+        
+        const prefix = match[1].toLowerCase();
+        let label;
+        
+        if (prefix.startsWith("il")) {
+            label = `ILS CAT ${prefix[2]}`;
+        } else if (prefix.startsWith("gl")) {
+            label = `GLS CAT ${prefix[prefix.length - 1]}`;
+        } else {
+            label = prefix.toUpperCase();
+        }
+        
+        approaches.push({
+            id: key,
+            label: `${label} ${runway}`,
+            type: key,
+            runway: runway
+        });
     });
     
     showApproachChips(approaches);
     
     if (approaches.length === 0) {
-        showTrackerMessage('info', `No approaches found for runway ${runway}`);
+        showTrackerMessage('info', `No approaches available for runway ${runway} with your aircraft`);
     }
 }
 
@@ -2678,6 +2702,7 @@ if (typeof checkAuthStatus !== 'undefined') {
 </script>
 </body>
 </html>
+
 
 
 
