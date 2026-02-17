@@ -1071,10 +1071,36 @@
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // Load airport data from JSON (single source of truth)
     let AIRPORT_DATA = {};
+    let airportDataLoaded = false;
+    let airportsInitialized = false;
+    
     fetch('airports-data.json')
         .then(r => r.json())
-        .then(data => { AIRPORT_DATA = data; })
+        .then(data => { 
+            AIRPORT_DATA = data;
+            airportDataLoaded = true;
+            console.log('Airport data loaded:', Object.keys(AIRPORT_DATA).length, 'airports');
+            // Trigger initialization if DOM is ready
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                initializeAfterDataLoad();
+            }
+        })
         .catch(e => console.error('Failed to load airport data:', e));
+    
+    // Function to initialize UI elements after data loads
+    function initializeAfterDataLoad() {
+        if (airportsInitialized) return; // Prevent double initialization
+        airportsInitialized = true;
+        
+        if (typeof loadAirports === 'function') {
+            console.log('Initializing airports dropdown');
+            loadAirports();
+        }
+        if (typeof loadAircraft === 'function') {
+            console.log('Initializing aircraft dropdown');
+            loadAircraft();
+        }
+    }
 </script>
 
     <script>
@@ -1965,8 +1991,26 @@
             const savedLang = localStorage.getItem('language') || 'en';
             currentLang = savedLang;
             document.getElementById('langSelect').value = currentLang;
-            translate();
-            updateUI();
+            
+            // Wait for airport data before initializing
+            const checkDataLoaded = setInterval(() => {
+                if (airportDataLoaded) {
+                    clearInterval(checkDataLoaded);
+                    initializeAfterDataLoad();
+                    translate();
+                    updateUI();
+                }
+            }, 50); // Check every 50ms
+            
+            // Timeout after 5 seconds
+            setTimeout(() => {
+                clearInterval(checkDataLoaded);
+                if (!airportDataLoaded) {
+                    console.error('Airport data failed to load within 5 seconds');
+                    translate();
+                    updateUI();
+                }
+            }, 5000);
         });
     </script>
     <div class="settings-modal" id="settingsModal">
@@ -2719,7 +2763,6 @@ function showTrackerMessage(type, message) {
     }
 }
 
-// Update requirements check when Discord status changes
 const originalCheckAuthStatusVatsim = checkAuthStatus;
 if (typeof checkAuthStatus !== 'undefined') {
     checkAuthStatus = async function() {
