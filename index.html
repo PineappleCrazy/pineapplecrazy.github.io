@@ -277,7 +277,7 @@
         .tailwind { color: #ff5252; }
         .crosswind { color: #ffa726; }
 
-        pre {
+        .pre {
             background: #000;
             padding: 10px;
             color: #0f0;
@@ -286,17 +286,18 @@
             border-radius: 4px;
         }
 
-        footer {
+        .footer {
             margin-top: 40px;
             padding: 20px;
             text-align: center;
             font-size: 0.8em;
             color: #888;
             border-top: 1px solid var(--border);
+            box-sizing: border-box;
             width: 100%;
         }
 
-        footer a {
+        .footer a {
             color: var(--accent);
             text-decoration: none;
         }
@@ -593,7 +594,7 @@
         }
         
         .vatsim-card::before {
-            content: "LIVE";
+            content: "✈️ LIVE";
             position: absolute;
             top: -10px;
             right: 20px;
@@ -955,7 +956,7 @@
         
             <div class="vatsim-info-box">
                 <strong data-i18n="vatsimTrackerInfoTitle">✈️ Track Your Flight:</strong><br>
-                <span data-i18n="vatsimTrackerInfoDesc">Enter your VATSIM callsign and planned runway for arrival. We'll keep track of you and let you know if anything unexpected comes up.</span>
+                <span data-i18n="vatsimTrackerInfoDesc">Enter your VATSIM callsign and runway. We'll monitor your position and send Discord alerts at 50nm and if weather deteriorates!</span>
             </div>
         
             <!-- Tracker Status Display -->
@@ -1064,10 +1065,17 @@
         </svg>
     </div>
     <footer>
-        pineapplecrazyav@gmail.com
+        <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bdcdd4d3d8dccdcdd1d8decfdcc7c4dccbfddad0dcd4d193ded2d0">[email&#160;protected]</a>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="airports-data.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // Load airport data from JSON (single source of truth)
+    let AIRPORT_DATA = {};
+    fetch('airports-data.json')
+        .then(r => r.json())
+        .then(data => { AIRPORT_DATA = data; })
+        .catch(e => console.error('Failed to load airport data:', e));
+</script>
 
     <script>
         const translations = {
@@ -1107,7 +1115,7 @@
                 errorRecommending: "Error recommending approach",
                 vatsimTrackerTitle: "Live Tracking",
                 vatsimTrackerInfoTitle: "✈️ Track Your Flight:",
-                vatsimTrackerInfoDesc: "Enter your VATSIM callsign and planned runway for arrival. We'll keep track of you and let you know if anything unexpected comes up.",
+                vatsimTrackerInfoDesc: "Enter your VATSIM callsign and runway. We'll monitor your position and send Discord alerts at 50nm and if weather deteriorates!",
                 trackerStatusLabel: "Tracker Status",
                 statusNotTracking: "NOT TRACKING",
                 statusTracking: "TRACKING",
@@ -1125,7 +1133,7 @@
                 approachSelectLabel: "Select Approach (Optional)",
                 autoRecommendChip: "Auto-Recommend",
                 approachOptionalText: "Leave as auto-recommend for best approach at 50nm",
-                startTrackingBtn: "Start Tracking",
+                startTrackingBtn: "🛫 Start Tracking",
                 stopTrackingBtn: "🛑 Stop Tracking",
                 airports: {}
             },
@@ -1163,9 +1171,9 @@
                 howItWorksDesc4: "Fyll inn en flyplass, rullebane og fly, deretter trykk på tryllestaven - vi vil",
                 recommend: "anbefale",
                 howItWorksDesc5: "innflygingen vi mener passer best.",
-                vatsimTrackerTitle: "Spor Din Flyvning",
+                vatsimTrackerTitle: "VATSIM Flysporin",
                 vatsimTrackerInfoTitle: "✈️ Spor din flyging:",
-                vatsimTrackerInfoDesc: "Skriv inn din/ditt VATSIM kallesignal og planlagt rullebane for ankomst. Vi vil kommer til å spore deg og gi deg beskjed om noe uforventet dukker opp.",
+                vatsimTrackerInfoDesc: "Skriv inn ditt VATSIM kallesignal og rullebane. Vi vil overvåke din posisjon og sende Discord-varsler på 50nm og hvis været forverres!",
                 trackerStatusLabel: "Sporingsstatus",
                 statusNotTracking: "IKKE SPORING",
                 statusTracking: "SPORING",
@@ -2722,32 +2730,3 @@ if (typeof checkAuthStatus !== 'undefined') {
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
