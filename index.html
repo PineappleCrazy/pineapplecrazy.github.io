@@ -1048,7 +1048,7 @@
                 <!-- Action Buttons -->
                 <div class="tracker-actions">
                     <button class="btn-start" id="startTrackingBtn" disabled onclick="startTracking()">
-                        <span data-i18n="startTrackingBtn">🛫 Start Tracking</span>
+                        <span data-i18n="startTrackingBtn">Start Tracking</span>
                     </button>
                     <button class="btn-stop" id="stopTrackingBtn" style="display: none;" onclick="stopTracking()">
                         <span data-i18n="stopTrackingBtn">🛑 Stop Tracking</span>
@@ -1160,7 +1160,7 @@
                 approachSelectLabel: "Select Approach (Optional)",
                 autoRecommendChip: "Auto-Recommend",
                 approachOptionalText: "Leave as auto-recommend for best approach at 50nm",
-                startTrackingBtn: "🛫 Start Tracking",
+                startTrackingBtn: "Start Tracking",
                 stopTrackingBtn: "🛑 Stop Tracking",
                 airports: {}
             },
@@ -1218,7 +1218,7 @@
                 approachSelectLabel: "Velg Innflyging (Valgfritt)",
                 autoRecommendChip: "Auto-Anbefal",
                 approachOptionalText: "La stå som auto-anbefal for beste innflyging på 50nm",
-                startTrackingBtn: "🛫 Start Sporing",
+                startTrackingBtn: "Start Sporing",
                 stopTrackingBtn: "🛑 Stopp Sporing",
                 airports: {
                     EBAW: "Antwerpen",
@@ -2576,7 +2576,7 @@ async function startTracking() {
         
         if (response.ok) {
             trackedFlight = data.tracking;
-            showTrackerMessage('success', `🛫 Now tracking ${callsign}! You'll receive Discord alerts at 50nm and if weather deteriorates.`);
+            showTrackerMessage('success', `🛫 Now tracking ${callsign}! You'll receive Discord alerts with weather updates and approach recommendations.`);
             updateTrackerUI(true);
             startLiveUpdates();
         } else {
@@ -2774,6 +2774,7 @@ if (typeof checkAuthStatus !== 'undefined') {
 </script>
 </body>
 </html>
+
 
 
 
