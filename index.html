@@ -224,9 +224,13 @@
     }
 
     function getFlag(callsign) {
-      if (callsign.startsWith("EL")) return "🇱🇺"; // Luxembourg
-      if (callsign.startsWith("EB")) return "🇧🇪"; // Belgium
-      return "";
+      if (callsign.startsWith("EL")) {
+        return '<img src="flags/lu.png" class="flag">';
+      }
+      if (callsign.startsWith("EB")) {
+        return '<img src="flags/be.png" class="flag">';
+      }
+      return '';
     }
 
     async function checkStatus() {
