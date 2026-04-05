@@ -197,7 +197,7 @@
             ['Online for', timeSince(entry.logon_time)],
           ].filter(Boolean)
         : [
-            ['Callsign', entry.callsign],
+            ['Callsign', `${getFlag(entry.callsign)} ${entry.callsign}`],
             ['Frequency', entry.frequency],
             ['Online for', timeSince(entry.logon_time)],
           ];
@@ -221,6 +221,12 @@
         <div class="status-label" style="color:#c0392b;font-size:15px">The request failed</div>
         <p style="font-size:13px;color:#8aa0cc;margin-top:6px">No idea lol</p>
       `;
+    }
+
+    function getFlag(callsign) {
+      if (callsign.startsWith("EL")) return "🇱🇺"; // Luxembourg
+      if (callsign.startsWith("EB")) return "🇧🇪"; // Belgium
+      return "";
     }
 
     async function checkStatus() {
