@@ -121,6 +121,22 @@
     .info-item .key { color: #8aa0cc; }
     .info-item .val { color: #1a2a4a; text-align: right; max-width: 60%; }
 
+    /* Position name label shown above callsign */
+    .position-name {
+      display: block;
+      font-size: 10.5px;
+      font-weight: 400;
+      color: #aabbd6;
+      letter-spacing: 0.04em;
+      margin-bottom: 1px;
+    }
+
+    .callsign-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
     .btn {
       margin-top: 32px;
       width: 100%;
@@ -151,7 +167,7 @@
     .flag {
       width: 18px;
       height: 12px;
-      object-fit: cover;   /* fills the box nicely */
+      object-fit: cover;
       display: inline-block;
       vertical-align: middle;
       margin-right: 6px;
@@ -180,6 +196,70 @@
     const CID = 1778154;
     const API = 'https://data.vatsim.net/v3/vatsim-data.json';
 
+    const POSITION_NAMES = {
+      'EBBR_DEL':   'Brussels Delivery',
+      'EBBR_GND':   'Brussels Ground',
+      'EBBR_C_GND':   'Brussels Ground',
+      'EBBR_S_GND':   'Brussels Ground',
+      'EBBR_TWR':   'Brussels Tower',
+      'EBBR_N_TWR':   'Brussels Tower',
+      'EBBR_APP':   'Brussels Arrival',
+      'EBBR_F_APP':   'Brussels Approach',
+      'EBBR_DEP':   'Brussels Departure',
+
+      'EBLG_GND':   'Liège Ground',
+      'EBLG_TWR':   'Liège Tower',
+      'EBLG_APP':   'Liège Approach',
+
+      'EBCI_GND':   'Charleroi Ground',
+      'EBCI_TWR':   'Charleroi Tower',
+      'EBCI_APP':   'Charleroi Approach',
+
+      'EBAW_GND':   'Antwerpen Ground',
+      'EBAW_TWR':   'Antwerpen Tower',
+
+      'EBOS_GND':   'Ostend Ground',
+      'EBOS_TWR':   'Ostend Tower',
+      'EBOS_APP':   'Ostend Approach',
+
+      'EBKT_I_TWR':   'Kortrijk Information',
+
+      'EBBU_E_CTR':   'Brussels Control',
+      'EBBU_W_CTR':   'Brussels Control',
+      'EBBU_LOW_CTR':   'Brussels Control',
+      'EBBU_U_CTR':   'Maastricht Radar',
+      'EDYY_N_CTR':   'Maastricht Radar',
+      'EDYY_O_CTR':   'Maastricht Radar',
+
+      'ELLX_DEL':   'Luxembourg Delivery',
+      'ELLX_TWR':   'Luxembourg Tower',
+      'ELLX_APP':   'Luxembourg Radar',
+      "ELLX_F_APP": 'Luxembourg Arrival',
+    };
+
+    // Suffix fallback labels if no exact match found
+    const SUFFIX_LABELS = {
+      'DEL':  'Delivery',
+      'GND':  'Ground',
+      'TWR':  'Tower',
+      'APP':  'Approach',
+      'DEP':  'Departure',
+      'CTR':  'Control',
+      'ATIS': 'ATIS',
+      'FSS':  'Flight Service',
+      'OBS':  'Observer',
+    };
+    function getPositionName(callsign) {
+      if (POSITION_NAMES[callsign]) return POSITION_NAMES[callsign];
+
+      const parts = callsign.split('_');
+      const suffix = parts[parts.length - 1]?.toUpperCase();
+      if (suffix && SUFFIX_LABELS[suffix]) return SUFFIX_LABELS[suffix];
+
+      return null;
+    }
+    // ────────────────────────────────────────────────────────────────────────
+
     function timeSince(logonTime) {
       const s = Math.floor((Date.now() - new Date(logonTime)) / 1000);
       const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
@@ -195,6 +275,22 @@
       `).join('');
     }
 
+    /**
+     * Renders the callsign cell with an optional position name above it.
+     */
+    function callsignCell(callsign) {
+      const flag = getFlag(callsign);
+      const name = getPositionName(callsign);
+      if (name) {
+        return `
+          <span class="callsign-wrap">
+            <span class="position-name">${name}</span>
+            <span>${flag}${callsign}</span>
+          </span>`;
+      }
+      return `<span>${flag}${callsign}</span>`;
+    }
+
     function renderOnline(entry, type) {
       const fp = entry.flight_plan;
       const pairs = type === 'pilot'
@@ -207,7 +303,7 @@
             ['Online for', timeSince(entry.logon_time)],
           ].filter(Boolean)
         : [
-            ['Callsign', `${getFlag(entry.callsign)} ${entry.callsign}`],
+            ['Callsign', callsignCell(entry.callsign)],
             ['Frequency', entry.frequency],
             ['Online for', timeSince(entry.logon_time)],
           ];
