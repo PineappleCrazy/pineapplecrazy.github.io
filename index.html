@@ -10,20 +10,21 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #f0f4ff;
+      background: #0d1117;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #1a2a4a;
+      color: #e0e8f8;
     }
 
     .card {
-      background: #fff;
+      background: #161b27;
       border-radius: 16px;
       padding: 48px 40px 36px;
       width: min(400px, 92vw);
-      box-shadow: 0 4px 40px rgba(60, 100, 200, 0.10);
+      box-shadow: 0 4px 40px rgba(0, 0, 0, 0.40);
+      border: 1px solid #1f2a3f;
     }
 
     .eyebrow {
@@ -31,25 +32,25 @@
       font-weight: 500;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #8aa0cc;
+      color: #4a6190;
       margin-bottom: 8px;
     }
 
     .cid {
       font-size: 32px;
       font-weight: 300;
-      color: #1a2a4a;
+      color: #e0e8f8;
       letter-spacing: -0.5px;
       margin-bottom: 36px;
     }
 
     .cid span {
-      color: #3b6ef8;
+      color: #5b8af5;
     }
 
     hr {
       border: none;
-      border-top: 1px solid #e8eef8;
+      border-top: 1px solid #1f2a3f;
       margin-bottom: 28px;
     }
 
@@ -64,14 +65,14 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      color: #8aa0cc;
+      color: #4a6190;
       font-size: 14px;
       font-weight: 300;
     }
     .spinner {
       width: 16px; height: 16px;
-      border: 2px solid #d0dcf7;
-      border-top-color: #3b6ef8;
+      border: 2px solid #1f2a3f;
+      border-top-color: #5b8af5;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
       flex-shrink: 0;
@@ -90,19 +91,19 @@
       border-radius: 999px;
       margin-bottom: 20px;
     }
-    .pill.online  { background: #e8f5ec; color: #2a9a50; }
-    .pill.offline { background: #faeaea; color: #c0392b; }
+    .pill.online  { background: #0e2a1a; color: #3dba6a; border: 1px solid #1a4a2e; }
+    .pill.offline { background: #2a0e0e; color: #e05555; border: 1px solid #4a1a1a; }
     .pill .dot {
       width: 6px; height: 6px;
       border-radius: 50%;
     }
-    .pill.online  .dot { background: #2a9a50; }
-    .pill.offline .dot { background: #c0392b; }
+    .pill.online  .dot { background: #3dba6a; }
+    .pill.offline .dot { background: #e05555; }
 
     .status-label {
       font-size: 22px;
       font-weight: 300;
-      color: #1a2a4a;
+      color: #e0e8f8;
       margin-bottom: 20px;
       letter-spacing: -0.3px;
     }
@@ -118,15 +119,14 @@
       align-items: baseline;
       font-size: 13.5px;
     }
-    .info-item .key { color: #8aa0cc; }
-    .info-item .val { color: #1a2a4a; text-align: right; max-width: 60%; }
+    .info-item .key { color: #4a6190; }
+    .info-item .val { color: #c8d8f0; text-align: right; max-width: 60%; }
 
-    /* Position name label shown above callsign */
     .position-name {
       display: block;
       font-size: 10.5px;
       font-weight: 400;
-      color: #aabbd6;
+      color: #3a5070;
       letter-spacing: 0.04em;
       margin-bottom: 1px;
     }
@@ -141,8 +141,8 @@
       margin-top: 32px;
       width: 100%;
       padding: 12px;
-      background: #3b6ef8;
-      color: #fff;
+      background: #2a4ab0;
+      color: #e0e8f8;
       border: none;
       border-radius: 10px;
       font-family: 'Inter', sans-serif;
@@ -152,15 +152,15 @@
       cursor: pointer;
       transition: background 0.18s, transform 0.1s;
     }
-    .btn:hover   { background: #2a5ce0; }
+    .btn:hover   { background: #3558cc; }
     .btn:active  { transform: scale(0.99); }
-    .btn:disabled { background: #c5d3f5; cursor: not-allowed; }
+    .btn:disabled { background: #1a2440; color: #3a4f70; cursor: not-allowed; }
 
     .updated {
       margin-top: 14px;
       text-align: center;
       font-size: 11px;
-      color: #b0bedd;
+      color: #3a5070;
       letter-spacing: 0.05em;
     }
 
@@ -237,7 +237,6 @@
       "ELLX_F_APP": 'Luxembourg Arrival',
     };
 
-    // Suffix fallback labels if no exact match found
     const SUFFIX_LABELS = {
       'DEL':  'Delivery',
       'GND':  'Ground',
@@ -258,7 +257,6 @@
 
       return null;
     }
-    // ────────────────────────────────────────────────────────────────────────
 
     function timeSince(logonTime) {
       const s = Math.floor((Date.now() - new Date(logonTime)) / 1000);
@@ -275,9 +273,6 @@
       `).join('');
     }
 
-    /**
-     * Renders the callsign cell with an optional position name above it.
-     */
     function callsignCell(callsign) {
       const flag = getFlag(callsign);
       const name = getPositionName(callsign);
@@ -318,14 +313,14 @@
     function renderOffline() {
       return `
         <div class="pill offline"><span class="dot"></span> NO HE ISN'T!</div>
-        <div class="status-label" style="color:#8aa0cc;font-weight:300">He's not connected to the big v</div>
+        <div class="status-label" style="color:#4a6190;font-weight:300">He's not connected to the big v</div>
       `;
     }
 
     function renderError() {
       return `
-        <div class="status-label" style="color:#c0392b;font-size:15px">The request failed</div>
-        <p style="font-size:13px;color:#8aa0cc;margin-top:6px">No idea lol</p>
+        <div class="status-label" style="color:#e05555;font-size:15px">The request failed</div>
+        <p style="font-size:13px;color:#4a6190;margin-top:6px">No idea lol</p>
       `;
     }
 
