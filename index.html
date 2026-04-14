@@ -1,372 +1,1088 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>is he on plane game?</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GND ASSIST</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:         #070b12;
+      --panel:      #0b1220;
+      --panel2:     #0e1829;
+      --border:     #162440;
+      --border2:    #1e3358;
+      --accent:     #00aaff;
+      --accent-dim: #005588;
+      --accent-glow:#00aaff44;
+      --green:      #00d47a;
+      --green-dim:  #00d47a22;
+      --red:        #ff4060;
+      --red-dim:    #ff406022;
+      --amber:      #ffaa00;
+      --amber-dim:  #ffaa0022;
+      --text:       #c0d4ee;
+      --text-dim:   #4a6080;
+      --text-mid:   #7a9ab8;
+      --mono:       'Share Tech Mono', monospace;
+      --sans:       'Rajdhani', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: #0d1117;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
       min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Scanline overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Grid bg */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #app {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+    }
+
+    /* ── HEADER ── */
+    header {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #e0e8f8;
-    }
-
-    .card {
-      background: #161b27;
-      border-radius: 16px;
-      padding: 48px 40px 36px;
-      width: min(400px, 92vw);
-      box-shadow: 0 4px 40px rgba(0, 0, 0, 0.40);
-      border: 1px solid #1f2a3f;
-    }
-
-    .eyebrow {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #4a6190;
-      margin-bottom: 8px;
-    }
-
-    .cid {
-      font-size: 32px;
-      font-weight: 300;
-      color: #e0e8f8;
-      letter-spacing: -0.5px;
-      margin-bottom: 36px;
-    }
-
-    .cid span {
-      color: #5b8af5;
-    }
-
-    hr {
-      border: none;
-      border-top: 1px solid #1f2a3f;
+      align-items: flex-end;
+      gap: 16px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border2);
       margin-bottom: 28px;
     }
 
-    .status-area {
-      min-height: 100px;
+    .logo-mark {
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      align-items: center;
+      gap: 2px;
     }
 
-    .loading {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: #4a6190;
-      font-size: 14px;
-      font-weight: 300;
+    .logo-diamond {
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--accent);
+      transform: rotate(45deg);
+      box-shadow: 0 0 12px var(--accent-glow), inset 0 0 8px var(--accent-glow);
+      animation: pulse-border 3s ease-in-out infinite;
     }
-    .spinner {
-      width: 16px; height: 16px;
-      border: 2px solid #1f2a3f;
-      border-top-color: #5b8af5;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      flex-shrink: 0;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.06em;
+    @keyframes pulse-border {
+      0%, 100% { box-shadow: 0 0 12px var(--accent-glow), inset 0 0 8px var(--accent-glow); }
+      50%       { box-shadow: 0 0 22px var(--accent), inset 0 0 14px var(--accent-glow); }
+    }
+
+    .logo-text {
+      font-family: var(--sans);
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      text-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .logo-sub {
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: var(--text-dim);
       text-transform: uppercase;
-      padding: 5px 12px;
-      border-radius: 999px;
-      margin-bottom: 20px;
     }
-    .pill.online  { background: #0e2a1a; color: #3dba6a; border: 1px solid #1a4a2e; }
-    .pill.offline { background: #2a0e0e; color: #e05555; border: 1px solid #4a1a1a; }
-    .pill .dot {
-      width: 6px; height: 6px;
+
+    header .version-tag {
+      margin-left: auto;
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.2em;
+      text-align: right;
+      line-height: 1.8;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-    }
-    .pill.online  .dot { background: #3dba6a; }
-    .pill.offline .dot { background: #e05555; }
-
-    .status-label {
-      font-size: 22px;
-      font-weight: 300;
-      color: #e0e8f8;
-      margin-bottom: 20px;
-      letter-spacing: -0.3px;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: blink 2s ease-in-out infinite;
+      vertical-align: middle;
+      margin-right: 4px;
     }
 
-    .info-list {
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 16px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tab-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transition: transform 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+      border-color: var(--border2);
+      background: var(--panel2);
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-color: var(--accent-dim);
+      background: var(--panel2);
+    }
+
+    .tab-btn.active::after {
+      transform: scaleX(1);
+    }
+
+    /* ── PANELS ── */
+    .panel {
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .panel.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── FORM GRID ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-    }
-    .info-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      font-size: 13.5px;
-    }
-    .info-item .key { color: #4a6190; }
-    .info-item .val { color: #c8d8f0; text-align: right; max-width: 60%; }
-
-    .position-name {
-      display: block;
-      font-size: 10.5px;
-      font-weight: 400;
-      color: #3a5070;
-      letter-spacing: 0.04em;
-      margin-bottom: 1px;
+      gap: 5px;
     }
 
-    .callsign-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      color: var(--text-dim);
+      text-transform: uppercase;
     }
 
-    .btn {
-      margin-top: 32px;
+    .field-hint {
+      font-size: 9px;
+      color: var(--text-dim);
+      opacity: 0.6;
+      letter-spacing: 0.1em;
+    }
+
+    input[type="text"] {
+      background: var(--panel);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      padding: 9px 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-dim), 0 0 12px var(--accent-glow);
+    }
+
+    input[type="text"].valid   { border-color: var(--green); }
+    input[type="text"].invalid { border-color: var(--red); }
+
+    input::placeholder { color: var(--text-dim); font-size: 12px; }
+
+    /* ── SUBMIT ── */
+    .submit-btn {
       width: 100%;
       padding: 12px;
-      background: #2a4ab0;
-      color: #e0e8f8;
-      border: none;
-      border-radius: 10px;
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.04em;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
       cursor: pointer;
-      transition: background 0.18s, transform 0.1s;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+      margin-top: 4px;
     }
-    .btn:hover   { background: #3558cc; }
-    .btn:active  { transform: scale(0.99); }
-    .btn:disabled { background: #1a2440; color: #3a4f70; cursor: not-allowed; }
 
-    .updated {
-      margin-top: 14px;
-      text-align: center;
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      transform: translateX(-100%);
+      transition: transform 0.25s;
+      z-index: -1;
+    }
+
+    .submit-btn:hover {
+      color: var(--bg);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .submit-btn:hover::before { transform: translateX(0); }
+
+    .submit-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ── LOADING ── */
+    .loading-bar {
+      height: 2px;
+      background: var(--border);
+      margin: 16px 0;
+      overflow: hidden;
+      display: none;
+    }
+
+    .loading-bar.active { display: block; }
+
+    .loading-bar::after {
+      content: '';
+      display: block;
+      height: 100%;
+      background: var(--accent);
+      animation: loadSlide 1.2s ease-in-out infinite;
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    @keyframes loadSlide {
+      0%   { transform: translateX(-100%) scaleX(0.3); }
+      50%  { transform: translateX(35%) scaleX(0.8); }
+      100% { transform: translateX(100%) scaleX(0.3); }
+    }
+
+    .loading-msg {
       font-size: 11px;
-      color: #3a5070;
+      color: var(--text-dim);
+      letter-spacing: 0.2em;
+      text-align: center;
+      display: none;
+    }
+
+    .loading-msg.active { display: block; }
+
+    /* ── RESULTS ── */
+    #results-area {
+      margin-top: 20px;
+    }
+
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--panel2);
+      border: 1px solid var(--border2);
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .results-title {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .results-count {
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    .results-box {
+      border: 1px solid var(--border2);
+      background: var(--panel);
+      min-height: 80px;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+
+    .results-box::-webkit-scrollbar { width: 4px; }
+    .results-box::-webkit-scrollbar-track { background: var(--panel); }
+    .results-box::-webkit-scrollbar-thumb { background: var(--border2); }
+
+    /* stand row */
+    .stand-row {
+      display: flex;
+      align-items: center;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+      animation: rowIn 0.15s ease both;
+      transition: background 0.15s;
+    }
+
+    .stand-row:last-child { border-bottom: none; }
+    .stand-row:hover { background: var(--panel2); }
+
+    @keyframes rowIn {
+      from { opacity: 0; transform: translateX(-6px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .stand-id {
+      font-size: 16px;
+      font-weight: 700;
+      min-width: 48px;
+      color: var(--text);
+      letter-spacing: 0.08em;
+    }
+
+    .stand-badge {
+      font-size: 9px;
+      padding: 2px 7px;
+      border: 1px solid;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .badge-free     { color: var(--green); border-color: var(--green); background: var(--green-dim); }
+    .badge-occupied { color: var(--red);   border-color: var(--red);   background: var(--red-dim); animation: pulse-red 1.5s ease-in-out infinite; }
+    .badge-reserve  { color: var(--amber); border-color: var(--amber); background: var(--amber-dim); }
+    .badge-checking { color: var(--text-dim); border-color: var(--text-dim); }
+
+    @keyframes pulse-red {
+      0%, 100% { box-shadow: none; }
+      50%       { box-shadow: 0 0 6px var(--red); }
+    }
+
+    .stand-coords {
+      margin-left: auto;
+      font-size: 10px;
+      color: var(--text-dim);
       letter-spacing: 0.05em;
     }
 
-    .flag {
-      width: 18px;
-      height: 12px;
-      object-fit: cover;
+    /* section dividers */
+    .section-label {
+      padding: 6px 14px;
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      color: var(--text-dim);
+      background: var(--panel2);
+      border-bottom: 1px solid var(--border);
+      text-transform: uppercase;
+    }
+
+    /* holding point row */
+    .hp-row {
+      display: flex;
+      align-items: center;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+      animation: rowIn 0.15s ease both;
+      transition: background 0.15s;
+    }
+
+    .hp-row:hover { background: var(--panel2); }
+    .hp-row:last-child { border-bottom: none; }
+
+    .hp-id {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+      min-width: 56px;
+      text-shadow: 0 0 16px var(--accent-glow);
+    }
+
+    .hp-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .hp-label {
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.2em;
+    }
+
+    .hp-tora {
+      font-family: var(--sans);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.05em;
+    }
+
+    .hp-tora-unit {
+      font-size: 10px;
+      color: var(--text-mid);
+      margin-left: 3px;
+    }
+
+    /* reserve toggle */
+    .reserve-toggle {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-top: 1px solid var(--border);
+      background: var(--panel2);
+      cursor: pointer;
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      transition: background 0.15s;
+    }
+
+    .reserve-toggle:hover { background: var(--panel); }
+    .reserve-toggle.shown { display: flex; }
+
+    .toggle-arrow {
       display: inline-block;
-      vertical-align: middle;
-      margin-right: 6px;
-      border-radius: 2px;
+      transition: transform 0.2s;
+      font-size: 10px;
+    }
+
+    .toggle-arrow.open { transform: rotate(180deg); }
+
+    /* empty / error */
+    .msg-box {
+      padding: 28px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+      letter-spacing: 0.2em;
+    }
+
+    .msg-box.error { color: var(--red); }
+
+    /* ── VATSIM NOTICE ── */
+    .vatsim-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border: 1px solid var(--border);
+      border-top: none;
+      background: var(--panel2);
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+    }
+
+    .vatsim-logo {
+      color: var(--accent);
+      font-weight: bold;
+      font-size: 11px;
+    }
+
+    .vatsim-bar .cached { margin-left: auto; color: var(--text-dim); opacity: 0.6; }
+
+    /* ── INFO STRIP (form hints) ── */
+    .info-strip {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .info-chip {
+      font-size: 9px;
+      padding: 3px 9px;
+      border: 1px solid var(--border2);
+      color: var(--text-dim);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: var(--panel2);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 560px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: 1; }
     }
   </style>
 </head>
 <body>
+<div id="app">
 
-  <div class="card">
-    <div class="cid">is nicky on plane game?</div>
-    <hr />
+  <!-- HEADER -->
+  <header>
+    <div class="logo-mark">
+      <div class="logo-diamond"></div>
+    </div>
+    <div>
+      <div class="logo-text">GND ASSIST</div>
+      <div class="logo-sub">Ground Operations Reference Tool</div>
+    </div>
+    <div class="version-tag">
+      <span class="status-dot"></span>VATSIM LIVE<br>
+      v1.0.0
+    </div>
+  </header>
 
-    <div class="status-area" id="status-area">
-      <div class="loading">
-        <div class="spinner"></div>
-        Checking status…
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('stands')">◈ &nbsp;Stand Picker</button>
+    <button class="tab-btn" onclick="switchTab('holding')">◈ &nbsp;Holding Point</button>
+  </div>
+
+  <!-- ══════════════════════════════════ STAND PICKER ══════════════════════════════════ -->
+  <div class="panel active" id="panel-stands">
+
+    <div class="info-strip">
+      <span class="info-chip">Airline — 3-char ICAO</span>
+      <span class="info-chip">Aircraft — ICAO type code</span>
+      <span class="info-chip">Airports — 4-char ICAO</span>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="s-airline">Airline</label>
+        <input type="text" id="s-airline" maxlength="3" placeholder="RYR" autocomplete="off" oninput="validateField(this,3,3)">
+        <span class="field-hint">e.g. RYR · BAW · EZY</span>
+      </div>
+      <div class="form-group">
+        <label for="s-acft">Aircraft Type</label>
+        <input type="text" id="s-acft" maxlength="4" placeholder="B738" autocomplete="off" oninput="validateAcftField(this)">
+        <span class="field-hint">e.g. B738 · A320 · E190</span>
+      </div>
+      <div class="form-group">
+        <label for="s-adep">Departure Airport</label>
+        <input type="text" id="s-adep" maxlength="4" placeholder="EBCI" autocomplete="off" oninput="validateField(this,4,4)">
+        <span class="field-hint">e.g. EBCI · ELLX</span>
+      </div>
+      <div class="form-group">
+        <label for="s-ades">Destination Airport</label>
+        <input type="text" id="s-ades" maxlength="4" placeholder="EHAM" autocomplete="off" oninput="validateField(this,4,4)">
+        <span class="field-hint">Used to determine Schengen status</span>
       </div>
     </div>
 
-    <button class="btn" id="refresh-btn" onclick="checkStatus()" disabled>Refresh</button>
-    <div class="updated" id="updated"></div>
+    <button class="submit-btn" id="stand-btn" onclick="runStandPicker()">
+      ▸ &nbsp; Find Stands
+    </button>
+
+    <div class="loading-bar" id="stand-loading"></div>
+    <div class="loading-msg" id="stand-loading-msg">Fetching stand data...</div>
+
+    <div id="stand-results-area"></div>
   </div>
 
-  <script>
-    const CID = 1778154;
-    const API = 'https://data.vatsim.net/v3/vatsim-data.json';
+  <!-- ══════════════════════════════════ HOLDING POINT ══════════════════════════════════ -->
+  <div class="panel" id="panel-holding">
 
-    const POSITION_NAMES = {
-      'EBBR_DEL':   'Brussels Delivery',
-      'EBBR_GND':   'Brussels Ground',
-      'EBBR_C_GND':   'Brussels Ground',
-      'EBBR_S_GND':   'Brussels Ground',
-      'EBBR_TWR':   'Brussels Tower',
-      'EBBR_N_TWR':   'Brussels Tower',
-      'EBBR_APP':   'Brussels Arrival',
-      'EBBR_F_APP':   'Brussels Approach',
-      'EBBR_DEP':   'Brussels Departure',
+    <div class="info-strip">
+      <span class="info-chip">Aircraft — ICAO type code</span>
+      <span class="info-chip">Runway — without leading zero</span>
+    </div>
 
-      'EBLG_GND':   'Liège Ground',
-      'EBLG_TWR':   'Liège Tower',
-      'EBLG_APP':   'Liège Approach',
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="h-acft">Aircraft Type</label>
+        <input type="text" id="h-acft" maxlength="4" placeholder="B738" autocomplete="off" oninput="validateAcftField(this)">
+        <span class="field-hint">e.g. B738 · A320 · E190</span>
+      </div>
+      <div class="form-group">
+        <label for="h-adep">Departure Airport</label>
+        <input type="text" id="h-adep" maxlength="4" placeholder="EBCI" autocomplete="off" oninput="validateField(this,4,4)">
+        <span class="field-hint">e.g. EBCI · ELLX</span>
+      </div>
+      <div class="form-group">
+        <label for="h-runway">Assigned Runway</label>
+        <input type="text" id="h-runway" maxlength="3" placeholder="24" autocomplete="off">
+        <span class="field-hint">e.g. 06 · 24 · 18R</span>
+      </div>
+      <div class="form-group">
+        <label for="h-stand">Parked Stand</label>
+        <input type="text" id="h-stand" maxlength="6" placeholder="52" autocomplete="off">
+        <span class="field-hint">Current parking position</span>
+      </div>
+    </div>
 
-      'EBCI_GND':   'Charleroi Ground',
-      'EBCI_TWR':   'Charleroi Tower',
-      'EBCI_APP':   'Charleroi Approach',
+    <button class="submit-btn" id="hp-btn" onclick="runHoldingPoint()">
+      ▸ &nbsp; Find Holding Points
+    </button>
 
-      'EBAW_GND':   'Antwerpen Ground',
-      'EBAW_TWR':   'Antwerpen Tower',
+    <div class="loading-bar" id="hp-loading"></div>
 
-      'EBOS_GND':   'Ostend Ground',
-      'EBOS_TWR':   'Ostend Tower',
-      'EBOS_APP':   'Ostend Approach',
+    <div id="hp-results-area"></div>
+  </div>
 
-      'EBKT_I_TWR':   'Kortrijk Information',
+</div>
 
-      'EBBU_E_CTR':   'Brussels Control',
-      'EBBU_W_CTR':   'Brussels Control',
-      'EBBU_LOW_CTR':   'Brussels Control',
-      'EBBU_U_CTR':   'Maastricht Radar',
-      'EDYY_N_CTR':   'Maastricht Radar',
-      'EDYY_O_CTR':   'Maastricht Radar',
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  DATA TABLES
+// ═══════════════════════════════════════════════════════════════
 
-      'ELLX_DEL':   'Luxembourg Delivery',
-      'ELLX_TWR':   'Luxembourg Tower',
-      'ELLX_APP':   'Luxembourg Radar',
-      "ELLX_F_APP": 'Luxembourg Arrival',
-    };
+const VALID_ACFT = new Set([
+  'bsc1','bsc3',
+  'a318','a319','a320','a321','a19n','a20n','a21n',
+  'a332','a333','a338','a339',
+  'a359','a35k',
+  'a388',
+  'b733','b734','b735','b736','b737','b738','b739','b37m','b38m','b39m','b3xm',
+  'b742','b744','b748',
+  'b763','b764',
+  'b772','b773','b77l','b77w',
+  'b788','b789','b78x',
+  'crj9','crjx',
+  'e170','e175','e190','e195','e290','e295',
+]);
 
-    const SUFFIX_LABELS = {
-      'DEL':  'Delivery',
-      'GND':  'Ground',
-      'TWR':  'Tower',
-      'APP':  'Approach',
-      'DEP':  'Departure',
-      'CTR':  'Control',
-      'ATIS': 'ATIS',
-      'FSS':  'Flight Service',
-      'OBS':  'Observer',
-    };
-    function getPositionName(callsign) {
-      if (POSITION_NAMES[callsign]) return POSITION_NAMES[callsign];
+const TYPE_MAP = {
+  bsc1:'a220', bsc3:'a220',
+  a318:'a320', a319:'a320', a320:'a320', a321:'a320', a19n:'a320', a20n:'a320', a21n:'a320',
+  a332:'a330', a333:'a330', a338:'a330', a339:'a330',
+  a359:'a350', a35k:'a350',
+  a388:'a388',
+  b733:'b737', b734:'b737', b735:'b737', b736:'b737', b737:'b737',
+  b738:'b737', b739:'b737', b37m:'b737', b38m:'b737', b39m:'b737', b3xm:'b737',
+  b742:'b747', b744:'b747', b748:'b747',
+  b763:'b767', b764:'b767',
+  b772:'b777', b773:'b777', b77l:'b777', b77w:'b777',
+  b788:'b787', b789:'b787', b78x:'b787',
+  crj9:'crjs', crjx:'crjs',
+  e170:'ejet', e175:'ejet', e190:'ejet', e195:'ejet', e290:'ejet', e295:'ejet',
+};
 
-      const parts = callsign.split('_');
-      const suffix = parts[parts.length - 1]?.toUpperCase();
-      if (suffix && SUFFIX_LABELS[suffix]) return SUFFIX_LABELS[suffix];
+const AIRLINE_ALIASES = {
+  eju:'ezy', ezs:'ezy',
+  ruk:'ryr',
+  tom:'tui', tfl:'tui', jaf:'tui', blx:'tui',
+  efw:'baw', cfe:'baw',
+  nsz:'noz',
+  mac:'aby',
+};
 
-      return null;
+// ═══════════════════════════════════════════════════════════════
+//  CACHE
+// ═══════════════════════════════════════════════════════════════
+
+let schengenData  = null;
+let vatsimCache   = null;
+let vatsimFetchTs = 0;
+const VATSIM_TTL  = 5 * 60 * 1000; // 5 min
+
+async function loadSchengen() {
+  if (schengenData) return schengenData;
+  const r = await fetch('references/schengen.json');
+  schengenData = await r.json();
+  return schengenData;
+}
+
+async function loadAirport(icao) {
+  const r = await fetch(`references/${icao.toLowerCase()}.json`);
+  if (!r.ok) throw new Error(`No data for ${icao.toUpperCase()}`);
+  return r.json();
+}
+
+async function loadVatsim() {
+  const now = Date.now();
+  if (vatsimCache && (now - vatsimFetchTs) < VATSIM_TTL) return vatsimCache;
+  const r = await fetch('https://data.vatsim.net/v3/vatsim-data.json');
+  vatsimCache   = await r.json();
+  vatsimFetchTs = now;
+  return vatsimCache;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  GEO
+// ═══════════════════════════════════════════════════════════════
+
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const phi1 = lat1 * Math.PI / 180, phi2 = lat2 * Math.PI / 180;
+  const dphi = (lat2 - lat1) * Math.PI / 180;
+  const dl   = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dphi/2)**2 + Math.cos(phi1)*Math.cos(phi2)*Math.sin(dl/2)**2;
+  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function checkOccupied(coords, vatsimData) {
+  if (!coords || !vatsimData) return false;
+  const [lat, lon] = coords.split(',').map(s => parseFloat(s.trim()));
+  for (const pilot of vatsimData.pilots || []) {
+    if (pilot.latitude == null || pilot.longitude == null) continue;
+    if (pilot.groundspeed >= 10) continue;
+    if (haversine(lat, lon, pilot.latitude, pilot.longitude) <= 25) return true;
+  }
+  return false;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  NORMALISE INPUTS
+// ═══════════════════════════════════════════════════════════════
+
+function normaliseAirline(raw) {
+  const a = raw.toLowerCase().trim();
+  return AIRLINE_ALIASES[a] || a;
+}
+
+function normaliseAcft(raw) {
+  const a = raw.toLowerCase().trim();
+  return TYPE_MAP[a] || a;
+}
+
+function normaliseRunway(raw) {
+  return raw.replace(/^0/, '').trim();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  VALIDATION UI
+// ═══════════════════════════════════════════════════════════════
+
+function validateField(el, minLen, maxLen) {
+  const v = el.value.trim();
+  if (v.length >= minLen && v.length <= maxLen) {
+    el.classList.add('valid'); el.classList.remove('invalid');
+  } else if (v.length > 0) {
+    el.classList.add('invalid'); el.classList.remove('valid');
+  } else {
+    el.classList.remove('valid','invalid');
+  }
+}
+
+function validateAcftField(el) {
+  const v = el.value.toLowerCase().trim();
+  if (VALID_ACFT.has(v)) {
+    el.classList.add('valid'); el.classList.remove('invalid');
+  } else if (v.length >= 3) {
+    el.classList.add('invalid'); el.classList.remove('valid');
+  } else {
+    el.classList.remove('valid','invalid');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════════════════════
+
+function switchTab(id) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['stands','holding'][i] === id);
+  });
+  document.querySelectorAll('.panel').forEach((p, i) => {
+    p.classList.toggle('active', ['stands','holding'][i] === id);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  STAND PICKER
+// ═══════════════════════════════════════════════════════════════
+
+async function runStandPicker() {
+  const airlineRaw = document.getElementById('s-airline').value.trim();
+  const acftRaw    = document.getElementById('s-acft').value.trim();
+  const adepRaw    = document.getElementById('s-adep').value.trim();
+  const adesRaw    = document.getElementById('s-ades').value.trim();
+
+  if (!airlineRaw || !acftRaw || !adepRaw || !adesRaw) {
+    showResult('stand-results-area', '<div class="msg-box error">All fields required.</div>');
+    return;
+  }
+
+  const airline = normaliseAirline(airlineRaw);
+  const acft    = normaliseAcft(acftRaw.toLowerCase());
+  const adep    = adepRaw.toLowerCase();
+
+  const btn = document.getElementById('stand-btn');
+  const bar = document.getElementById('stand-loading');
+  const msg = document.getElementById('stand-loading-msg');
+  btn.disabled = true;
+  bar.classList.add('active');
+  msg.classList.add('active');
+  msg.textContent = 'Loading airport data...';
+
+  try {
+    const [schengen, airportData, vatsim] = await Promise.all([
+      loadSchengen(),
+      loadAirport(adep),
+      (msg.textContent = 'Checking VATSIM occupancy...', loadVatsim()),
+    ]);
+
+    const isSchengen = schengen.includes(adesRaw.toUpperCase());
+    const mode = isSchengen ? 'S' : 'N';
+
+    msg.textContent = 'Analysing stands...';
+
+    const primary = [], reserve = [];
+
+    for (const [standId, info] of Object.entries(airportData.stands)) {
+      const allowed = info.allowed || {};
+      if (!allowed[airline]) continue;
+      if (!allowed[airline].includes(acft)) continue;
+      if (!(info.schengen || []).includes(mode)) continue;
+
+      const occupied = info.coords ? checkOccupied(info.coords, vatsim) : null;
+      const entry = { standId, info, occupied };
+      if (info.reserve) reserve.push(entry); else primary.push(entry);
     }
 
-    function timeSince(logonTime) {
-      const s = Math.floor((Date.now() - new Date(logonTime)) / 1000);
-      const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
-      return h > 0 ? `${h}h ${m}m` : `${m}m`;
-    }
+    primary.sort((a,b) => a.standId.localeCompare(b.standId, undefined, {numeric:true}));
+    reserve.sort((a,b) => a.standId.localeCompare(b.standId, undefined, {numeric:true}));
 
-    function rows(pairs) {
-      return pairs.map(([k, v]) => `
-        <div class="info-item">
-          <span class="key">${k}</span>
-          <span class="val">${v}</span>
-        </div>
-      `).join('');
-    }
+    renderStandResults(adep, airline, acft, isSchengen, primary, reserve, vatsimFetchTs);
 
-    function callsignCell(callsign) {
-      const flag = getFlag(callsign);
-      const name = getPositionName(callsign);
-      if (name) {
-        return `
-          <span class="callsign-wrap">
-            <span class="position-name">${name}</span>
-            <span>${flag}${callsign}</span>
-          </span>`;
+  } catch (err) {
+    showResult('stand-results-area',
+      `<div class="msg-box error">✕ &nbsp;${err.message}</div>`);
+  } finally {
+    btn.disabled = false;
+    bar.classList.remove('active');
+    msg.classList.remove('active');
+  }
+}
+
+function renderStandResults(adep, airline, acft, isSchengen, primary, reserve, ts) {
+  const timeStr = new Date(ts).toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'});
+  const schengenLabel = isSchengen ? 'SCHENGEN' : 'NON-SCHENGEN';
+
+  let html = `
+    <div class="results-header">
+      <span class="results-title">${adep.toUpperCase()} &nbsp;·&nbsp; ${airline.toUpperCase()} &nbsp;·&nbsp; ${acft.toUpperCase()} &nbsp;·&nbsp; ${schengenLabel}</span>
+      <span class="results-count">${primary.length + reserve.length} found</span>
+    </div>
+    <div class="results-box" id="stands-box">
+  `;
+
+  if (primary.length === 0 && reserve.length === 0) {
+    html += '<div class="msg-box">No stands match these criteria.</div>';
+  } else if (primary.length === 0) {
+    html += '<div class="msg-box">No primary stands available.</div>';
+  } else {
+    html += '<div class="section-label">Primary Stands</div>';
+    for (const {standId, info, occupied} of primary) {
+      const badge = occupied
+        ? '<span class="stand-badge badge-occupied">Occupied</span>'
+        : '<span class="stand-badge badge-free">Free</span>';
+      html += `
+        <div class="stand-row">
+          <span class="stand-id">${standId}</span>
+          ${badge}
+          <span class="stand-coords">${info.coords || ''}</span>
+        </div>`;
+    }
+  }
+
+  html += '</div>';
+
+  // Reserve toggle
+  if (reserve.length > 0) {
+    html += `
+      <div class="reserve-toggle shown" id="reserve-toggle" onclick="toggleReserve()">
+        <span class="toggle-arrow" id="reserve-arrow">▾</span>
+        &nbsp;Reserve Stands &nbsp;<span style="opacity:0.5">(${reserve.length})</span>
+      </div>
+      <div id="reserve-box" style="display:none">
+        <div class="results-box">
+          <div class="section-label">Reserve Stands</div>`;
+    for (const {standId, info, occupied} of reserve) {
+      const badge = occupied
+        ? '<span class="stand-badge badge-occupied">Occupied</span>'
+        : '<span class="stand-badge badge-reserve">Reserve</span>';
+      html += `
+          <div class="stand-row">
+            <span class="stand-id">${standId}</span>
+            ${badge}
+            <span class="stand-coords">${info.coords || ''}</span>
+          </div>`;
+    }
+    html += `</div></div>`;
+  }
+
+  html += `
+    <div class="vatsim-bar">
+      <span class="vatsim-logo">VATSIM</span>
+      Occupancy data live from VATSIM network
+      <span class="cached">Checked: ${timeStr}</span>
+    </div>`;
+
+  showResult('stand-results-area', html);
+}
+
+function toggleReserve() {
+  const box   = document.getElementById('reserve-box');
+  const arrow = document.getElementById('reserve-arrow');
+  const open  = box.style.display === 'none';
+  box.style.display = open ? 'block' : 'none';
+  arrow.classList.toggle('open', open);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  HOLDING POINT PICKER
+// ═══════════════════════════════════════════════════════════════
+
+async function runHoldingPoint() {
+  const acftRaw   = document.getElementById('h-acft').value.trim();
+  const adepRaw   = document.getElementById('h-adep').value.trim();
+  const runwayRaw = document.getElementById('h-runway').value.trim();
+  const standRaw  = document.getElementById('h-stand').value.trim();
+
+  if (!acftRaw || !adepRaw || !runwayRaw || !standRaw) {
+    showResult('hp-results-area', '<div class="msg-box error">All fields required.</div>');
+    return;
+  }
+
+  const acft    = normaliseAcft(acftRaw.toLowerCase());
+  const adep    = adepRaw.toLowerCase();
+  const runway  = normaliseRunway(runwayRaw);
+  const stand   = standRaw.toLowerCase();
+
+  const btn = document.getElementById('hp-btn');
+  const bar = document.getElementById('hp-loading');
+  btn.disabled = true;
+  bar.classList.add('active');
+
+  try {
+    const airportData = await loadAirport(adep);
+    const matches = [];
+
+    for (const [hpId, hp] of Object.entries(airportData.holdingPoints || {})) {
+      const standOk = hp.stands === 'all' || (Array.isArray(hp.stands) && hp.stands.includes(stand));
+      if (hp.types.includes(acft) && standOk && runway === hp.runway) {
+        matches.push({ hpId, tora: hp.tora });
       }
-      return `<span>${flag}${callsign}</span>`;
     }
 
-    function renderOnline(entry, type) {
-      const fp = entry.flight_plan;
-      const pairs = type === 'pilot'
-        ? [
-            ['Callsign', entry.callsign],
-            fp ? ['Route', `${fp.departure} → ${fp.arrival}`] : null,
-            fp?.aircraft_short ? ['Aircraft', fp.aircraft_short] : null,
-            ['Altitude', `${Number(entry.altitude).toLocaleString()} ft`],
-            ['Ground speed', `${entry.groundspeed} kt`],
-            ['Online for', timeSince(entry.logon_time)],
-          ].filter(Boolean)
-        : [
-            ['Callsign', callsignCell(entry.callsign)],
-            ['Frequency', entry.frequency],
-            ['Online for', timeSince(entry.logon_time)],
-          ];
+    renderHpResults(adep, acft, runway, stand, matches);
 
-      return `
-        <div class="pill online"><span class="dot"></span> YES HE IS!</div>
-        <div class="status-label">${type === 'pilot' ? 'Flying' : 'Controlling'}</div>
-        <div class="info-list">${rows(pairs)}</div>
-      `;
+  } catch (err) {
+    showResult('hp-results-area',
+      `<div class="msg-box error">✕ &nbsp;${err.message}</div>`);
+  } finally {
+    btn.disabled = false;
+    bar.classList.remove('active');
+  }
+}
+
+function renderHpResults(adep, acft, runway, stand, matches) {
+  let html = `
+    <div class="results-header">
+      <span class="results-title">${adep.toUpperCase()} &nbsp;·&nbsp; RWY ${runway} &nbsp;·&nbsp; ${acft.toUpperCase()}</span>
+      <span class="results-count">${matches.length} match${matches.length !== 1 ? 'es' : ''}</span>
+    </div>
+    <div class="results-box">`;
+
+  if (matches.length === 0) {
+    html += '<div class="msg-box">No holding points match these criteria.</div>';
+  } else {
+    for (const {hpId, tora} of matches) {
+      html += `
+        <div class="hp-row">
+          <div class="hp-id">${hpId}</div>
+          <div class="hp-meta">
+            <span class="hp-label">TORA</span>
+            <span class="hp-tora">${Number(tora).toLocaleString()}<span class="hp-tora-unit">m</span></span>
+          </div>
+        </div>`;
     }
+  }
 
-    function renderOffline() {
-      return `
-        <div class="pill offline"><span class="dot"></span> NO HE ISN'T!</div>
-        <div class="status-label" style="color:#4a6190;font-weight:300">He's not connected to the big v</div>
-      `;
-    }
+  html += '</div>';
+  showResult('hp-results-area', html);
+}
 
-    function renderError() {
-      return `
-        <div class="status-label" style="color:#e05555;font-size:15px">The request failed</div>
-        <p style="font-size:13px;color:#4a6190;margin-top:6px">No idea lol</p>
-      `;
-    }
+// ═══════════════════════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════════════════════
 
-    function getFlag(callsign) {
-      if (callsign.startsWith("EL")) {
-        return '<img src="flags/lu.png" class="flag">';
-      }
-      if (callsign.startsWith("EB")) {
-        return '<img src="flags/be.png" class="flag">';
-      }
-      return '';
-    }
+function showResult(containerId, html) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = html;
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
 
-    async function checkStatus() {
-      const area = document.getElementById('status-area');
-      const btn  = document.getElementById('refresh-btn');
-      btn.disabled = true;
-      area.innerHTML = `<div class="loading"><div class="spinner"></div>Checking status…</div>`;
-
-      try {
-        const res  = await fetch(API, { cache: 'no-store' });
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-
-        const pilot = data.pilots?.find(p => p.cid === CID);
-        const atc   = data.controllers?.find(c => c.cid === CID);
-
-        area.innerHTML = pilot ? renderOnline(pilot, 'pilot')
-                       : atc   ? renderOnline(atc,   'atc')
-                       :         renderOffline();
-
-        const ts = data.general?.update_timestamp;
-        if (ts) {
-          const d = new Date(ts);
-          document.getElementById('updated').textContent =
-            `Last updated ${d.toUTCString().slice(5, 22)}z`;
-        }
-      } catch {
-        area.innerHTML = renderError();
-      }
-
-      btn.disabled = false;
-    }
-
-    checkStatus();
-  </script>
-
+// Enter key submit helpers
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  if (document.getElementById('panel-stands').classList.contains('active')) runStandPicker();
+  else runHoldingPoint();
+});
+</script>
 </body>
 </html>
