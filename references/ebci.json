@@ -1,0 +1,378 @@
+{
+  "stands": {
+    "51": {
+      "coords": "50.466668, 4.464125",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "52": {
+      "coords": "50.466808, 4.464697",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "53": {
+      "coords": "50.466992, 4.465240",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "54": {
+      "coords": "50.467180, 4.465821",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "55": {
+      "coords": "50.467333, 4.466386",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "56": {
+      "coords": "50.467465, 4.466978",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "57": {
+      "coords": "50.467647, 4.467543",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "58": {
+      "coords": "50.467832, 4.468239",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "59": {
+      "coords": "50.468021, 4.468776",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "60": {
+      "coords": "50.468172, 4.469339",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "61": {
+      "coords": "50.468351, 4.469889",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "62": {
+      "coords": "50.468525, 4.470439",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "63": {
+      "coords": "50.468677, 4.470998",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "64": {
+      "coords": "50.468882, 4.471683",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "65": {
+      "coords": "50.469047, 4.472233",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "66": {
+      "coords": "50.469224, 4.472906",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "67": {
+      "coords": "50.469408, 4.473445",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "68": {
+      "coords": "50.469551, 4.474021",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "69": {
+      "coords": "50.469741, 4.474624",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "70": {
+      "coords": "50.469904, 4.475185",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "71": {
+      "coords": "50.470082, 4.475730",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "72": {
+      "coords": "50.470228, 4.476298",
+      "schengen": ["S", "N"],
+      "reserve": false,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "88": {
+      "coords": "50.467042, 4.468796",
+      "schengen": ["S", "N"],
+      "reserve": true,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "89": {
+      "coords": "50.467201, 4.469361",
+      "schengen": ["S", "N"],
+      "reserve": true,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "90": {
+      "coords": "50.467365, 4.469917",
+      "schengen": ["S", "N"],
+      "reserve": true,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "91": {
+      "coords": "50.467521, 4.470476",
+      "schengen": ["S", "N"],
+      "reserve": true,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "92": {
+      "coords": "50.467686, 4.471032",
+      "schengen": ["S", "N"],
+      "reserve": true,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "93": {
+      "coords": "50.467848, 4.471587",
+      "schengen": ["S", "N"],
+      "reserve": true,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    },
+    "94": {
+      "coords": "50.468047, 4.472273",
+      "schengen": ["S", "N"],
+      "reserve": true,
+      "allowed": {
+        "ccm": ["a320"],
+        "pgt": ["a320", "b737"],
+        "ryr": ["a320", "b737"],
+        "voe": ["a320"],
+        "wzz": ["a320"]
+      }
+    }
+  },
+  "holdingPoints": {
+    "N2": {
+      "runway": "6",
+      "types": ["a220", "a320", "a330", "a340", "a350", "a388", "b737", "b747", "b767", "b777", "b787", "ejet", "crjs", "dh8d"],
+      "stands": "all",
+      "tora": "2800"
+    },
+    "N5": {
+      "runway": "24",
+      "types": ["a220", "a320", "b737", "ejet", "crjs", "dh8d"],
+      "stands": "all",
+      "tora": "2405"
+    },
+    "N6": {
+      "runway": "24",
+      "types": ["a220", "a320", "b737", "ejet", "crjs", "dh8d"],
+      "stands": "all",
+      "tora": "2837"
+    },
+    "N7": {
+      "runway": "24",
+      "types": ["a220", "a320", "a330", "a340", "a350", "a388", "b737", "b747", "b767", "b777", "b787", "ejet", "crjs", "dh8d"],
+      "stands": "all",
+      "tora": "3055"
+    }
+  }
+}
