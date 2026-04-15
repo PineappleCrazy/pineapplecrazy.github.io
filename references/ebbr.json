@@ -54,5 +54,17 @@
       "stands": "all",
       "tora": "3638"
     },
+    "Z": {
+      "runway": "7R",
+      "types": ["a330", "a340", "a350", "a388", "b747", "b767", "b777", "b787"],
+      "stands": "all",
+      "tora": "2893"
+    },
+    "C6": {
+      "runway": "7R",
+      "types": ["a220", "a320", "b737", "ejet", "crjs", "dh8d"],
+      "stands": "all",
+      "tora": "2405"
+    }
   }
 }
