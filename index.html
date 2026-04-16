@@ -913,7 +913,8 @@ async function runHoldingPoint(){
   try {
     const airportData=await loadAirport(adep), matches=[];
     for(const [hpId,hp] of Object.entries(airportData.holdingPoints||{})){
-      const standOk=hp.stands==='all'||(Array.isArray(hp.stands)&&hp.stands.includes(stand));
+      const excluded=Array.isArray(hp.excludeStands)&&hp.excludeStands.includes(stand);
+      const standOk=!excluded&&(hp.stands==='all'||(Array.isArray(hp.stands)&&hp.stands.includes(stand)));
       if(hp.types.includes(acft)&&standOk&&runway===hp.runway) matches.push({hpId,name:hp.name||null,tora:hp.tora});
     }
     renderHpResults(adep,acft,runway,stand,matches);
