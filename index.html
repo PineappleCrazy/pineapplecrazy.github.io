@@ -655,6 +655,11 @@
   <!-- STAND PICKER -->
   <div class="panel active" id="panel-stands">
     <div class="card">
+      <div class="info-strip">
+        <span class="info-chip">Airline — 3-char ICAO</span>
+        <span class="info-chip">Aircraft — ICAO type code</span>
+        <span class="info-chip">Airports — 4-char ICAO</span>
+      </div>
       <div class="form-grid">
         <div class="form-group">
           <label for="s-airline">Airline</label>
@@ -669,11 +674,12 @@
         <div class="form-group">
           <label for="s-adep">Departure Airport</label>
           <input type="text" id="s-adep" maxlength="4" placeholder="EBCI" autocomplete="off" oninput="validateField(this,4,4)">
-          <span class="field-hint">e.g. EGLL · LKPR</span>
+          <span class="field-hint">e.g. EBCI · ELLX</span>
         </div>
         <div class="form-group">
           <label for="s-ades">Destination Airport</label>
           <input type="text" id="s-ades" maxlength="4" placeholder="EHAM" autocomplete="off" oninput="validateField(this,4,4)">
+          <span class="field-hint">Determines Schengen status</span>
         </div>
       </div>
       <button class="submit-btn" id="stand-btn" onclick="runStandPicker()">Find Stands</button>
@@ -686,6 +692,10 @@
   <!-- HOLDING POINT -->
   <div class="panel" id="panel-holding">
     <div class="card">
+      <div class="info-strip">
+        <span class="info-chip">Aircraft — ICAO type code</span>
+        <span class="info-chip">Runway — without leading zero</span>
+      </div>
       <div class="form-grid">
         <div class="form-group">
           <label for="h-acft">Aircraft Type</label>
@@ -904,7 +914,7 @@ async function runHoldingPoint(){
     const airportData=await loadAirport(adep), matches=[];
     for(const [hpId,hp] of Object.entries(airportData.holdingPoints||{})){
       const standOk=hp.stands==='all'||(Array.isArray(hp.stands)&&hp.stands.includes(stand));
-      if(hp.types.includes(acft)&&standOk&&runway===hp.runway) matches.push({hpId,tora:hp.tora});
+      if(hp.types.includes(acft)&&standOk&&runway===hp.runway) matches.push({hpId,name:hp.name||null,tora:hp.tora});
     }
     renderHpResults(adep,acft,runway,stand,matches);
   } catch(err){
@@ -920,12 +930,13 @@ function renderHpResults(adep,acft,runway,stand,matches){
   if(!matches.length){
     html+='<div class="msg-box">No holding points match these criteria.</div>';
   } else {
-    for(const {hpId,tora} of matches){
+    for(const {hpId,name,tora} of matches){
       html+=`<div class="hp-row">
         <div class="hp-id">${hpId}</div>
         <div class="hp-divider"></div>
         <div class="hp-meta"><span class="hp-label">TORA</span><span class="hp-tora">${Number(tora).toLocaleString()}<span class="hp-tora-unit">m</span></span></div>
-      </div>`;
+      </div>`
+        .replace(`>${hpId}<`, `>${name||hpId}<`);
     }
   }
   html+='</div>';
