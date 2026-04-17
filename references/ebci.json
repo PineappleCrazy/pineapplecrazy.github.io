@@ -360,19 +360,19 @@
       "runway": "24",
       "types": ["a220", "a320", "b737", "ejet", "crjs", "dh8d"],
       "stands": "all",
-      "tora": "2405"
+      "tora": "2400"
     },
     "N6": {
       "runway": "24",
       "types": ["a220", "a320", "b737", "ejet", "crjs", "dh8d"],
       "stands": "all",
-      "tora": "2837"
+      "tora": "2800"
     },
     "N7": {
       "runway": "24",
       "types": ["a220", "a320", "a330", "a340", "a350", "a388", "b737", "b747", "b767", "b777", "b787", "ejet", "crjs", "dh8d"],
       "stands": "all",
-      "tora": "3055"
+      "tora": "3100"
     }
   }
 }
