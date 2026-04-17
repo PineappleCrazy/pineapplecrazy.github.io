@@ -487,25 +487,25 @@
       "runway": "24",
       "types": ["a220", "a320", "a330", "a340", "a350", "a388", "b737", "b747", "b767", "b777", "b787", "ejet", "crjs", "dh8d"],
       "stands": "all",
-      "tora": "4002"
+      "tora": "4000"
     },
     "A2": {
       "runway": "24",
       "types": ["a220", "a320", "a330", "a388", "b737", "b747", "b767", "b787", "ejet", "crjs", "dh8d"],
       "stands": "all",
-      "tora": "4002"
+      "tora": "4000"
     },
     "B4": {
       "runway": "6",
       "types": ["a330", "a388", "b747", "b767", "b787"],
       "stands": "all",
-      "tora": "4002"
+      "tora": "4000"
     },
     "G": {
       "runway": "6",
       "types": ["a220", "a320", "b737", "ejet", "crjs", "dh8d"],
       "stands": "all",
-      "tora": "3275"
+      "tora": "3300"
     }
   }
 }
