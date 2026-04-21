@@ -163,53 +163,22 @@
 const CID = 1778154;
 const API = 'https://data.vatsim.net/v3/vatsim-data.json';
 
-/* Airport ICAO prefix → human-readable name */
-const AIRPORT_NAMES = {
-  'EBBR': 'Brussels',
-  'EBOS': 'Ostend',
-  'EBCI': 'Charleroi',
-  'EBLG': 'Liège',
-  'EBAW': 'Antwerp',
-  'EBKT': 'Kortrijk',
-  'EBST': 'Sint-Truiden',
-  'EBFS': 'Florennes',
-  'EBBL': 'Kleine-Brogel',
-  'EBBE': 'Beauvechain',
-  'ELLX': 'Luxembourg',
-  'ELNT': 'Noertrange',
-  /* FIR / UIR */
-  'EBBU': 'Brussels',
-  'ELUX': 'Luxembourg',
-};
+const POSITION_NAMES = {
+  "EBKT_I_TWR":  "Kortrijk Information",
 
-/* Callsign suffix → position type */
-const SUFFIX_NAMES = {
-  'DEL':  'Delivery',
-  'GND':  'Ground',
-  'TWR':  'Tower',
-  'APP':  'Approach',
-  'DEP':  'Departure',
-  'CTR':  'Control',
-  'ATIS': 'ATIS',
-  'FSS':  'Flight Service',
-  'OBS':  'Observer',
+  "EBBR_DEL": "Brussels Delivery",
+  "EBBR_GND": "Brussels Ground",
+  "EBBR_C_GND": "Brussels Ground",
+  "EBBR_S_GND": "Brussels Ground",
+  "EBBR_TWR": "Brussels Tower",
+  "EBBR_N_TWR": "Brussels Tower",
+  "EBBR_APP": "Brussels Arrival",
+  "EBBR_DEP": "Brussels Departure
+  "EBBR_F_APP": "Brussels Approach",
 };
 
 function getPositionName(callsign) {
-  // Callsigns look like EBBR_GND or EBBR_1_GND etc.
-  const parts = callsign.split('_');
-  if (parts.length < 2) return null;
-
-  const icao   = parts[0];
-  const suffix = parts[parts.length - 1].toUpperCase();
-
-  const airport  = AIRPORT_NAMES[icao];
-  const position = SUFFIX_NAMES[suffix];
-
-  if (airport && position) return `${airport} ${position}`;
-  if (airport)             return airport;
-  if (position)            return position;
-  return null;
+  return POSITION_NAMES[callsign] ?? null;
 }
 
 /* ✅ FLAG FUNCTION */
@@ -242,9 +211,9 @@ function renderOnline(entry, type) {
   const fp = entry.flight_plan;
 
   const positionName = type === 'atc' ? getPositionName(entry.callsign) : null;
-  const positionHtml = positionName
-    ? `<div class="position-name">${positionName}</div>`
-    : '';
+  const callsignVal = positionName
+    ? `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;"><span class="position-name">${positionName}</span><span>${getFlag(entry.callsign)}${entry.callsign}</span></div>`
+    : `${getFlag(entry.callsign)}${entry.callsign}`;
 
   const pairs = type === 'pilot'
     ? [
@@ -256,14 +225,13 @@ function renderOnline(entry, type) {
         ['Online for', timeSince(entry.logon_time)],
       ].filter(Boolean)
     : [
-        ['Callsign', `${getFlag(entry.callsign)}${entry.callsign}`],
+        ['Callsign', callsignVal],
         ['Frequency', entry.frequency],
         ['Online for', timeSince(entry.logon_time)],
       ];
 
   return `
     <div class="pill online">YES HE IS!</div>
-    ${positionHtml}
     <div class="status-label">${type === 'pilot' ? 'Flying' : 'Controlling'}</div>
     <div class="info-list">${rows(pairs)}</div>
   `;
