@@ -239,7 +239,7 @@ function renderOnline(entry, type) {
 
   const pairs = type === 'pilot'
     ? [
-        ['Callsign', `${getFlag(entry.callsign)}${entry.callsign}`],
+        ['Position', `${getFlag(entry.callsign)}${entry.callsign}`],
         fp ? ['Route', `${fp.departure} → ${fp.arrival}`] : null,
         fp?.aircraft_short ? ['Aircraft', fp.aircraft_short] : null,
         ['Altitude', `${Number(entry.altitude).toLocaleString()} ft`],
@@ -247,7 +247,7 @@ function renderOnline(entry, type) {
         ['Online for', timeSince(entry.logon_time)],
       ].filter(Boolean)
     : [
-        ['Callsign', callsignVal],
+        ['Position', callsignVal],
         ['Frequency', entry.frequency],
         ['Online for', timeSince(entry.logon_time)],
       ];
