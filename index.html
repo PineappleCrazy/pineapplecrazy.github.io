@@ -79,6 +79,14 @@
     .pill.online  { background: #e8f5ec; color: #2a9a50; }
     .pill.offline { background: #faeaea; color: #c0392b; }
 
+    .position-name {
+      font-size: 11px;
+      font-weight: 400;
+      color: #b0bedd;
+      letter-spacing: 0.03em;
+      margin-bottom: 4px;
+    }
+
     .status-label {
       font-size: 22px;
       font-weight: 300;
@@ -155,6 +163,55 @@
 const CID = 1778154;
 const API = 'https://data.vatsim.net/v3/vatsim-data.json';
 
+/* Airport ICAO prefix → human-readable name */
+const AIRPORT_NAMES = {
+  'EBBR': 'Brussels',
+  'EBOS': 'Ostend',
+  'EBCI': 'Charleroi',
+  'EBLG': 'Liège',
+  'EBAW': 'Antwerp',
+  'EBKT': 'Kortrijk',
+  'EBST': 'Sint-Truiden',
+  'EBFS': 'Florennes',
+  'EBBL': 'Kleine-Brogel',
+  'EBBE': 'Beauvechain',
+  'ELLX': 'Luxembourg',
+  'ELNT': 'Noertrange',
+  /* FIR / UIR */
+  'EBBU': 'Brussels',
+  'ELUX': 'Luxembourg',
+};
+
+/* Callsign suffix → position type */
+const SUFFIX_NAMES = {
+  'DEL':  'Delivery',
+  'GND':  'Ground',
+  'TWR':  'Tower',
+  'APP':  'Approach',
+  'DEP':  'Departure',
+  'CTR':  'Control',
+  'ATIS': 'ATIS',
+  'FSS':  'Flight Service',
+  'OBS':  'Observer',
+};
+
+function getPositionName(callsign) {
+  // Callsigns look like EBBR_GND or EBBR_1_GND etc.
+  const parts = callsign.split('_');
+  if (parts.length < 2) return null;
+
+  const icao   = parts[0];
+  const suffix = parts[parts.length - 1].toUpperCase();
+
+  const airport  = AIRPORT_NAMES[icao];
+  const position = SUFFIX_NAMES[suffix];
+
+  if (airport && position) return `${airport} ${position}`;
+  if (airport)             return airport;
+  if (position)            return position;
+  return null;
+}
+
 /* ✅ FLAG FUNCTION */
 function getFlag(callsign) {
   if (callsign.startsWith("EL")) {
@@ -184,6 +241,11 @@ function rows(pairs) {
 function renderOnline(entry, type) {
   const fp = entry.flight_plan;
 
+  const positionName = type === 'atc' ? getPositionName(entry.callsign) : null;
+  const positionHtml = positionName
+    ? `<div class="position-name">${positionName}</div>`
+    : '';
+
   const pairs = type === 'pilot'
     ? [
         ['Callsign', `${getFlag(entry.callsign)}${entry.callsign}`],
@@ -201,6 +263,7 @@ function renderOnline(entry, type) {
 
   return `
     <div class="pill online">YES HE IS!</div>
+    ${positionHtml}
     <div class="status-label">${type === 'pilot' ? 'Flying' : 'Controlling'}</div>
     <div class="info-list">${rows(pairs)}</div>
   `;
