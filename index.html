@@ -1,960 +1,240 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GND ASSIST</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg:           #07101f;
-      --bg-mid:       #0c1829;
-      --surface:      #0f1e35;
-      --surface2:     #132240;
-      --rim:          rgba(255,255,255,0.06);
-      --rim2:         rgba(255,255,255,0.10);
-      --accent:       #4fa8f5;
-      --accent-soft:  rgba(79,168,245,0.12);
-      --accent-ring:  rgba(79,168,245,0.30);
-      --green:        #34d399;
-      --green-soft:   rgba(52,211,153,0.10);
-      --red:          #f87171;
-      --red-soft:     rgba(248,113,113,0.10);
-      --amber:        #fbbf24;
-      --amber-soft:   rgba(251,191,36,0.10);
-      --text:         #c8d8f0;
-      --text-mid:     #7a94b4;
-      --text-dim:     #3d5470;
-      --sans:         'DM Sans', sans-serif;
-      --mono:         'DM Mono', monospace;
-      --r-sm:         8px;
-      --r-md:         12px;
-      --r-lg:         18px;
-      --r-xl:         24px;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>is he on plane game?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--sans);
-      font-weight: 400;
+      font-family: 'Inter', sans-serif;
+      background: #f0f4ff;
       min-height: 100vh;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* Soft ambient glow blobs */
-    body::before {
-      content: '';
-      position: fixed;
-      top: -180px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 900px;
-      height: 500px;
-      background: radial-gradient(ellipse at center, rgba(40,100,200,0.13) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    body::after {
-      content: '';
-      position: fixed;
-      bottom: -200px;
-      right: -100px;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(ellipse at center, rgba(79,168,245,0.05) 0%, transparent 65%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ─── APP SHELL ─── */
-    #app {
-      position: relative;
-      z-index: 1;
-      max-width: 820px;
-      margin: 0 auto;
-      padding: 40px 24px 80px;
-    }
-
-    /* ─── HEADER ─── */
-    header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 36px;
-      animation: fadeUp 0.3s ease both;
-    }
-
-    .logo-icon {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, rgba(79,168,245,0.25), rgba(79,168,245,0.08));
-      border: 1px solid rgba(79,168,245,0.3);
-      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
-      box-shadow: 0 0 20px rgba(79,168,245,0.1);
+      color: #1a2a4a;
     }
 
-    .logo-icon svg {
-      width: 18px;
-      height: 18px;
-      fill: none;
-      stroke: var(--accent);
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .logo-wordmark {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-    }
-
-    .logo-name {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: 0.04em;
-      line-height: 1;
-    }
-
-    .logo-desc {
-      font-size: 11px;
-      font-weight: 300;
-      color: var(--text-dim);
-      letter-spacing: 0.05em;
-    }
-
-    .header-right {
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-mid);
-      background: var(--surface);
-      border: 1px solid var(--rim);
-      padding: 5px 12px;
-      border-radius: 100px;
-    }
-
-    .live-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 8px var(--green);
-      animation: pulse-dot 2.5s ease-in-out infinite;
-      flex-shrink: 0;
-    }
-
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--green); }
-      50%       { opacity: 0.5; box-shadow: 0 0 3px var(--green); }
-    }
-
-    /* ─── TABS ─── */
-    .tabs {
-      display: flex;
-      background: var(--surface);
-      border: 1px solid var(--rim);
-      border-radius: var(--r-lg);
-      padding: 4px;
-      margin-bottom: 20px;
-      gap: 4px;
-      animation: fadeUp 0.3s ease 0.06s both;
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 9px 20px;
-      background: transparent;
-      border: none;
-      border-radius: calc(var(--r-lg) - 2px);
-      color: var(--text-dim);
-      font-family: var(--sans);
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      transition: all 0.22s ease;
-    }
-
-    .tab-btn:hover { color: var(--text-mid); background: rgba(255,255,255,0.04); }
-
-    .tab-btn.active {
-      color: var(--text);
-      background: var(--surface2);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px var(--rim2);
-    }
-
-    /* ─── PANELS ─── */
-    .panel { display: none; animation: panelIn 0.22s ease; }
-    .panel.active { display: block; }
-
-    @keyframes panelIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ─── CARD ─── */
     .card {
-      background: var(--surface);
-      border: 1px solid var(--rim);
-      border-radius: var(--r-xl);
-      padding: 24px;
-      margin-bottom: 12px;
-      animation: fadeUp 0.3s ease 0.12s both;
+      background: #fff;
+      border-radius: 16px;
+      padding: 48px 40px 36px;
+      width: min(400px, 92vw);
+      box-shadow: 0 4px 40px rgba(60, 100, 200, 0.10);
     }
 
-    /* ─── FORM GRID ─── */
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 18px;
+    .cid {
+      font-size: 32px;
+      font-weight: 300;
+      margin-bottom: 36px;
     }
 
-    .form-group {
+    hr {
+      border: none;
+      border-top: 1px solid #e8eef8;
+      margin-bottom: 28px;
+    }
+
+    .status-area {
+      min-height: 100px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      justify-content: center;
     }
 
-    .form-group.full { grid-column: 1 / -1; }
-
-    label {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-mid);
-      letter-spacing: 0.06em;
-    }
-
-    .field-hint {
-      font-size: 10px;
-      font-weight: 300;
-      color: var(--text-dim);
-      letter-spacing: 0.03em;
-      margin-top: 1px;
-    }
-
-    input[type="text"] {
-      background: var(--bg-mid);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: var(--r-md);
-      color: var(--text);
-      font-family: var(--mono);
+    .loading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #8aa0cc;
       font-size: 14px;
-      font-weight: 400;
-      padding: 10px 14px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-      width: 100%;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
     }
 
-    input[type="text"]:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-ring), inset 0 1px 2px rgba(0,0,0,0.2);
-      background: rgba(12,24,42,0.9);
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid #d0dcf7;
+      border-top-color: #3b6ef8;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
     }
 
-    input[type="text"].valid   { border-color: rgba(52,211,153,0.45); }
-    input[type="text"].invalid { border-color: rgba(248,113,113,0.45); }
-    input::placeholder { color: var(--text-dim); font-size: 13px; font-weight: 300; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ─── SUBMIT BUTTON ─── */
-    .submit-btn {
-      width: 100%;
-      padding: 12px 20px;
-      background: linear-gradient(135deg, rgba(79,168,245,0.18), rgba(79,168,245,0.08));
-      border: 1px solid rgba(79,168,245,0.35);
-      border-radius: var(--r-md);
-      color: var(--accent);
-      font-family: var(--sans);
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      cursor: pointer;
-      transition: all 0.22s ease;
-      box-shadow: 0 0 20px rgba(79,168,245,0.06);
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 20px;
     }
 
-    .submit-btn:hover {
-      background: linear-gradient(135deg, rgba(79,168,245,0.26), rgba(79,168,245,0.14));
-      border-color: rgba(79,168,245,0.55);
-      box-shadow: 0 4px 24px rgba(79,168,245,0.14);
-      transform: translateY(-1px);
-    }
+    .pill.online  { background: #e8f5ec; color: #2a9a50; }
+    .pill.offline { background: #faeaea; color: #c0392b; }
 
-    .submit-btn:active { transform: translateY(0); }
-
-    .submit-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-      transform: none;
-      pointer-events: none;
-    }
-
-    /* ─── LOADING ─── */
-    .loading-bar {
-      height: 2px;
-      background: var(--rim);
-      border-radius: 2px;
-      margin: 16px 0 4px;
-      overflow: hidden;
-      display: none;
-    }
-
-    .loading-bar.active { display: block; }
-
-    .loading-bar::after {
-      content: '';
-      display: block;
-      height: 100%;
-      width: 40%;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      animation: shimmer 1.4s ease-in-out infinite;
-      border-radius: 2px;
-    }
-
-    @keyframes shimmer {
-      0%   { transform: translateX(-150%); }
-      100% { transform: translateX(400%); }
-    }
-
-    .loading-msg {
-      font-size: 11px;
+    .status-label {
+      font-size: 22px;
       font-weight: 300;
-      color: var(--text-dim);
-      letter-spacing: 0.06em;
-      text-align: center;
-      padding: 4px 0 8px;
-      display: none;
+      margin-bottom: 20px;
     }
 
-    .loading-msg.active { display: block; }
-
-    /* ─── RESULTS ─── */
-    #stand-results-area, #hp-results-area { margin-top: 4px; }
-
-    .results-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 18px;
-      background: var(--surface2);
-      border: 1px solid var(--rim);
-      border-radius: var(--r-lg) var(--r-lg) 0 0;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .results-title {
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 400;
-      color: var(--text-mid);
-      letter-spacing: 0.1em;
-    }
-
-    .results-count {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--accent);
-      background: var(--accent-soft);
-      padding: 2px 10px;
-      border-radius: 100px;
-      letter-spacing: 0.04em;
-      flex-shrink: 0;
-    }
-
-    .results-box {
-      border: 1px solid var(--rim);
-      border-top: none;
-      background: var(--surface);
-      max-height: 460px;
-      overflow-y: auto;
-      border-radius: 0 0 var(--r-lg) var(--r-lg);
-    }
-
-    .results-box::-webkit-scrollbar { width: 4px; }
-    .results-box::-webkit-scrollbar-track { background: transparent; }
-    .results-box::-webkit-scrollbar-thumb { background: var(--rim2); border-radius: 4px; }
-
-    /* stand row */
-    .stand-row {
-      display: flex;
-      align-items: center;
-      padding: 11px 18px;
-      border-bottom: 1px solid var(--rim);
-      gap: 12px;
-      transition: background 0.15s;
-      animation: rowFade 0.18s ease both;
-    }
-
-    .stand-row:last-child { border-bottom: none; }
-    .stand-row:hover { background: rgba(255,255,255,0.025); }
-
-    @keyframes rowFade {
-      from { opacity: 0; transform: translateX(-5px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-
-    .stand-id {
-      font-family: var(--mono);
-      font-size: 15px;
-      font-weight: 500;
-      min-width: 52px;
-      color: var(--text);
-      letter-spacing: 0.06em;
-    }
-
-    .stand-badge {
-      font-size: 10px;
-      font-weight: 500;
-      padding: 3px 10px;
-      border-radius: 100px;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-    }
-
-    .badge-free     { color: var(--green); background: var(--green-soft); }
-    .badge-reserve  { color: var(--amber); background: var(--amber-soft); }
-    .badge-occupied {
-      color: var(--red);
-      background: var(--red-soft);
-      animation: occupied-pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes occupied-pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.6; }
-    }
-
-    .stand-coords {
-      margin-left: auto;
-      font-family: var(--mono);
-      font-size: 10px;
-      font-weight: 300;
-      color: var(--text-dim);
-      letter-spacing: 0.04em;
-    }
-
-    /* section divider */
-    .section-label {
-      padding: 7px 18px;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      background: rgba(0,0,0,0.15);
-      border-bottom: 1px solid var(--rim);
-    }
-
-    /* holding point row */
-    .hp-row {
-      display: flex;
-      align-items: center;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--rim);
-      gap: 20px;
-      transition: background 0.15s;
-      animation: rowFade 0.18s ease both;
-    }
-
-    .hp-row:last-child { border-bottom: none; }
-    .hp-row:hover { background: rgba(255,255,255,0.025); }
-
-    .hp-id {
-      font-family: var(--mono);
-      font-size: 26px;
-      font-weight: 500;
-      color: var(--accent);
-      min-width: 64px;
-      letter-spacing: 0.04em;
-    }
-
-    .hp-divider {
-      width: 1px;
-      height: 32px;
-      background: var(--rim2);
-      flex-shrink: 0;
-    }
-
-    .hp-meta {
+    .info-list {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 10px;
     }
 
-    .hp-label {
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--text-dim);
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13.5px;
     }
 
-    .hp-tora {
-      font-family: var(--mono);
-      font-size: 20px;
-      font-weight: 400;
-      color: var(--text);
-      letter-spacing: 0.03em;
-    }
+    .key { color: #8aa0cc; }
+    .val { color: #1a2a4a; text-align: right; max-width: 60%; }
 
-    .hp-tora-unit {
-      font-size: 11px;
-      font-weight: 300;
-      color: var(--text-mid);
-      margin-left: 2px;
-    }
-
-    /* reserve toggle */
-    .reserve-toggle {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 18px;
-      background: rgba(251,191,36,0.04);
-      border: 1px solid var(--rim);
-      border-top: none;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--amber);
-      letter-spacing: 0.06em;
-      transition: background 0.15s;
-    }
-
-    .reserve-toggle.shown { display: flex; }
-    .reserve-toggle:hover { background: rgba(251,191,36,0.09); }
-
-    .toggle-arrow {
-      display: inline-block;
-      transition: transform 0.22s ease;
-    }
-
-    .toggle-arrow.open { transform: rotate(180deg); }
-
-    #reserve-box .results-box {
-      border-top: 1px solid var(--rim);
-      border-radius: 0;
-    }
-
-    /* empty / error */
-    .msg-box {
-      padding: 32px;
-      text-align: center;
+    .btn {
+      margin-top: 32px;
+      width: 100%;
+      padding: 12px;
+      background: #3b6ef8;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
       font-size: 13px;
-      font-weight: 300;
-      color: var(--text-dim);
-      letter-spacing: 0.06em;
+      cursor: pointer;
     }
 
-    .msg-box.error { color: var(--red); }
-
-    /* VATSIM footer */
-    .vatsim-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      background: rgba(0,0,0,0.2);
-      border: 1px solid var(--rim);
-      border-top: none;
-      border-radius: 0 0 var(--r-lg) var(--r-lg);
-      font-size: 10px;
-      font-weight: 300;
-      color: var(--text-dim);
-      letter-spacing: 0.05em;
+    .updated {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 11px;
+      color: #b0bedd;
     }
 
-    .vatsim-logo {
-      font-family: var(--mono);
-      font-weight: 500;
-      color: var(--accent);
-      font-size: 10px;
-    }
-
-    .vatsim-bar .cached { margin-left: auto; opacity: 0.7; }
-
-    /* info chips */
-    .info-strip {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
-    .info-chip {
-      font-size: 10px;
-      font-weight: 400;
-      padding: 4px 11px;
-      border: 1px solid var(--rim2);
-      border-radius: 100px;
-      color: var(--text-dim);
-      letter-spacing: 0.04em;
-      background: rgba(255,255,255,0.02);
-    }
-
-    @media (max-width: 560px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .form-group.full { grid-column: 1; }
-      #app { padding: 28px 16px 60px; }
-      .results-title { font-size: 10px; }
-      .header-right span:not(.live-dot) { display: none; }
+    /* ✅ FLAG FIX */
+    .flag {
+      width: 18px;
+      height: 12px;
+      object-fit: cover;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 6px;
+      border-radius: 2px;
     }
   </style>
+
 </head>
+
 <body>
-<div id="app">
 
-  <header>
-    <div class="logo-icon">
-      <svg viewBox="0 0 24 24">
-        <path d="M21 16l-7-7-4 4-5-5"/>
-        <polyline points="17 16 21 16 21 12"/>
-      </svg>
-    </div>
-    <div class="logo-wordmark">
-      <span class="logo-name">GND Assist</span>
-      <span class="logo-desc">Ground Operations Reference Tool</span>
-    </div>
-    <div class="header-right">
-      <div class="live-dot"></div>
-      <span>VATSIM Live</span>
-    </div>
-  </header>
+<div class="card">
+  <div class="cid">is nicky on plane game?</div>
+  <hr />
 
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('stands')">Stand Picker</button>
-    <button class="tab-btn" onclick="switchTab('holding')">Holding Point</button>
+  <div class="status-area" id="status-area">
+    <div class="loading">
+      <div class="spinner"></div>
+      Checking status…
+    </div>
   </div>
 
-  <!-- STAND PICKER -->
-  <div class="panel active" id="panel-stands">
-    <div class="card">
-      <div class="info-strip">
-        <span class="info-chip">Airline — 3-char ICAO</span>
-        <span class="info-chip">Aircraft — ICAO type code</span>
-        <span class="info-chip">Airports — 4-char ICAO</span>
-      </div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="s-airline">Airline</label>
-          <input type="text" id="s-airline" maxlength="3" placeholder="RYR" autocomplete="off" oninput="validateField(this,3,3)">
-          <span class="field-hint">e.g. RYR · BAW · EZY</span>
-        </div>
-        <div class="form-group">
-          <label for="s-acft">Aircraft Type</label>
-          <input type="text" id="s-acft" maxlength="4" placeholder="B738" autocomplete="off" oninput="validateAcftField(this)">
-          <span class="field-hint">e.g. B738 · A320 · E190</span>
-        </div>
-        <div class="form-group">
-          <label for="s-adep">Departure Airport</label>
-          <input type="text" id="s-adep" maxlength="4" placeholder="EBCI" autocomplete="off" oninput="validateField(this,4,4)">
-          <span class="field-hint">e.g. EBCI · ELLX</span>
-        </div>
-        <div class="form-group">
-          <label for="s-ades">Destination Airport</label>
-          <input type="text" id="s-ades" maxlength="4" placeholder="EHAM" autocomplete="off" oninput="validateField(this,4,4)">
-          <span class="field-hint">Determines Schengen status</span>
-        </div>
-      </div>
-      <button class="submit-btn" id="stand-btn" onclick="runStandPicker()">Find Stands</button>
-      <div class="loading-bar" id="stand-loading"></div>
-      <div class="loading-msg" id="stand-loading-msg">Loading airport data...</div>
-    </div>
-    <div id="stand-results-area"></div>
-  </div>
+<button class="btn" onclick="checkStatus()">Refresh</button>
 
-  <!-- HOLDING POINT -->
-  <div class="panel" id="panel-holding">
-    <div class="card">
-      <div class="info-strip">
-        <span class="info-chip">Aircraft — ICAO type code</span>
-        <span class="info-chip">Runway — without leading zero</span>
-      </div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="h-acft">Aircraft Type</label>
-          <input type="text" id="h-acft" maxlength="4" placeholder="B738" autocomplete="off" oninput="validateAcftField(this)">
-          <span class="field-hint">e.g. B738 · A320 · E190</span>
-        </div>
-        <div class="form-group">
-          <label for="h-adep">Departure Airport</label>
-          <input type="text" id="h-adep" maxlength="4" placeholder="EBCI" autocomplete="off" oninput="validateField(this,4,4)">
-          <span class="field-hint">e.g. EBCI · ELLX</span>
-        </div>
-        <div class="form-group">
-          <label for="h-runway">Assigned Runway</label>
-          <input type="text" id="h-runway" maxlength="3" placeholder="24" autocomplete="off">
-          <span class="field-hint">e.g. 06 · 24 · 18R</span>
-        </div>
-        <div class="form-group">
-          <label for="h-stand">Parked Stand</label>
-          <input type="text" id="h-stand" maxlength="6" placeholder="52" autocomplete="off">
-          <span class="field-hint">Current parking position</span>
-        </div>
-      </div>
-      <button class="submit-btn" id="hp-btn" onclick="runHoldingPoint()">Find Holding Points</button>
-      <div class="loading-bar" id="hp-loading"></div>
-    </div>
-    <div id="hp-results-area"></div>
-  </div>
-
+  <div class="updated" id="updated"></div>
 </div>
+
 <script>
-const VALID_ACFT = new Set([
-  'bsc1','bsc3','a318','a319','a320','a321','a19n','a20n','a21n',
-  'a332','a333','a338','a339','a359','a35k','a388',
-  'b733','b734','b735','b736','b737','b738','b739','b37m','b38m','b39m','b3xm',
-  'b742','b744','b748','b763','b764','b772','b773','b77l','b77w','b788','b789','b78x',
-  'crj9','crjx','e170','e175','e190','e195','e290','e295',
-]);
+const CID = 1778154;
+const API = 'https://data.vatsim.net/v3/vatsim-data.json';
 
-const TYPE_MAP = {
-  bsc1:'a220',bsc3:'a220',
-  a318:'a320',a319:'a320',a320:'a320',a321:'a320',a19n:'a320',a20n:'a320',a21n:'a320',
-  a332:'a330',a333:'a330',a338:'a330',a339:'a330',
-  a359:'a350',a35k:'a350',a388:'a388',
-  b733:'b737',b734:'b737',b735:'b737',b736:'b737',b737:'b737',
-  b738:'b737',b739:'b737',b37m:'b737',b38m:'b737',b39m:'b737',b3xm:'b737',
-  b742:'b747',b744:'b747',b748:'b747',
-  b763:'b767',b764:'b767',
-  b772:'b777',b773:'b777',b77l:'b777',b77w:'b777',
-  b788:'b787',b789:'b787',b78x:'b787',
-  crj9:'crjs',crjx:'crjs',
-  e170:'ejet',e175:'ejet',e190:'ejet',e195:'ejet',e290:'ejet',e295:'ejet',
-};
-
-const AIRLINE_ALIASES = {
-  eju:'ezy',ezs:'ezy',ruk:'ryr',
-  tom:'tui',tfl:'tui',jaf:'tui',blx:'tui',
-  efw:'baw',cfe:'baw',nsz:'noz',mac:'aby',
-};
-
-let schengenData=null, vatsimCache=null, vatsimFetchTs=0;
-const VATSIM_TTL = 5*60*1000;
-
-async function loadSchengen() {
-  if (schengenData) return schengenData;
-  schengenData = await (await fetch('references/schengen.json')).json();
-  return schengenData;
-}
-
-async function loadAirport(icao) {
-  const r = await fetch(`references/${icao.toLowerCase()}.json`);
-  if (!r.ok) throw new Error(`No data for ${icao.toUpperCase()}`);
-  return r.json();
-}
-
-async function loadVatsim() {
-  const now = Date.now();
-  if (vatsimCache && (now - vatsimFetchTs) < VATSIM_TTL) return vatsimCache;
-  vatsimCache = await (await fetch('https://data.vatsim.net/v3/vatsim-data.json')).json();
-  vatsimFetchTs = now;
-  return vatsimCache;
-}
-
-function haversine(lat1,lon1,lat2,lon2) {
-  const R=6371000, phi1=lat1*Math.PI/180, phi2=lat2*Math.PI/180;
-  const dphi=(lat2-lat1)*Math.PI/180, dl=(lon2-lon1)*Math.PI/180;
-  const a=Math.sin(dphi/2)**2+Math.cos(phi1)*Math.cos(phi2)*Math.sin(dl/2)**2;
-  return 2*R*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-}
-
-function checkOccupied(coords, vatsimData) {
-  if (!coords||!vatsimData) return false;
-  const [lat,lon]=coords.split(',').map(s=>parseFloat(s.trim()));
-  for (const p of vatsimData.pilots||[]) {
-    if (p.latitude==null||p.longitude==null||p.groundspeed>=10) continue;
-    if (haversine(lat,lon,p.latitude,p.longitude)<=25) return true;
+/* ✅ FLAG FUNCTION */
+function getFlag(callsign) {
+  if (callsign.startsWith("EL")) {
+    return '<img src="flags/lu.png" class="flag">';
   }
-  return false;
-}
-
-function normaliseAirline(r){ const a=r.toLowerCase().trim(); return AIRLINE_ALIASES[a]||a; }
-function normaliseAcft(r){ const a=r.toLowerCase().trim(); return TYPE_MAP[a]||a; }
-function normaliseRunway(r){ return r.replace(/^0/,'').trim(); }
-
-function validateField(el,min,max){
-  const v=el.value.trim();
-  if(v.length>=min&&v.length<=max){el.classList.add('valid');el.classList.remove('invalid');}
-  else if(v.length>0){el.classList.add('invalid');el.classList.remove('valid');}
-  else{el.classList.remove('valid','invalid');}
-}
-
-function validateAcftField(el){
-  const v=el.value.toLowerCase().trim();
-  if(VALID_ACFT.has(v)){el.classList.add('valid');el.classList.remove('invalid');}
-  else if(v.length>=3){el.classList.add('invalid');el.classList.remove('valid');}
-  else{el.classList.remove('valid','invalid');}
-}
-
-function switchTab(id){
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['stands','holding'][i]===id));
-  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active',['stands','holding'][i]===id));
-}
-
-async function runStandPicker(){
-  const airlineRaw=document.getElementById('s-airline').value.trim();
-  const acftRaw=document.getElementById('s-acft').value.trim();
-  const adepRaw=document.getElementById('s-adep').value.trim();
-  const adesRaw=document.getElementById('s-ades').value.trim();
-  if(!airlineRaw||!acftRaw||!adepRaw||!adesRaw){
-    showResult('stand-results-area','<div class="msg-box error">All fields required.</div>'); return;
+  if (callsign.startsWith("EB")) {
+    return '<img src="flags/be.png" class="flag">';
   }
-  const airline=normaliseAirline(airlineRaw), acft=normaliseAcft(acftRaw), adep=adepRaw.toLowerCase();
-  const btn=document.getElementById('stand-btn'), bar=document.getElementById('stand-loading'), msg=document.getElementById('stand-loading-msg');
-  btn.disabled=true; bar.classList.add('active'); msg.classList.add('active');
-  msg.textContent='Loading airport data...';
-  try {
-    const [schengen,airportData,vatsim]=await Promise.all([
-      loadSchengen(), loadAirport(adep),
-      (msg.textContent='Checking VATSIM occupancy...', loadVatsim()),
-    ]);
-    msg.textContent='Analysing stands...';
-    const isSchengen=schengen.includes(adesRaw.toUpperCase()), mode=isSchengen?'S':'N';
-    const primary=[], reserve=[];
-    for(const [standId,info] of Object.entries(airportData.stands)){
-      const allowed=info.allowed||{};
-      if(!allowed[airline]||!allowed[airline].includes(acft)) continue;
-      if(!(info.schengen||[]).includes(mode)) continue;
-      const occupied=info.coords?checkOccupied(info.coords,vatsim):null;
-      (info.reserve?reserve:primary).push({standId,info,occupied});
-    }
-    primary.sort((a,b)=>a.standId.localeCompare(b.standId,undefined,{numeric:true}));
-    reserve.sort((a,b)=>a.standId.localeCompare(b.standId,undefined,{numeric:true}));
-    renderStandResults(adep,airline,acft,isSchengen,primary,reserve,vatsimFetchTs);
-  } catch(err){
-    showResult('stand-results-area',`<div class="msg-box error">✕ &nbsp;${err.message}</div>`);
-  } finally {
-    btn.disabled=false; bar.classList.remove('active'); msg.classList.remove('active');
-  }
+  return '';
 }
 
-function renderStandResults(adep,airline,acft,isSchengen,primary,reserve,ts){
-  const timeStr=new Date(ts).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-  let html=`
-    <div class="results-header">
-      <span class="results-title">${adep.toUpperCase()} · ${airline.toUpperCase()} · ${acft.toUpperCase()} · ${isSchengen?'Schengen':'Non-Schengen'}</span>
-      <span class="results-count">${primary.length+reserve.length} found</span>
+function timeSince(logonTime) {
+  const s = Math.floor((Date.now() - new Date(logonTime)) / 1000);
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+  return h > 0 ? `${h}h ${m}m` : `${m}m`;
+}
+
+function rows(pairs) {
+  return pairs.map(([k, v]) => `
+    <div class="info-item">
+      <span class="key">${k}</span>
+      <span class="val">${v}</span>
     </div>
-    <div class="results-box" id="stands-box">`;
-  if(!primary.length&&!reserve.length){
-    html+='<div class="msg-box">No stands match these criteria.</div>';
-  } else if(!primary.length){
-    html+='<div class="msg-box">No primary stands available.</div>';
-  } else {
-    html+='<div class="section-label">Primary Stands</div>';
-    for(const {standId,info,occupied} of primary){
-      const badge=occupied?'<span class="stand-badge badge-occupied">Occupied</span>':'<span class="stand-badge badge-free">Free</span>';
-      html+=`<div class="stand-row"><span class="stand-id">${standId}</span>${badge}<span class="stand-coords">${info.coords||''}</span></div>`;
-    }
-  }
-  html+='</div>';
-  if(reserve.length){
-    html+=`<div class="reserve-toggle shown" id="reserve-toggle" onclick="toggleReserve()">
-      <span class="toggle-arrow" id="reserve-arrow">▾</span>
-      Reserve Stands <span style="opacity:0.5;margin-left:4px">(${reserve.length})</span>
-    </div>
-    <div id="reserve-box" style="display:none"><div class="results-box"><div class="section-label">Reserve Stands</div>`;
-    for(const {standId,info,occupied} of reserve){
-      const badge=occupied?'<span class="stand-badge badge-occupied">Occupied</span>':'<span class="stand-badge badge-reserve">Reserve</span>';
-      html+=`<div class="stand-row"><span class="stand-id">${standId}</span>${badge}<span class="stand-coords">${info.coords||''}</span></div>`;
-    }
-    html+='</div></div>';
-  }
-  html+=`<div class="vatsim-bar"><span class="vatsim-logo">VATSIM</span> Occupancy data live from VATSIM network <span class="cached">Checked: ${timeStr}</span></div>`;
-  showResult('stand-results-area',html);
+  `).join('');
 }
 
-function toggleReserve(){
-  const box=document.getElementById('reserve-box'), arrow=document.getElementById('reserve-arrow');
-  const open=box.style.display==='none';
-  box.style.display=open?'block':'none';
-  arrow.classList.toggle('open',open);
+function renderOnline(entry, type) {
+  const fp = entry.flight_plan;
+
+  const pairs = type === 'pilot'
+    ? [
+        ['Callsign', `${getFlag(entry.callsign)}${entry.callsign}`],
+        fp ? ['Route', `${fp.departure} → ${fp.arrival}`] : null,
+        fp?.aircraft_short ? ['Aircraft', fp.aircraft_short] : null,
+        ['Altitude', `${Number(entry.altitude).toLocaleString()} ft`],
+        ['Ground speed', `${entry.groundspeed} kt`],
+        ['Online for', timeSince(entry.logon_time)],
+      ].filter(Boolean)
+    : [
+        ['Callsign', `${getFlag(entry.callsign)}${entry.callsign}`],
+        ['Frequency', entry.frequency],
+        ['Online for', timeSince(entry.logon_time)],
+      ];
+
+  return `
+    <div class="pill online">YES HE IS!</div>
+    <div class="status-label">${type === 'pilot' ? 'Flying' : 'Controlling'}</div>
+    <div class="info-list">${rows(pairs)}</div>
+  `;
 }
 
-async function runHoldingPoint(){
-  const acftRaw=document.getElementById('h-acft').value.trim();
-  const adepRaw=document.getElementById('h-adep').value.trim();
-  const runwayRaw=document.getElementById('h-runway').value.trim();
-  const standRaw=document.getElementById('h-stand').value.trim();
-  if(!acftRaw||!adepRaw||!runwayRaw||!standRaw){
-    showResult('hp-results-area','<div class="msg-box error">All fields required.</div>'); return;
-  }
-  const acft=normaliseAcft(acftRaw), adep=adepRaw.toLowerCase();
-  const runway=normaliseRunway(runwayRaw), stand=standRaw.toLowerCase();
-  const btn=document.getElementById('hp-btn'), bar=document.getElementById('hp-loading');
-  btn.disabled=true; bar.classList.add('active');
+function renderOffline() {
+  return `
+    <div class="pill offline">NO HE ISN'T!</div>
+    <div class="status-label" style="color:#8aa0cc;">He's not connected</div>
+  `;
+}
+
+async function checkStatus() {
+  const area = document.getElementById('status-area');
+  area.innerHTML = `<div class="loading"><div class="spinner"></div>Checking...</div>`;
+
   try {
-    const airportData=await loadAirport(adep), matches=[];
-    for(const [hpId,hp] of Object.entries(airportData.holdingPoints||{})){
-      const excluded=Array.isArray(hp.excludeStands)&&hp.excludeStands.includes(stand);
-      const standOk=!excluded&&(hp.stands==='all'||(Array.isArray(hp.stands)&&hp.stands.includes(stand)));
-      if(hp.types.includes(acft)&&standOk&&runway===hp.runway) matches.push({hpId,name:hp.name||null,tora:hp.tora});
-    }
-    renderHpResults(adep,acft,runway,stand,matches);
-  } catch(err){
-    showResult('hp-results-area',`<div class="msg-box error">✕ &nbsp;${err.message}</div>`);
-  } finally { btn.disabled=false; bar.classList.remove('active'); }
-}
+    const res = await fetch(API);
+    const data = await res.json();
 
-function renderHpResults(adep,acft,runway,stand,matches){
-  let html=`<div class="results-header">
-    <span class="results-title">${adep.toUpperCase()} · RWY ${runway} · ${acft.toUpperCase()}</span>
-    <span class="results-count">${matches.length} match${matches.length!==1?'es':''}</span>
-  </div><div class="results-box">`;
-  if(!matches.length){
-    html+='<div class="msg-box">No holding points match these criteria.</div>';
-  } else {
-    for(const {hpId,name,tora} of matches){
-      html+=`<div class="hp-row">
-        <div class="hp-id">${hpId}</div>
-        <div class="hp-divider"></div>
-        <div class="hp-meta"><span class="hp-label">TORA</span><span class="hp-tora">${Number(tora).toLocaleString()}<span class="hp-tora-unit">m</span></span></div>
-      </div>`
-        .replace(`>${hpId}<`, `>${name||hpId}<`);
-    }
+    const pilot = data.pilots.find(p => p.cid === CID);
+    const atc   = data.controllers.find(c => c.cid === CID);
+
+    area.innerHTML = pilot ? renderOnline(pilot, 'pilot')
+                   : atc   ? renderOnline(atc, 'atc')
+                   : renderOffline();
+
+  } catch {
+    area.innerHTML = `<div>Error loading data</div>`;
   }
-  html+='</div>';
-  showResult('hp-results-area',html);
 }
 
-function showResult(id,html){
-  const el=document.getElementById(id);
-  el.innerHTML=html;
-  el.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-
-document.addEventListener('keydown',e=>{
-  if(e.key!=='Enter') return;
-  if(document.getElementById('panel-stands').classList.contains('active')) runStandPicker();
-  else runHoldingPoint();
-});
+checkStatus();
 </script>
+
 </body>
 </html>
