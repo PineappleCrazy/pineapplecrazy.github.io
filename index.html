@@ -146,7 +146,7 @@
 <body>
 
 <div class="card">
-  <div class="cid">is Nickie on plane game?</div>
+  <div class="cid">Is Nickie on plane game?</div>
   <hr />
 
   <div class="status-area" id="status-area">
@@ -221,9 +221,9 @@ function timeSince(logonTime) {
 }
 
 function rows(pairs) {
-  return pairs.map(([k, v]) => `
+  return pairs.map(([k, v, keyStyle]) => `
     <div class="info-item">
-      <span class="key">${k}</span>
+      <span class="${keyStyle ?? 'key'}">${k}</span>
       <span class="val">${v}</span>
     </div>
   `).join('');
@@ -244,7 +244,7 @@ function renderOnline(entry, type) {
         ['Online for', timeSince(entry.logon_time)],
       ].filter(Boolean)
     : [
-        [positionName ?? 'Position', `${getFlag(entry.callsign)}${entry.callsign}`],
+        [positionName ?? 'Position', `${getFlag(entry.callsign)}${entry.callsign}`, positionName ? 'val' : 'key'],
         ['Frequency', entry.frequency],
         ['Online for', timeSince(entry.logon_time)],
       ];
