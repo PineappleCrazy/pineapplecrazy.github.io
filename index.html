@@ -81,6 +81,14 @@
     .pill.online  { background: #2a6e40; color: #ededed; }
     .pill.offline { background: #8b2020; color: #ededed; }
 
+    .pill-box {
+      background: #444444;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
     .position-name {
       font-size: 11px;
       font-weight: 400;
@@ -250,7 +258,7 @@ function renderOnline(entry, type) {
       ];
 
   return `
-    <div class="pill online">YES HE IS!</div>
+    <div class="pill-box"><div class="pill online">YES HE IS!</div></div>
     <div class="status-label">${type === 'pilot' ? 'Flying' : 'Controlling'}</div>
     <div class="info-list">${rows(pairs)}</div>
   `;
@@ -258,7 +266,7 @@ function renderOnline(entry, type) {
 
 function renderOffline() {
   return `
-    <div class="pill offline">NO HE ISN'T!</div>
+    <div class="pill-box"><div class="pill offline">NO HE ISN'T!</div></div>
     <div class="status-label" style="color:#ededed;">He's not connected</div>
   `;
 }
