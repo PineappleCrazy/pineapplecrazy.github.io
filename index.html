@@ -14,16 +14,16 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #f0f4ff;
+      background: #333333;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #1a2a4a;
+      color: #ededed;
     }
 
     .card {
-      background: #fff;
+      background: #707070;
       border-radius: 16px;
       padding: 48px 40px 36px;
       width: min(400px, 92vw);
@@ -38,7 +38,7 @@
 
     hr {
       border: none;
-      border-top: 1px solid #e8eef8;
+      border-top: 1px solid #7a7a7a;
       margin-bottom: 28px;
     }
 
@@ -108,13 +108,13 @@
     }
 
     .key { color: #8aa0cc; }
-    .val { color: #1a2a4a; text-align: right; max-width: 60%; }
+    .val { color: #ededed; text-align: right; max-width: 60%; }
 
     .btn {
       margin-top: 32px;
       width: 100%;
       padding: 12px;
-      background: #3b6ef8;
+      background: #444444;
       color: #fff;
       border: none;
       border-radius: 10px;
@@ -259,7 +259,7 @@ function renderOnline(entry, type) {
 function renderOffline() {
   return `
     <div class="pill offline">NO HE ISN'T!</div>
-    <div class="status-label" style="color:#8aa0cc;">He's not connected</div>
+    <div class="status-label" style="color:#ededed;">He's not connected</div>
   `;
 }
 
