@@ -17,8 +17,11 @@
       background: #333333;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 20px;
+      padding: 40px 0;
       color: #ededed;
       transition: background 0.4s ease;
     }
@@ -144,6 +147,31 @@
       border-radius: 2px;
     }
 
+    /* ── Positions card ── */
+    .positions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .position-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13.5px;
+      padding: 8px 10px;
+      background: rgba(0,0,0,0.15);
+      border-radius: 8px;
+    }
+
+    .position-row .pos-name { color: #ededed; }
+    .position-row .pos-callsign {
+      font-size: 12px;
+      color: #b0bedd;
+      font-family: monospace;
+      letter-spacing: 0.04em;
+    }
+
     /* ── Settings ── */
     .settings-btn {
       position: fixed;
@@ -263,6 +291,7 @@
   </button>
 </div>
 
+<!-- Status card -->
 <div class="card">
   <div class="cid">Is Nickie on plane game?</div>
   <hr />
@@ -277,6 +306,71 @@
   <button class="btn" onclick="checkStatus()">Refresh</button>
 
   <div class="updated" id="updated"></div>
+</div>
+
+<!-- Positions card -->
+<div class="card" style="padding-top: 28px; padding-bottom: 24px;">
+  <div class="cid">Positions I control</div>
+  <hr />
+
+  <div class="positions-list">
+    <div class="position-row">
+      <span class="pos-name">Antwerp Ground</span>
+      <span class="pos-callsign">EBAW_GND</span>
+    </div>
+    <div class="position-row">
+      <span class="pos-name">Antwerp Tower</span>
+      <span class="pos-callsign">EBAW_TWR</span>
+    </div>
+    <div class="position-row">
+      <span class="pos-name">Brussels Delivery</span>
+      <span class="pos-callsign">EBBR_DEL</span>
+    </div>
+    <div class="position-row">
+      <span class="pos-name">Brussels Ground</span>
+      <span class="pos-callsign">EBBR_GND</span>
+    </div>
+    <div class="position-row">
+      <span class="pos-name">Brussels Tower</span>
+      <span class="pos-callsign">EBBR_TWR</span>
+    </div>
+    <div class="position-row">
+      <span class="pos-name">Charleroi Ground</span>
+      <span class="pos-callsign">EBCI_GND</span>
+    </div>
+    <div class="position-row">
+      <span class="pos-name">Charleroi Tower</span>
+      <span class="pos-callsign">EBCI_TWR</span>
+    </div>
+    <div class="position-row">
+      <span class="pos-name">Kortrijk Information</span>
+      <span class="pos-callsign">EBKT_I_TWR</span>
+    </div>
+    <div class="position-row">
+      <span class="pos-name">Liège Ground</span>
+      <span class="pos-callsign">EBLG_GND</span>
+    </div>
+    <div class="position-row">
+      <span class="pos-name">Liège Tower</span>
+      <span class="pos-callsign">EBLG_TWR</span>
+    </div>
+    <div class="position-row">
+      <span class="pos-name">Ostend Ground</span>
+      <span class="pos-callsign">EBOS_GND</span>
+    </div>
+    <div class="position-row">
+      <span class="pos-name">Ootend Tower</span>
+      <span class="pos-callsign">EBOS_TWR</span>
+    </div>
+    <div class="position-row">
+      <span class="pos-name">Luxembourg Delivery</span>
+      <span class="pos-callsign">ELLX_DEL</span>
+    </div>
+    <div class="position-row">
+      <span class="pos-name">Luxembourg Tower</span>
+      <span class="pos-callsign">ELLX_TWR</span>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -405,7 +499,6 @@ document.addEventListener('click', (e) => {
 });
 
 function randomDarkColor() {
-  // HSL with low lightness (18–38%) and muted saturation (10–45%)
   const h = Math.floor(Math.random() * 360);
   const s = Math.floor(Math.random() * 35) + 10;
   const l = Math.floor(Math.random() * 20) + 18;
