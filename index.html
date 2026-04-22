@@ -286,41 +286,6 @@ async function checkStatus() {
 }
 
 checkStatus();
-</script>
-  <!-- Button -->
-<button id="randomColorBtn">Ethan's autism satisfaction</button>
-
-<style>
-  #randomColorBtn {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 15px 30px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    background-color: #3498db;
-    color: white;
-    transition: background-color 0.3s ease;
-  }
-</style>
-
-<script>
-  function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
-
-  document.getElementById("randomColorBtn").onclick = function () {
-    this.style.backgroundColor = getRandomColor();
-  };
-</script>
 
 </body>
 </html>
