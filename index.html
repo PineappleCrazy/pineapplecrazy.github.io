@@ -20,6 +20,7 @@
       align-items: center;
       justify-content: center;
       color: #ededed;
+      transition: background 0.4s ease;
     }
 
     .card {
@@ -122,7 +123,9 @@
       border-radius: 10px;
       font-size: 13px;
       cursor: pointer;
+      transition: background 0.2s;
     }
+    .btn:hover { background: #555555; }
 
     .updated {
       margin-top: 14px;
@@ -131,7 +134,6 @@
       color: #b0bedd;
     }
 
-    /* ✅ FLAG FIX */
     .flag {
       width: 18px;
       height: 12px;
@@ -141,11 +143,125 @@
       margin-right: 6px;
       border-radius: 2px;
     }
+
+    /* ── Settings ── */
+    .settings-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      transition: background 0.2s, transform 0.3s ease;
+      z-index: 100;
+    }
+    .settings-btn:hover { background: rgba(255,255,255,0.14); }
+    .settings-btn.open { transform: rotate(60deg); }
+
+    .settings-btn svg {
+      width: 17px;
+      height: 17px;
+      fill: #cccccc;
+    }
+
+    .settings-panel {
+      position: fixed;
+      top: 60px;
+      right: 16px;
+      width: 200px;
+      background: #2a2a2a;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px;
+      padding: 16px;
+      z-index: 99;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+
+      opacity: 0;
+      transform: translateY(-8px) scale(0.97);
+      pointer-events: none;
+      transform-origin: top right;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .settings-panel.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: all;
+    }
+
+    .settings-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: #888;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .settings-action {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 12.5px;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      text-align: left;
+      color: #ededed;
+      transition: background 0.15s;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .settings-action:last-child { margin-bottom: 0; }
+
+    .settings-action.randomise { background: #3a3a3a; }
+    .settings-action.randomise:hover { background: #484848; }
+
+    .settings-action.revert { background: #2e2e2e; }
+    .settings-action.revert:hover { background: #3a3a3a; }
+
+    .swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      background: #333333;
+      border: 1px solid rgba(255,255,255,0.15);
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
   </style>
 
 </head>
 
 <body>
+
+<!-- Settings toggle -->
+<button class="settings-btn" id="settings-btn" onclick="toggleSettings()" title="Settings">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.92c.04-.34.07-.69.07-1.08s-.03-.74-.07-1.08l2.32-1.82c.21-.16.27-.45.13-.68l-2.2-3.81c-.13-.23-.42-.31-.65-.23l-2.74 1.1c-.57-.43-1.18-.79-1.85-1.06L14 2.42c-.04-.26-.27-.42-.5-.42h-4c-.23 0-.46.16-.5.42l-.44 2.9c-.67.27-1.28.63-1.85 1.06L4.01 5.38c-.23-.08-.52 0-.65.23L1.16 9.42c-.14.23-.08.52.13.68l2.32 1.82c-.04.34-.07.7-.07 1.08s.03.74.07 1.08L1.29 15.9c-.21.16-.27.45-.13.68l2.2 3.81c.13.23.42.31.65.23l2.74-1.1c.57.43 1.18.79 1.85 1.06l.44 2.9c.04.26.27.42.5.42h4c.23 0 .46-.16.5-.42l.44-2.9c.67-.27 1.28-.63 1.85-1.06l2.74 1.1c.23.08.52 0 .65-.23l2.2-3.81c.14-.23.08-.52-.13-.68l-2.32-1.82z"/>
+  </svg>
+</button>
+
+<!-- Settings panel -->
+<div class="settings-panel" id="settings-panel">
+  <div class="settings-label">Background</div>
+  <button class="settings-action randomise" onclick="randomiseBg()">
+    <span class="swatch" id="swatch"></span>
+    Random colour
+  </button>
+  <button class="settings-action revert" onclick="revertBg()">
+    <span style="font-size:13px">↩</span>
+    Revert to default
+  </button>
+</div>
 
 <div class="card">
   <div class="cid">Is Nickie on plane game?</div>
@@ -158,7 +274,7 @@
     </div>
   </div>
 
-<button class="btn" onclick="checkStatus()">Refresh</button>
+  <button class="btn" onclick="checkStatus()">Refresh</button>
 
   <div class="updated" id="updated"></div>
 </div>
@@ -166,13 +282,12 @@
 <script>
 const CID = 1778154;
 const API = 'https://data.vatsim.net/v3/vatsim-data.json';
+const DEFAULT_BG = '#333333';
 
 const POSITION_NAMES = {
   "EBKT_I_TWR":  "Kortrijk Information",
-
   "EBAW_GND": "Antwerpen Ground",
   "EBAW_TWR": "Antwerpen Tower",
-
   "EBBR_DEL": "Brussels Delivery",
   "EBBR_GND": "Brussels Ground",
   "EBBR_C_GND": "Brussels Ground",
@@ -182,19 +297,15 @@ const POSITION_NAMES = {
   "EBBR_APP": "Brussels Arrival",
   "EBBR_DEP": "Brussels Departure",
   "EBBR_F_APP": "Brussels Approach",
-
   "EBCI_GND": "Charleroi Ground",
   "EBCI_TWR": "Charleroi Tower",
   "EBCI_APP": "Charleroi Approach",
-
   "EBLG_GND": "Liège Ground",
   "EBLG_TWR": "Liège Tower",
   "EBLG_APP": "Liège Approach",
-
   "EBOS_GND": "Oostende Ground",
   "EBOS_TWR": "Oostende Tower",
   "EBOS_APP": "Oostende Approach",
-
   "ELLX_DEL": "Luxembourg Delivery",
   "ELLX_TWR": "Luxembourg Tower",
   "ELLX_APP": "Luxembourg Radar",
@@ -205,14 +316,9 @@ function getPositionName(callsign) {
   return POSITION_NAMES[callsign] ?? null;
 }
 
-/* ✅ FLAG FUNCTION */
 function getFlag(callsign) {
-  if (callsign.startsWith("EL")) {
-    return '<img src="flags/lu.png" class="flag">';
-  }
-  if (callsign.startsWith("EB")) {
-    return '<img src="flags/be.png" class="flag">';
-  }
+  if (callsign.startsWith("EL")) return '<img src="flags/lu.png" class="flag">';
+  if (callsign.startsWith("EB")) return '<img src="flags/be.png" class="flag">';
   return '';
 }
 
@@ -233,9 +339,7 @@ function rows(pairs) {
 
 function renderOnline(entry, type) {
   const fp = entry.flight_plan;
-
   const positionName = type === 'atc' ? getPositionName(entry.callsign) : null;
-
   const pairs = type === 'pilot'
     ? [
         ['Position', `${getFlag(entry.callsign)}${entry.callsign}`],
@@ -250,7 +354,6 @@ function renderOnline(entry, type) {
         ['Frequency', entry.frequency],
         ['Online for', timeSince(entry.logon_time)],
       ];
-
   return `
     <div class="pill online">YES HE IS!</div>
     <div class="status-label">${type === 'pilot' ? 'Flying' : 'Controlling'}</div>
@@ -268,22 +371,70 @@ function renderOffline() {
 async function checkStatus() {
   const area = document.getElementById('status-area');
   area.innerHTML = `<div class="loading"><div class="spinner"></div>Checking...</div>`;
-
   try {
     const res = await fetch(API);
     const data = await res.json();
-
     const pilot = data.pilots.find(p => p.cid === CID);
     const atc   = data.controllers.find(c => c.cid === CID);
-
     area.innerHTML = pilot ? renderOnline(pilot, 'pilot')
                    : atc   ? renderOnline(atc, 'atc')
                    : renderOffline();
-
   } catch {
     area.innerHTML = `<div>Error loading data</div>`;
   }
 }
+
+// ── Settings logic ──────────────────────────────────────────
+
+let panelOpen = false;
+
+function toggleSettings() {
+  panelOpen = !panelOpen;
+  document.getElementById('settings-panel').classList.toggle('visible', panelOpen);
+  document.getElementById('settings-btn').classList.toggle('open', panelOpen);
+}
+
+// Close panel when clicking outside
+document.addEventListener('click', (e) => {
+  if (panelOpen &&
+      !e.target.closest('#settings-panel') &&
+      !e.target.closest('#settings-btn')) {
+    panelOpen = false;
+    document.getElementById('settings-panel').classList.remove('visible');
+    document.getElementById('settings-btn').classList.remove('open');
+  }
+});
+
+function randomDarkColor() {
+  // HSL with low lightness (18–38%) and muted saturation (10–45%)
+  const h = Math.floor(Math.random() * 360);
+  const s = Math.floor(Math.random() * 35) + 10;
+  const l = Math.floor(Math.random() * 20) + 18;
+  return hslToHex(h, s, l);
+}
+
+function hslToHex(h, s, l) {
+  s /= 100; l /= 100;
+  const a = s * Math.min(l, 1 - l);
+  const f = n => {
+    const k = (n + h / 30) % 12;
+    const c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+    return Math.round(255 * c).toString(16).padStart(2, '0');
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+function randomiseBg() {
+  const colour = randomDarkColor();
+  document.body.style.background = colour;
+  document.getElementById('swatch').style.background = colour;
+}
+
+function revertBg() {
+  document.body.style.background = DEFAULT_BG;
+  document.getElementById('swatch').style.background = DEFAULT_BG;
+}
+
 checkStatus();
 </script>
 </body>
