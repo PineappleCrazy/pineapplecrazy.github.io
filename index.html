@@ -14,7 +14,9 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #333333;
+      background:
+        linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.72)),
+        url('image.png') center/cover no-repeat fixed;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -395,7 +397,7 @@
 <script>
 const CID = 1778154;
 const API = 'https://data.vatsim.net/v3/vatsim-data.json';
-const DEFAULT_BG = '#333333';
+const DEFAULT_BG = "linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.72)), url('image.png') center/cover no-repeat fixed";
 
 const POSITION_NAMES = {
   "EBKT_I_TWR":  "Kortrijk Information",
