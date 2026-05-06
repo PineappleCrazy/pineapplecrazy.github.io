@@ -194,6 +194,39 @@
       white-space: nowrap;
     }
 
+    /* ── Sort toggle ── */
+    .positions-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0;
+    }
+
+    .sort-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 7px;
+      color: #b0bedd;
+      font-size: 11px;
+      font-family: 'Inter', sans-serif;
+      padding: 4px 9px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .sort-btn:hover { background: rgba(255,255,255,0.12); color: #ededed; }
+    .sort-btn.active { background: #1e5c35; border-color: #2e7a49; color: #c8f0d8; }
+
+    .sort-btn svg {
+      width: 11px;
+      height: 11px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+
     /* ── Settings ── */
     .settings-btn {
       position: fixed;
@@ -332,67 +365,17 @@
 
 <!-- Positions card -->
 <div class="card" style="padding-top: 28px; padding-bottom: 24px;">
-  <div class="cid">Where will you find me?</div>
-  <hr />
-
-  <div class="positions-list">
-    <div class="position-row">
-      <span class="pos-name">Antwerp Ground</span>
-      <div class="pos-right"><span class="pos-hours">4h</span><span class="pos-callsign">EBAW_GND</span></div>
-    </div>
-    <div class="position-row">
-      <span class="pos-name">Antwerp Tower</span>
-      <div class="pos-right"><span class="pos-hours">52h</span><span class="pos-callsign">EBAW_TWR</span></div>
-    </div>
-    <div class="position-row">
-      <span class="pos-name">Brussels Delivery</span>
-      <div class="pos-right"><span class="pos-hours">37h</span><span class="pos-callsign">EBBR_DEL</span></div>
-    </div>
-    <div class="position-row">
-      <span class="pos-name">Brussels Ground</span>
-      <div class="pos-right"><span class="pos-hours">213h</span><span class="pos-callsign">EBBR_GND</span></div>
-    </div>
-    <div class="position-row">
-      <span class="pos-name">Brussels Tower</span>
-      <div class="pos-right"><span class="pos-hours">74h</span><span class="pos-callsign">EBBR_TWR</span></div>
-    </div>
-    <div class="position-row">
-      <span class="pos-name">Charleroi Ground</span>
-      <div class="pos-right"><span class="pos-hours">44h</span><span class="pos-callsign">EBCI_GND</span></div>
-    </div>
-    <div class="position-row">
-      <span class="pos-name">Charleroi Tower</span>
-      <div class="pos-right"><span class="pos-hours">120h</span><span class="pos-callsign">EBCI_TWR</span></div>
-    </div>
-    <div class="position-row">
-      <span class="pos-name">Kortrijk Information</span>
-      <div class="pos-right"><span class="pos-hours">68h</span><span class="pos-callsign">EBKT_I_TWR</span></div>
-    </div>
-    <div class="position-row">
-      <span class="pos-name">Liège Ground</span>
-      <div class="pos-right"><span class="pos-hours">14h</span><span class="pos-callsign">EBLG_GND</span></div>
-    </div>
-    <div class="position-row">
-      <span class="pos-name">Liège Tower</span>
-      <div class="pos-right"><span class="pos-hours">53h</span><span class="pos-callsign">EBLG_TWR</span></div>
-    </div>
-    <div class="position-row">
-      <span class="pos-name">Ostend Ground</span>
-      <div class="pos-right"><span class="pos-hours">11h</span><span class="pos-callsign">EBOS_GND</span></div>
-    </div>
-    <div class="position-row">
-      <span class="pos-name">Ostend Tower</span>
-      <div class="pos-right"><span class="pos-hours">62h</span><span class="pos-callsign">EBOS_TWR</span></div>
-    </div>
-    <div class="position-row">
-      <span class="pos-name">Luxembourg Delivery</span>
-      <div class="pos-right"><span class="pos-hours">14h</span><span class="pos-callsign">ELLX_DEL</span></div>
-    </div>
-    <div class="position-row">
-      <span class="pos-name">Luxembourg Tower</span>
-      <div class="pos-right"><span class="pos-hours">169h</span><span class="pos-callsign">ELLX_TWR</span></div>
-    </div>
+  <div class="positions-header">
+    <div class="cid" style="margin-bottom:0">Where will you find me?</div>
+    <button class="sort-btn" id="sort-btn" onclick="toggleSort()" title="Toggle sort order">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 18h6v-2H3v2zm0-5h12v-2H3v2zm0-7v2h18V6H3z"/>
+      </svg>
+      By hours
+    </button>
   </div>
+  <hr style="margin-top:18px;" />
+  <div class="positions-list" id="positions-list"></div>
 </div>
 
 <script>
@@ -549,6 +532,59 @@ function revertBg() {
   document.getElementById('swatch').style.background = DEFAULT_BG;
 }
 
+// ── Positions list ──────────────────────────────────────────
+
+const POSITIONS = [
+  { name: 'Antwerp Ground',      callsign: 'EBAW_GND',   hours: 4   },
+  { name: 'Antwerp Tower',       callsign: 'EBAW_TWR',   hours: 52  },
+  { name: 'Brussels Delivery',   callsign: 'EBBR_DEL',   hours: 37  },
+  { name: 'Brussels Ground',     callsign: 'EBBR_GND',   hours: 213 },
+  { name: 'Brussels Tower',      callsign: 'EBBR_TWR',   hours: 74  },
+  { name: 'Charleroi Ground',    callsign: 'EBCI_GND',   hours: 44  },
+  { name: 'Charleroi Tower',     callsign: 'EBCI_TWR',   hours: 120 },
+  { name: 'Kortrijk Information',callsign: 'EBKT_I_TWR', hours: 68  },
+  { name: 'Liège Ground',        callsign: 'EBLG_GND',   hours: 14  },
+  { name: 'Liège Tower',         callsign: 'EBLG_TWR',   hours: 53  },
+  { name: 'Ostend Ground',       callsign: 'EBOS_GND',   hours: 11  },
+  { name: 'Ostend Tower',        callsign: 'EBOS_TWR',   hours: 62  },
+  { name: 'Luxembourg Delivery', callsign: 'ELLX_DEL',   hours: 14  },
+  { name: 'Luxembourg Tower',    callsign: 'ELLX_TWR',   hours: 169 },
+];
+
+let sortByHours = false;
+
+function renderPositions() {
+  const list = sortByHours
+    ? [...POSITIONS].sort((a, b) => b.hours - a.hours)
+    : POSITIONS;
+
+  document.getElementById('positions-list').innerHTML = list.map((p, i) => `
+    <div class="position-row" style="transition: opacity 0.2s; animation: fadeRow 0.18s ease both; animation-delay: ${i * 18}ms">
+      <span class="pos-name">${p.name}</span>
+      <div class="pos-right">
+        <span class="pos-hours">${p.hours}h</span>
+        <span class="pos-callsign">${p.callsign}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleSort() {
+  sortByHours = !sortByHours;
+  const btn = document.getElementById('sort-btn');
+  btn.classList.toggle('active', sortByHours);
+  btn.innerHTML = sortByHours
+    ? `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 18h6v-2H3v2zm0-5h12v-2H3v2zm0-7v2h18V6H3z"/></svg> Default`
+    : `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 18h6v-2H3v2zm0-5h12v-2H3v2zm0-7v2h18V6H3z"/></svg> By hours`;
+  renderPositions();
+}
+
+// Inject fade-in keyframe once
+const styleEl = document.createElement('style');
+styleEl.textContent = `@keyframes fadeRow { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }`;
+document.head.appendChild(styleEl);
+
+renderPositions();
 checkStatus();
 </script>
 </body>
