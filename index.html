@@ -501,10 +501,10 @@ function renderOffline() {
       const { time, callsign, type } = JSON.parse(raw);
       const posName = getPositionName(callsign);
       const label = type === 'pilot' ? `flying as ${callsign}` : `controlling ${posName ?? callsign}`;
-      const dateStr = new Date(time).toLocaleString('en-GB', { weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+      const dateStr = new Date(time).toLocaleString('en-GB', { day:'numeric', month:'numeric', hour:'2-digit', minute:'2-digit' });
       lastSeenHtml = `
         <div class="last-seen">
-          Last seen <strong>${timeSinceDetailed(time)} ago</strong> — ${label}
+          Last seen <strong>${timeSinceDetailed(time)} ago</strong> ${label}
           <div class="last-seen-sub">${dateStr}</div>
         </div>`;
     }
