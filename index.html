@@ -140,6 +140,28 @@
       color: #b0bedd;
     }
 
+    .last-seen {
+      margin-top: 16px;
+      padding: 10px 14px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 9px;
+      font-size: 12.5px;
+      color: #b0bedd;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .last-seen strong {
+      color: #ededed;
+      font-weight: 500;
+    }
+
+    .last-seen .last-seen-sub {
+      font-size: 11px;
+      color: #8a9abf;
+      margin-top: 3px;
+    }
+
     .flag {
       width: 18px;
       height: 12px;
@@ -460,10 +482,46 @@ function renderOnline(entry, type) {
   `;
 }
 
+function timeSinceDetailed(ts) {
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if (s < 60) return `${s}s`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m`;
+  const h = Math.floor(m / 60), rm = m % 60;
+  if (h < 24) return rm > 0 ? `${h}h ${rm}m` : `${h}h`;
+  const d = Math.floor(h / 24), rh = h % 24;
+  return rh > 0 ? `${d}d ${rh}h` : `${d}d`;
+}
+
 function renderOffline() {
+  let lastSeenHtml = '';
+  try {
+    const raw = localStorage.getItem('nickieLastSeen');
+    if (raw) {
+      const { time, callsign, type } = JSON.parse(raw);
+      const posName = getPositionName(callsign);
+      const label = type === 'pilot' ? `flying as ${callsign}` : `controlling ${posName ?? callsign}`;
+      const dateStr = new Date(time).toLocaleString('en-GB', { weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+      lastSeenHtml = `
+        <div class="last-seen">
+          Last seen <strong>${timeSinceDetailed(time)} ago</strong> — ${label}
+          <div class="last-seen-sub">${dateStr}</div>
+        </div>`;
+    }
+  } catch {}
   return `
     <div class="pill offline">NO HE ISN'T!</div>
+    ${lastSeenHtml}
   `;
+}
+
+// ── Auto-refresh ────────────────────────────────────────────
+let refreshTimeout = null;
+
+function scheduleNextRefresh() {
+  clearTimeout(refreshTimeout);
+  const delay = Math.floor(Math.random() * 60000) + 120000; // 2–3 mins
+  refreshTimeout = setTimeout(() => checkStatus(), delay);
 }
 
 async function checkStatus() {
@@ -474,12 +532,25 @@ async function checkStatus() {
     const data = await res.json();
     const pilot = data.pilots.find(p => p.cid === CID);
     const atc   = data.controllers.find(c => c.cid === CID);
+    if (pilot || atc) {
+      const entry = pilot ?? atc;
+      try {
+        localStorage.setItem('nickieLastSeen', JSON.stringify({
+          time: Date.now(),
+          callsign: entry.callsign,
+          type: pilot ? 'pilot' : 'atc'
+        }));
+      } catch {}
+    }
     area.innerHTML = pilot ? renderOnline(pilot, 'pilot')
                    : atc   ? renderOnline(atc, 'atc')
                    : renderOffline();
   } catch {
     area.innerHTML = `<div>Error loading data</div>`;
   }
+  const checkedAt = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  document.getElementById('updated').textContent = `Last refresh: ${checkedAt}`;
+  scheduleNextRefresh();
 }
 
 // ── Settings logic ──────────────────────────────────────────
