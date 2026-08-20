@@ -393,6 +393,10 @@
     return icao.startsWith("ELLX") || icao.toUpperCase().includes("LUX");
   }
 
+  const CODE_OVERRIDES = {
+    "EBKT_I_TWR": "AFIS"
+  };
+
   async function loadData(){
     const statusEl = document.getElementById('board-status');
     try{
@@ -486,7 +490,7 @@
 
       const rowsHtml = f.positions.map(p => `
         <div class="pos-row">
-          <span class="code">${p.pos.replace(f.icao + "_","")}</span>
+          <span class="code">${CODE_OVERRIDES[p.pos] || p.pos.replace(f.icao + "_","")}</span>
           <span class="label">${titleCase(p.name)}</span>
           <span class="hrs">${p.hours} h</span>
           <span class="pct">${p.perc}</span>
