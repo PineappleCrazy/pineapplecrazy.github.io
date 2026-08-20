@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>On Frequency — ATC Experience</title>
+<title>Nick's Control</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -343,9 +343,9 @@
 <body>
 
 <section class="hero">
-  <div class="hero-eyebrow"><span>&#9679;</span> Virtual air traffic control &mdash; Belgium / Luxembourg FIR</div>
+  <div class="hero-eyebrow"><span>&#9679;</span> MY YEARS IN EUROPEAN AIRSPACE, PUT INTO NUMBERS</div>
   <h1 id="hero-hours">&hellip; hours<br>on frequency.</h1>
-  <p class="hero-sub">A working log of every position I've controlled across Belgian and Luxembourg airspace &mdash; from ground and delivery to approach and radar.</p>
+  <p class="hero-sub">A working log of all my control throughout European airspace, from the most obscure AFIS to the most complex TMA position.</p>
   <div class="hero-strip" id="hero-strip"></div>
   <div class="hero-legend" id="hero-legend"></div>
   <div class="scroll-cue">Scroll</div>
@@ -364,8 +364,7 @@
 <div class="totals" id="totals"></div>
 
 <footer>
-  <p>ON FREQUENCY &mdash; ATC LOG</p>
-  <p>BELGIUM &middot; LUXEMBOURG FIR</p>
+  <p>NICK WRIDE</p>
 </footer>
 
 <script>
@@ -472,7 +471,7 @@
     const sub = document.getElementById('facility-sub');
     sub.textContent = facilities.length + " facilities, " +
       facilities.reduce((n,f)=>n+f.positions.length,0) +
-      " positions. Each strip below is a station I've worked, pulled live from the log.";
+      " positions.";
 
     facilities.forEach((f, i) => {
       const lux = isLux(f.icao);
