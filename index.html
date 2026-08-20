@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nick's Control</title>
+<title>On Frequency — ATC Experience</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -40,6 +40,26 @@
     padding:8vh 8vw;
     position:relative;
     border-bottom:1px solid var(--line);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:url('radar-bg.png') center 40%/cover no-repeat;
+    opacity:0.16;
+    z-index:0;
+  }
+  .hero::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg, transparent 0%, transparent 55%, var(--bg) 100%);
+    z-index:0;
+  }
+  .hero > *{
+    position:relative;
+    z-index:1;
   }
   .hero-eyebrow{
     font-family:'IBM Plex Mono',monospace;
@@ -71,6 +91,7 @@
     max-width:640px;
     height:34px;
     border:1px solid var(--line);
+    background:var(--panel-alt);
   }
   .hero-strip div{
     height:100%;
@@ -80,13 +101,14 @@
     font-family:'IBM Plex Mono',monospace;
     font-size:12px;
     letter-spacing:0.05em;
+    transition:width 0.6s ease;
   }
-  .strip-be{ background:var(--green-dim); color:#cfe6da; width:79.24%; }
-  .strip-lu{ background:var(--amber-dim); color:#f0dcc0; width:20.76%; }
+  .strip-seg{ color:#cfe6da; }
   .hero-legend{
     margin-top:0.9rem;
     display:flex;
     gap:2rem;
+    flex-wrap:wrap;
     font-family:'IBM Plex Mono',monospace;
     font-size:12px;
     color:var(--text-dim);
@@ -94,8 +116,6 @@
   .hero-legend .dot{
     display:inline-block;width:8px;height:8px;margin-right:6px;border-radius:1px;
   }
-  .dot-be{background:var(--green);}
-  .dot-lu{background:var(--amber);}
   .scroll-cue{
     position:absolute;
     bottom:6vh;
@@ -153,7 +173,15 @@
     display:flex;
     flex-direction:column;
     gap:1.1rem;
+    min-height:120px;
   }
+  .board-status{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    color:var(--text-faint);
+    padding:1rem 0;
+  }
+  .board-status.error{ color:var(--amber); }
   .strip-card{
     background:var(--panel);
     border:1px solid var(--line);
@@ -315,184 +343,198 @@
 <body>
 
 <section class="hero">
-  <div class="hero-eyebrow"><span>&#9679;</span> MY YEARS OF EUROPEAN SKIES, IN NUMBERS</div>
-  <h1>1,344 hours<br>on frequency.</h1>
-  <p class="hero-sub">A working log of my control across European airspace, from the smallest of AFISO to the largest TMA positions.</p>
-  <div class="hero-strip">
-    <div class="strip-be">BELGIUM</div>
-    <div class="strip-lu">LUX</div>
-  </div>
-  <div class="hero-legend">
-    <span><span class="dot dot-be"></span>Belgium &mdash; 1,065 h &middot; 79.24%</span>
-    <span><span class="dot dot-lu"></span>Luxembourg &mdash; 279 h &middot; 20.76%</span>
-  </div>
+  <div class="hero-eyebrow"><span>&#9679;</span> Virtual air traffic control &mdash; Belgium / Luxembourg FIR</div>
+  <h1 id="hero-hours">&hellip; hours<br>on frequency.</h1>
+  <p class="hero-sub">A working log of every position I've controlled across Belgian and Luxembourg airspace &mdash; from ground and delivery to approach and radar.</p>
+  <div class="hero-strip" id="hero-strip"></div>
+  <div class="hero-legend" id="hero-legend"></div>
   <div class="scroll-cue">Scroll</div>
 </section>
 
 <section class="section-head">
   <div class="kicker">Facility log</div>
   <h2>Where I control.</h2>
-  <p>Seven facilities, nineteen positions.</p>
+  <p id="facility-sub">Loading facility data from the log&hellip;</p>
 </section>
 
 <div class="board" id="board">
-
-  <div class="strip-card" data-dir="left">
-    <div class="strip-id">
-      <div class="code">EBAW</div>
-      <div class="name">Antwerpen</div>
-    </div>
-    <div class="strip-rows">
-      <div class="pos-row"><span class="code">GND</span><span class="label">Antwerpen Ground</span><span class="hrs">7 h</span><span class="pct">0.52%</span></div>
-      <div class="pos-row"><span class="code">TWR</span><span class="label">Antwerpen Tower</span><span class="hrs">55 h</span><span class="pct">4.09%</span></div>
-    </div>
-    <div class="strip-total">
-      <div class="hours">62</div>
-      <div class="pct">4.61%</div>
-      <div class="lbl">Hours</div>
-    </div>
-  </div>
-
-  <div class="strip-card" data-dir="right">
-    <div class="strip-id">
-      <div class="code">EBBR</div>
-      <div class="name">Brussels</div>
-    </div>
-    <div class="strip-rows">
-      <div class="pos-row"><span class="code">DEL</span><span class="label">Brussels Delivery</span><span class="hrs">43 h</span><span class="pct">3.20%</span></div>
-      <div class="pos-row"><span class="code">GND</span><span class="label">Brussels Ground</span><span class="hrs">218 h</span><span class="pct">16.22%</span></div>
-      <div class="pos-row"><span class="code">TWR</span><span class="label">Brussels Tower</span><span class="hrs">274 h</span><span class="pct">20.39%</span></div>
-    </div>
-    <div class="strip-total">
-      <div class="hours">535</div>
-      <div class="pct">39.81%</div>
-      <div class="lbl">Hours</div>
-    </div>
-  </div>
-
-  <div class="strip-card" data-dir="left">
-    <div class="strip-id">
-      <div class="code">EBCI</div>
-      <div class="name">Charleroi</div>
-    </div>
-    <div class="strip-rows">
-      <div class="pos-row"><span class="code">APP</span><span class="label">Charleroi Approach</span><span class="hrs">5 h</span><span class="pct">0.37%</span></div>
-      <div class="pos-row"><span class="code">GND</span><span class="label">Charleroi Ground</span><span class="hrs">44 h</span><span class="pct">3.27%</span></div>
-      <div class="pos-row"><span class="code">TWR</span><span class="label">Charleroi Tower</span><span class="hrs">140 h</span><span class="pct">10.42%</span></div>
-    </div>
-    <div class="strip-total">
-      <div class="hours">189</div>
-      <div class="pct">14.06%</div>
-      <div class="lbl">Hours</div>
-    </div>
-  </div>
-
-  <div class="strip-card" data-dir="right">
-    <div class="strip-id">
-      <div class="code">EBKT</div>
-      <div class="name">Kortrijk</div>
-    </div>
-    <div class="strip-rows">
-      <div class="pos-row"><span class="code">I_TWR</span><span class="label">Kortrijk Information</span><span class="hrs">85 h</span><span class="pct">6.32%</span></div>
-    </div>
-    <div class="strip-total">
-      <div class="hours">85</div>
-      <div class="pct">6.32%</div>
-      <div class="lbl">Hours</div>
-    </div>
-  </div>
-
-  <div class="strip-card" data-dir="left">
-    <div class="strip-id">
-      <div class="code">EBLG</div>
-      <div class="name">Li&egrave;ge</div>
-    </div>
-    <div class="strip-rows">
-      <div class="pos-row"><span class="code">APP</span><span class="label">Li&egrave;ge Approach</span><span class="hrs">6 h</span><span class="pct">0.45%</span></div>
-      <div class="pos-row"><span class="code">GND</span><span class="label">Li&egrave;ge Ground</span><span class="hrs">16 h</span><span class="pct">1.19%</span></div>
-      <div class="pos-row"><span class="code">TWR</span><span class="label">Li&egrave;ge Tower</span><span class="hrs">60 h</span><span class="pct">4.46%</span></div>
-    </div>
-    <div class="strip-total">
-      <div class="hours">82</div>
-      <div class="pct">6.10%</div>
-      <div class="lbl">Hours</div>
-    </div>
-  </div>
-
-  <div class="strip-card" data-dir="right">
-    <div class="strip-id">
-      <div class="code">EBOS</div>
-      <div class="name">Oostende</div>
-    </div>
-    <div class="strip-rows">
-      <div class="pos-row"><span class="code">APP</span><span class="label">Oostende Approach</span><span class="hrs">6 h</span><span class="pct">0.45%</span></div>
-      <div class="pos-row"><span class="code">GND</span><span class="label">Oostende Ground</span><span class="hrs">15 h</span><span class="pct">1.12%</span></div>
-      <div class="pos-row"><span class="code">TWR</span><span class="label">Oostende Tower</span><span class="hrs">91 h</span><span class="pct">6.77%</span></div>
-    </div>
-    <div class="strip-total">
-      <div class="hours">112</div>
-      <div class="pct">8.33%</div>
-      <div class="lbl">Hours</div>
-    </div>
-  </div>
-
-  <div class="strip-card lux" data-dir="left">
-    <div class="strip-id">
-      <div class="code">ELLX</div>
-      <div class="name">L&euml;tzebuerg</div>
-    </div>
-    <div class="strip-rows">
-      <div class="pos-row"><span class="code">APP</span><span class="label">L&euml;tzebuerg Radar</span><span class="hrs">58 h</span><span class="pct">4.32%</span></div>
-      <div class="pos-row"><span class="code">F_APP</span><span class="label">L&euml;tzebuerg Arrival</span><span class="hrs">10 h</span><span class="pct">0.74%</span></div>
-      <div class="pos-row"><span class="code">DEL</span><span class="label">L&euml;tzebuerg Delivery</span><span class="hrs">18 h</span><span class="pct">1.34%</span></div>
-      <div class="pos-row"><span class="code">TWR</span><span class="label">L&euml;tzebuerg Tower</span><span class="hrs">193 h</span><span class="pct">14.36%</span></div>
-    </div>
-    <div class="strip-total">
-      <div class="hours">279</div>
-      <div class="pct">20.76%</div>
-      <div class="lbl">Hours</div>
-    </div>
-  </div>
-
+  <div class="board-status" id="board-status">Fetching live data from the sheet&hellip;</div>
 </div>
 
-<div class="totals">
-  <div class="cell">
-    <div class="num">19</div>
-    <div class="lbl">Positions staffed</div>
-  </div>
-  <div class="cell">
-    <div class="num">7</div>
-    <div class="lbl">Facilities covered</div>
-  </div>
-  <div class="cell">
-    <div class="num">1,344</div>
-    <div class="lbl">Total hours logged</div>
-  </div>
-</div>
+<div class="totals" id="totals"></div>
 
 <footer>
-  <p>NICK WRIDE</p>
+  <p>ON FREQUENCY &mdash; ATC LOG</p>
+  <p>BELGIUM &middot; LUXEMBOURG FIR</p>
 </footer>
 
 <script>
-  const strips = document.querySelectorAll('.strip-card');
-  strips.forEach(el => {
-    if(el.dataset.dir === 'right') el.classList.add('in-right');
-  });
+  const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRRIgLiYcm5xtVPnAXokgdpG0rcfA9cZ_YTEa4katIUzhggZdk_huFSKOwzb74HPMOQug08BX_6Ub8N/pub?gid=0&single=true&output=csv";
 
-  const cells = document.querySelectorAll('.totals .cell');
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting){
-        entry.target.classList.add('visible');
+  function parseCsv(text){
+    return text.trim().split("\n").map(line => {
+      const cells = [];
+      let cur = "", inQuotes = false;
+      for(let i=0;i<line.length;i++){
+        const ch = line[i];
+        if(ch === '"'){ inQuotes = !inQuotes; continue; }
+        if(ch === ',' && !inQuotes){ cells.push(cur); cur=""; continue; }
+        cur += ch;
       }
+      cells.push(cur);
+      return cells.map(c => c.trim());
     });
-  }, { threshold: 0.2 });
+  }
 
-  strips.forEach(el => io.observe(el));
-  cells.forEach(el => io.observe(el));
+  function titleCase(str){
+    return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  function isLux(icao){
+    return icao.startsWith("ELLX") || icao.toUpperCase().includes("LUX");
+  }
+
+  async function loadData(){
+    const statusEl = document.getElementById('board-status');
+    try{
+      const res = await fetch(SHEET_URL, { cache: "no-store" });
+      if(!res.ok) throw new Error("Sheet request failed: " + res.status);
+      const csvText = await res.text();
+      const rows = parseCsv(csvText);
+      rows.shift(); // header row
+
+      const facilities = [];
+      const countries = [];
+      let current = null;
+      let totalHours = null;
+
+      rows.forEach(r => {
+        const [pos, name, hours, perc, ad, adHours, adPerc, country, countryHours, countryPerc] = r;
+        if(!pos) return;
+        if(pos.toUpperCase() === "TOTAL"){
+          totalHours = hours || totalHours;
+          return;
+        }
+        if(ad){
+          current = { adName: ad, hours: adHours, perc: adPerc, icao: pos.split("_")[0], positions: [] };
+          facilities.push(current);
+        }
+        if(current){
+          current.positions.push({ pos, name, hours, perc });
+        }
+        if(country){
+          countries.push({ name: country, hours: countryHours, perc: countryPerc });
+        }
+      });
+
+      renderHero(countries, totalHours);
+      renderFacilities(facilities);
+      renderTotals(facilities, totalHours);
+      statusEl.remove();
+    }catch(err){
+      statusEl.textContent = "Couldn't load live data from the sheet (" + err.message + "). Check the publish link is still active.";
+      statusEl.classList.add("error");
+    }
+  }
+
+  function renderHero(countries, totalHours){
+    document.getElementById('hero-hours').innerHTML =
+      (totalHours || "&hellip;") + " hours<br>on frequency.";
+
+    const stripEl = document.getElementById('hero-strip');
+    const legendEl = document.getElementById('hero-legend');
+    stripEl.innerHTML = "";
+    legendEl.innerHTML = "";
+
+    countries.forEach(c => {
+      const lux = isLux(c.name);
+      const seg = document.createElement('div');
+      seg.className = "strip-seg";
+      seg.style.width = (c.perc || "0%");
+      seg.style.background = lux ? "var(--amber-dim)" : "var(--green-dim)";
+      seg.textContent = c.name.toUpperCase();
+      stripEl.appendChild(seg);
+
+      const legendItem = document.createElement('span');
+      const dot = document.createElement('span');
+      dot.className = "dot";
+      dot.style.background = lux ? "var(--amber)" : "var(--green)";
+      legendItem.appendChild(dot);
+      legendItem.appendChild(document.createTextNode(
+        titleCase(c.name) + " \u2014 " + c.hours + " h \u00b7 " + c.perc
+      ));
+      legendEl.appendChild(legendItem);
+    });
+  }
+
+  function renderFacilities(facilities){
+    const board = document.getElementById('board');
+    const sub = document.getElementById('facility-sub');
+    sub.textContent = facilities.length + " facilities, " +
+      facilities.reduce((n,f)=>n+f.positions.length,0) +
+      " positions. Each strip below is a station I've worked, pulled live from the log.";
+
+    facilities.forEach((f, i) => {
+      const lux = isLux(f.icao);
+      const card = document.createElement('div');
+      card.className = "strip-card" + (lux ? " lux" : "") + (i % 2 === 1 ? " in-right" : "");
+
+      const idHtml = `
+        <div class="strip-id">
+          <div class="code">${f.icao}</div>
+          <div class="name">${titleCase(f.adName)}</div>
+        </div>`;
+
+      const rowsHtml = f.positions.map(p => `
+        <div class="pos-row">
+          <span class="code">${p.pos.replace(f.icao + "_","")}</span>
+          <span class="label">${titleCase(p.name)}</span>
+          <span class="hrs">${p.hours} h</span>
+          <span class="pct">${p.perc}</span>
+        </div>`).join("");
+
+      const totalHtml = `
+        <div class="strip-total">
+          <div class="hours">${f.hours}</div>
+          <div class="pct">${f.perc}</div>
+          <div class="lbl">Hours</div>
+        </div>`;
+
+      card.innerHTML = idHtml + `<div class="strip-rows">${rowsHtml}</div>` + totalHtml;
+      board.appendChild(card);
+    });
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.2 });
+    board.querySelectorAll('.strip-card').forEach(el => io.observe(el));
+  }
+
+  function renderTotals(facilities, totalHours){
+    const totalsEl = document.getElementById('totals');
+    const positionCount = facilities.reduce((n,f)=>n+f.positions.length,0);
+    const cells = [
+      { num: positionCount, lbl: "Positions worked" },
+      { num: facilities.length, lbl: "Facilities covered" },
+      { num: totalHours || "\u2014", lbl: "Total hours logged" },
+    ];
+    totalsEl.innerHTML = cells.map(c => `
+      <div class="cell">
+        <div class="num">${c.num}</div>
+        <div class="lbl">${c.lbl}</div>
+      </div>`).join("");
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.2 });
+    totalsEl.querySelectorAll('.cell').forEach(el => io.observe(el));
+  }
+
+  loadData();
 </script>
 
 </body>
