@@ -1,663 +1,499 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta property="og:title"       content="Check if Nickie is on plane game" />
-  <meta property="og:type"        content="website" />
-  <title>is he on plane game?</title>
-  <link rel="icon" type="image/x-icon" href="logo.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>On Frequency — ATC Experience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #11171b;
+    --panel: #1a2126;
+    --panel-alt: #1e262b;
+    --line: #2b363c;
+    --text: #e9e6dc;
+    --text-dim: #838f96;
+    --text-faint: #56626a;
+    --green: #6ba58c;
+    --green-dim: #3d5c4e;
+    --amber: #cf9a58;
+    --amber-dim: #6b5335;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Space Grotesk',sans-serif;
+    overflow-x:hidden;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
 
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:8vh 8vw;
+    position:relative;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    letter-spacing:0.15em;
+    color:var(--text-faint);
+    text-transform:uppercase;
+    margin-bottom:1.5rem;
+  }
+  .hero-eyebrow span{color:var(--green);}
+  .hero h1{
+    font-size:clamp(2.6rem, 7vw, 5.6rem);
+    font-weight:700;
+    line-height:1.02;
+    letter-spacing:-0.02em;
+    max-width:14ch;
+  }
+  .hero-sub{
+    margin-top:1.75rem;
+    max-width:46ch;
+    font-size:1.05rem;
+    color:var(--text-dim);
+    line-height:1.6;
+  }
+  .hero-strip{
+    margin-top:3.5rem;
+    display:flex;
+    gap:0;
+    max-width:640px;
+    height:34px;
+    border:1px solid var(--line);
+  }
+  .hero-strip div{
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.05em;
+  }
+  .strip-be{ background:var(--green-dim); color:#cfe6da; width:79.24%; }
+  .strip-lu{ background:var(--amber-dim); color:#f0dcc0; width:20.76%; }
+  .hero-legend{
+    margin-top:0.9rem;
+    display:flex;
+    gap:2rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--text-dim);
+  }
+  .hero-legend .dot{
+    display:inline-block;width:8px;height:8px;margin-right:6px;border-radius:1px;
+  }
+  .dot-be{background:var(--green);}
+  .dot-lu{background:var(--amber);}
+  .scroll-cue{
+    position:absolute;
+    bottom:6vh;
+    left:8vw;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.1em;
+    color:var(--text-faint);
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .scroll-cue::after{
+    content:'';
+    width:1px;height:26px;
+    background:var(--text-faint);
+    animation:cue 1.8s ease-in-out infinite;
+  }
+  @keyframes cue{
+    0%{transform:scaleY(0);transform-origin:top;}
+    50%{transform:scaleY(1);transform-origin:top;}
+    50.01%{transform-origin:bottom;}
+    100%{transform:scaleY(0);transform-origin:bottom;}
+  }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background:
-        linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.72)),
-        url('image.png') center/cover no-repeat fixed;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      padding: 40px 0;
-      color: #ededed;
-      transition: background 0.4s ease;
-    }
+  /* ---------- SECTION HEADER ---------- */
+  .section-head{
+    padding:10vh 8vw 4vh;
+  }
+  .section-head .kicker{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    margin-bottom:0.8rem;
+  }
+  .section-head h2{
+    font-size:clamp(1.8rem,4vw,2.6rem);
+    font-weight:600;
+    letter-spacing:-0.01em;
+    max-width:20ch;
+  }
+  .section-head p{
+    margin-top:1rem;
+    max-width:52ch;
+    color:var(--text-dim);
+    line-height:1.6;
+  }
 
-    .card {
-      background: #707070;
-      border-radius: 16px;
-      padding: 48px 40px 36px;
-      width: min(400px, 92vw);
-      box-shadow: 0 4px 40px rgba(60, 100, 200, 0.10);
-    }
+  /* ---------- STRIP CARDS (facilities) ---------- */
+  .board{
+    padding:0 8vw 12vh;
+    display:flex;
+    flex-direction:column;
+    gap:1.1rem;
+  }
+  .strip-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-left:3px solid var(--green);
+    display:grid;
+    grid-template-columns:220px 1fr 140px;
+    align-items:stretch;
+    opacity:0;
+    transform:translateX(-56px);
+    transition:transform 0.7s cubic-bezier(.16,.8,.3,1), opacity 0.7s ease;
+  }
+  .strip-card.lux{ border-left-color:var(--amber); }
+  .strip-card.in-right{ transform:translateX(56px); }
+  .strip-card.visible{ opacity:1; transform:translateX(0); }
 
-    .cid {
-      font-size: 26px;
-      font-weight: 300;
-      margin-bottom: 36px;
-      text-align: center;
-    }
+  .strip-id{
+    padding:1.4rem 1.5rem;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    border-right:1px solid var(--line);
+  }
+  .strip-id .code{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--text-faint);
+    letter-spacing:0.08em;
+  }
+  .strip-id .name{
+    font-size:1.25rem;
+    font-weight:600;
+    margin-top:0.3rem;
+  }
 
-    hr {
-      border: none;
-      border-top: 1px solid #7a7a7a;
-      margin-bottom: 28px;
-    }
+  .strip-rows{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:0.7rem 1.5rem;
+    gap:0;
+  }
+  .pos-row{
+    display:grid;
+    grid-template-columns:110px 1fr 60px 60px;
+    gap:0.75rem;
+    align-items:center;
+    padding:0.45rem 0;
+    border-bottom:1px dashed var(--line);
+    font-size:13px;
+  }
+  .pos-row:last-child{ border-bottom:none; }
+  .pos-row .code{
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--text-dim);
+    font-size:12px;
+  }
+  .pos-row .label{ color:var(--text); }
+  .pos-row .hrs{
+    font-family:'IBM Plex Mono',monospace;
+    text-align:right;
+    color:var(--text-dim);
+    font-size:12px;
+  }
+  .pos-row .pct{
+    font-family:'IBM Plex Mono',monospace;
+    text-align:right;
+    font-size:12px;
+    color:var(--green);
+  }
+  .strip-card.lux .pos-row .pct{ color:var(--amber); }
 
-    .status-area {
-      min-height: 100px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
+  .strip-total{
+    border-left:1px solid var(--line);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:0.2rem;
+    padding:1rem;
+  }
+  .strip-total .hours{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:1.6rem;
+    font-weight:600;
+  }
+  .strip-total .pct{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--green);
+  }
+  .strip-card.lux .strip-total .pct{ color:var(--amber); }
+  .strip-total .lbl{
+    font-size:10px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    margin-top:0.3rem;
+  }
 
-    .loading {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: #8aa0cc;
-      font-size: 14px;
-    }
+  /* ---------- TOTALS BAND ---------- */
+  .totals{
+    padding:8vh 8vw 10vh;
+    border-top:1px solid var(--line);
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:2px;
+    background:var(--line);
+  }
+  .totals .cell{
+    background:var(--bg);
+    padding:2.2rem 1.6rem;
+    opacity:0;
+    transform:translateY(30px);
+    transition:transform 0.6s ease, opacity 0.6s ease;
+  }
+  .totals .cell.visible{ opacity:1; transform:translateY(0); }
+  .totals .cell .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:2.4rem;
+    font-weight:600;
+  }
+  .totals .cell .lbl{
+    margin-top:0.5rem;
+    font-size:13px;
+    color:var(--text-dim);
+  }
 
-    .spinner {
-      width: 16px; height: 16px;
-      border: 2px solid #d0dcf7;
-      border-top-color: #3b6ef8;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding:8vh 8vw;
+    border-top:1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    flex-wrap:wrap;
+    gap:1rem;
+  }
+  footer p{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--text-faint);
+    letter-spacing:0.05em;
+  }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
+  @media (max-width:760px){
+    .strip-card{ grid-template-columns:1fr; }
+    .strip-id{ border-right:none; border-bottom:1px solid var(--line); }
+    .strip-total{ border-left:none; border-top:1px solid var(--line); flex-direction:row; justify-content:space-between; }
+    .pos-row{ grid-template-columns:80px 1fr 50px 50px; }
+    .totals{ grid-template-columns:1fr; }
+  }
 
-    .pill {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      font-size: 12px;
-      font-weight: 500;
-      padding: 5px 12px;
-      border-radius: 999px;
-      margin-bottom: 20px;
-    }
-
-    .pill.online  { background: #2a6e40; color: #ededed; border: 2px solid #444444; }
-    .pill.offline { background: #8b2020; color: #ededed; border: 2px solid #444444; }
-
-    .position-name {
-      font-size: 11px;
-      font-weight: 400;
-      color: #b0bedd;
-      letter-spacing: 0.03em;
-      margin-bottom: 4px;
-    }
-
-    .status-label {
-      font-size: 22px;
-      font-weight: 300;
-      margin-bottom: 20px;
-    }
-
-    .info-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .info-item {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13.5px;
-    }
-
-    .key { color: #d0d0d0; }
-    .val { color: #ededed; text-align: right; max-width: 60%; }
-
-    .btn {
-      margin-top: 32px;
-      width: 100%;
-      padding: 12px;
-      background: #444444;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn:hover { background: #555555; }
-
-    .updated {
-      margin-top: 14px;
-      text-align: center;
-      font-size: 11px;
-      color: #b0bedd;
-    }
-
-    .last-seen {
-      margin-top: 16px;
-      padding: 10px 14px;
-      background: rgba(0,0,0,0.2);
-      border-radius: 9px;
-      font-size: 12.5px;
-      color: #b0bedd;
-      text-align: center;
-      line-height: 1.5;
-    }
-
-    .last-seen strong {
-      color: #ededed;
-      font-weight: 500;
-    }
-
-    .last-seen .last-seen-sub {
-      font-size: 11px;
-      color: #8a9abf;
-      margin-top: 3px;
-    }
-
-    .flag {
-      width: 18px;
-      height: 12px;
-      object-fit: cover;
-      display: inline-block;
-      vertical-align: middle;
-      margin-right: 6px;
-      border-radius: 2px;
-    }
-
-    /* ── Positions card ── */
-    .positions-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .position-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 13.5px;
-      padding: 8px 10px;
-      background: rgba(0,0,0,0.15);
-      border-radius: 8px;
-    }
-
-    .position-row .pos-name { color: #ededed; }
-    .position-row .pos-callsign {
-      font-size: 12px;
-      color: #b0bedd;
-      font-family: monospace;
-      letter-spacing: 0.04em;
-      width: 69px;
-    }
-
-    .pos-right {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .pos-hours {
-      font-size: 11px;
-      font-weight: 500;
-      font-family: monospace;
-      color: #c8f0d8;
-      background: #1e5c35;
-      border: 1px solid #2e7a49;
-      border-radius: 5px;
-      padding: 2px 6px;
-      white-space: nowrap;
-    }
-
-    /* ── Sort toggle ── */
-    .positions-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0;
-    }
-
-    .sort-btn {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 7px;
-      color: #b0bedd;
-      font-size: 11px;
-      font-family: 'Inter', sans-serif;
-      padding: 4px 9px;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      white-space: nowrap;
-    }
-    .sort-btn:hover { background: rgba(255,255,255,0.12); color: #ededed; }
-    .sort-btn.active { background: #1e5c35; border-color: #2e7a49; color: #c8f0d8; }
-
-    .sort-btn svg {
-      width: 11px;
-      height: 11px;
-      fill: currentColor;
-      flex-shrink: 0;
-    }
-
-    /* ── Settings ── */
-    .settings-btn {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      width: 36px;
-      height: 36px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
-      transition: background 0.2s, transform 0.3s ease;
-      z-index: 100;
-    }
-    .settings-btn:hover { background: rgba(255,255,255,0.14); }
-    .settings-btn.open { transform: rotate(60deg); }
-
-    .settings-btn svg {
-      width: 17px;
-      height: 17px;
-      fill: #cccccc;
-    }
-
-    .settings-panel {
-      position: fixed;
-      top: 60px;
-      right: 16px;
-      width: 200px;
-      background: #2a2a2a;
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 14px;
-      padding: 16px;
-      z-index: 99;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-
-      opacity: 0;
-      transform: translateY(-8px) scale(0.97);
-      pointer-events: none;
-      transform-origin: top right;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-    }
-    .settings-panel.visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      pointer-events: all;
-    }
-
-    .settings-label {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      color: #888;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    .settings-action {
-      width: 100%;
-      padding: 9px 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.08);
-      font-size: 12.5px;
-      font-family: 'Inter', sans-serif;
-      cursor: pointer;
-      text-align: left;
-      color: #ededed;
-      transition: background 0.15s;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .settings-action:last-child { margin-bottom: 0; }
-
-    .settings-action.randomise { background: #3a3a3a; }
-    .settings-action.randomise:hover { background: #484848; }
-
-    .settings-action.revert { background: #2e2e2e; }
-    .settings-action.revert:hover { background: #3a3a3a; }
-
-    .swatch {
-      width: 12px;
-      height: 12px;
-      border-radius: 3px;
-      background: #333333;
-      border: 1px solid rgba(255,255,255,0.15);
-      flex-shrink: 0;
-      transition: background 0.3s;
-    }
-  </style>
-
+  @media (prefers-reduced-motion:reduce){
+    .strip-card, .totals .cell{ transition:opacity 0.4s ease; transform:none !important; }
+    .scroll-cue::after{ animation:none; }
+  }
+</style>
 </head>
-
 <body>
 
-<!-- Settings toggle -->
-<button class="settings-btn" id="settings-btn" onclick="toggleSettings()" title="Settings">
-  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.92c.04-.34.07-.69.07-1.08s-.03-.74-.07-1.08l2.32-1.82c.21-.16.27-.45.13-.68l-2.2-3.81c-.13-.23-.42-.31-.65-.23l-2.74 1.1c-.57-.43-1.18-.79-1.85-1.06L14 2.42c-.04-.26-.27-.42-.5-.42h-4c-.23 0-.46.16-.5.42l-.44 2.9c-.67.27-1.28.63-1.85 1.06L4.01 5.38c-.23-.08-.52 0-.65.23L1.16 9.42c-.14.23-.08.52.13.68l2.32 1.82c-.04.34-.07.7-.07 1.08s.03.74.07 1.08L1.29 15.9c-.21.16-.27.45-.13.68l2.2 3.81c.13.23.42.31.65.23l2.74-1.1c.57.43 1.18.79 1.85 1.06l.44 2.9c.04.26.27.42.5.42h4c.23 0 .46-.16.5-.42l.44-2.9c.67-.27 1.28-.63 1.85-1.06l2.74 1.1c.23.08.52 0 .65-.23l2.2-3.81c.14-.23.08-.52-.13-.68l-2.32-1.82z"/>
-  </svg>
-</button>
+<section class="hero">
+  <div class="hero-eyebrow"><span>&#9679;</span> Virtual air traffic control &mdash; Belgium / Luxembourg FIR</div>
+  <h1>1,344 hours<br>on frequency.</h1>
+  <p class="hero-sub">A working log of every position I've controlled across Belgian and Luxembourg airspace &mdash; from ground and delivery to approach and radar.</p>
+  <div class="hero-strip">
+    <div class="strip-be">BELGIUM</div>
+    <div class="strip-lu">LUX</div>
+  </div>
+  <div class="hero-legend">
+    <span><span class="dot dot-be"></span>Belgium &mdash; 1,065 h &middot; 79.24%</span>
+    <span><span class="dot dot-lu"></span>Luxembourg &mdash; 279 h &middot; 20.76%</span>
+  </div>
+  <div class="scroll-cue">Scroll</div>
+</section>
 
-<!-- Settings panel -->
-<div class="settings-panel" id="settings-panel">
-  <div class="settings-label">Background</div>
-  <button class="settings-action randomise" onclick="randomiseBg()">
-    <span class="swatch" id="swatch"></span>
-    Random colour
-  </button>
-  <button class="settings-action revert" onclick="revertBg()">
-    <span style="font-size:13px">↩</span>
-    Back to default
-  </button>
-</div>
+<section class="section-head">
+  <div class="kicker">Facility log</div>
+  <h2>Where I control.</h2>
+  <p>Seven facilities, nineteen positions. Each strip below is a station I've worked, broken down the way a real position log would read.</p>
+</section>
 
-<!-- Status card -->
-<div class="card">
-  <div class="cid">Is Nickie on plane game?</div>
-  <hr />
+<div class="board" id="board">
 
-  <div class="status-area" id="status-area">
-    <div class="loading">
-      <div class="spinner"></div>
-      Checking status…
+  <div class="strip-card" data-dir="left">
+    <div class="strip-id">
+      <div class="code">EBAW</div>
+      <div class="name">Antwerpen</div>
+    </div>
+    <div class="strip-rows">
+      <div class="pos-row"><span class="code">GND</span><span class="label">Antwerpen Ground</span><span class="hrs">7 h</span><span class="pct">0.52%</span></div>
+      <div class="pos-row"><span class="code">TWR</span><span class="label">Antwerpen Tower</span><span class="hrs">55 h</span><span class="pct">4.09%</span></div>
+    </div>
+    <div class="strip-total">
+      <div class="hours">62</div>
+      <div class="pct">4.61%</div>
+      <div class="lbl">Hours</div>
     </div>
   </div>
 
-  <button class="btn" onclick="checkStatus()">Refresh</button>
-
-  <div class="updated" id="updated"></div>
-</div>
-
-<!-- Positions card -->
-<div class="card" style="padding-top: 28px; padding-bottom: 24px;">
-  <div class="positions-header">
-    <div class="cid" style="margin-bottom:0; text-align:left">Where will you find me?</div>
-    <button class="sort-btn" id="sort-btn" onclick="toggleSort()" title="Toggle sort order">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3 18h6v-2H3v2zm0-5h12v-2H3v2zm0-7v2h18V6H3z"/>
-      </svg>
-      By hours
-    </button>
+  <div class="strip-card" data-dir="right">
+    <div class="strip-id">
+      <div class="code">EBBR</div>
+      <div class="name">Brussels</div>
+    </div>
+    <div class="strip-rows">
+      <div class="pos-row"><span class="code">DEL</span><span class="label">Brussels Delivery</span><span class="hrs">43 h</span><span class="pct">3.20%</span></div>
+      <div class="pos-row"><span class="code">GND</span><span class="label">Brussels Ground</span><span class="hrs">218 h</span><span class="pct">16.22%</span></div>
+      <div class="pos-row"><span class="code">TWR</span><span class="label">Brussels Tower</span><span class="hrs">274 h</span><span class="pct">20.39%</span></div>
+    </div>
+    <div class="strip-total">
+      <div class="hours">535</div>
+      <div class="pct">39.81%</div>
+      <div class="lbl">Hours</div>
+    </div>
   </div>
-  <hr style="margin-top:18px;" />
-  <div class="positions-list" id="positions-list"></div>
+
+  <div class="strip-card" data-dir="left">
+    <div class="strip-id">
+      <div class="code">EBCI</div>
+      <div class="name">Charleroi</div>
+    </div>
+    <div class="strip-rows">
+      <div class="pos-row"><span class="code">APP</span><span class="label">Charleroi Approach</span><span class="hrs">5 h</span><span class="pct">0.37%</span></div>
+      <div class="pos-row"><span class="code">GND</span><span class="label">Charleroi Ground</span><span class="hrs">44 h</span><span class="pct">3.27%</span></div>
+      <div class="pos-row"><span class="code">TWR</span><span class="label">Charleroi Tower</span><span class="hrs">140 h</span><span class="pct">10.42%</span></div>
+    </div>
+    <div class="strip-total">
+      <div class="hours">189</div>
+      <div class="pct">14.06%</div>
+      <div class="lbl">Hours</div>
+    </div>
+  </div>
+
+  <div class="strip-card" data-dir="right">
+    <div class="strip-id">
+      <div class="code">EBKT</div>
+      <div class="name">Kortrijk</div>
+    </div>
+    <div class="strip-rows">
+      <div class="pos-row"><span class="code">I_TWR</span><span class="label">Kortrijk Information</span><span class="hrs">85 h</span><span class="pct">6.32%</span></div>
+    </div>
+    <div class="strip-total">
+      <div class="hours">85</div>
+      <div class="pct">6.32%</div>
+      <div class="lbl">Hours</div>
+    </div>
+  </div>
+
+  <div class="strip-card" data-dir="left">
+    <div class="strip-id">
+      <div class="code">EBLG</div>
+      <div class="name">Li&egrave;ge</div>
+    </div>
+    <div class="strip-rows">
+      <div class="pos-row"><span class="code">APP</span><span class="label">Li&egrave;ge Approach</span><span class="hrs">6 h</span><span class="pct">0.45%</span></div>
+      <div class="pos-row"><span class="code">GND</span><span class="label">Li&egrave;ge Ground</span><span class="hrs">16 h</span><span class="pct">1.19%</span></div>
+      <div class="pos-row"><span class="code">TWR</span><span class="label">Li&egrave;ge Tower</span><span class="hrs">60 h</span><span class="pct">4.46%</span></div>
+    </div>
+    <div class="strip-total">
+      <div class="hours">82</div>
+      <div class="pct">6.10%</div>
+      <div class="lbl">Hours</div>
+    </div>
+  </div>
+
+  <div class="strip-card" data-dir="right">
+    <div class="strip-id">
+      <div class="code">EBOS</div>
+      <div class="name">Oostende</div>
+    </div>
+    <div class="strip-rows">
+      <div class="pos-row"><span class="code">APP</span><span class="label">Oostende Approach</span><span class="hrs">6 h</span><span class="pct">0.45%</span></div>
+      <div class="pos-row"><span class="code">GND</span><span class="label">Oostende Ground</span><span class="hrs">15 h</span><span class="pct">1.12%</span></div>
+      <div class="pos-row"><span class="code">TWR</span><span class="label">Oostende Tower</span><span class="hrs">91 h</span><span class="pct">6.77%</span></div>
+    </div>
+    <div class="strip-total">
+      <div class="hours">112</div>
+      <div class="pct">8.33%</div>
+      <div class="lbl">Hours</div>
+    </div>
+  </div>
+
+  <div class="strip-card lux" data-dir="left">
+    <div class="strip-id">
+      <div class="code">ELLX</div>
+      <div class="name">L&euml;tzebuerg</div>
+    </div>
+    <div class="strip-rows">
+      <div class="pos-row"><span class="code">APP</span><span class="label">L&euml;tzebuerg Radar</span><span class="hrs">58 h</span><span class="pct">4.32%</span></div>
+      <div class="pos-row"><span class="code">F_APP</span><span class="label">L&euml;tzebuerg Arrival</span><span class="hrs">10 h</span><span class="pct">0.74%</span></div>
+      <div class="pos-row"><span class="code">DEL</span><span class="label">L&euml;tzebuerg Delivery</span><span class="hrs">18 h</span><span class="pct">1.34%</span></div>
+      <div class="pos-row"><span class="code">TWR</span><span class="label">L&euml;tzebuerg Tower</span><span class="hrs">193 h</span><span class="pct">14.36%</span></div>
+    </div>
+    <div class="strip-total">
+      <div class="hours">279</div>
+      <div class="pct">20.76%</div>
+      <div class="lbl">Hours</div>
+    </div>
+  </div>
+
 </div>
+
+<div class="totals">
+  <div class="cell">
+    <div class="num">19</div>
+    <div class="lbl">Positions staffed</div>
+  </div>
+  <div class="cell">
+    <div class="num">7</div>
+    <div class="lbl">Facilities covered</div>
+  </div>
+  <div class="cell">
+    <div class="num">1,344</div>
+    <div class="lbl">Total hours logged</div>
+  </div>
+</div>
+
+<footer>
+  <p>NICK WRIDE</p>
+</footer>
 
 <script>
-const CID = 1778154;
-const API = 'https://data.vatsim.net/v3/vatsim-data.json';
-const DEFAULT_BG = "linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.72)), url('image.png') center/cover no-repeat fixed";
+  const strips = document.querySelectorAll('.strip-card');
+  strips.forEach(el => {
+    if(el.dataset.dir === 'right') el.classList.add('in-right');
+  });
 
-const POSITION_NAMES = {
-  "EBKT_I_TWR":  "Kortrijk Information",
-  "EBAW_GND": "Antwerpen Ground",
-  "EBAW_TWR": "Antwerpen Tower",
-  "EBBR_DEL": "Brussels Delivery",
-  "EBBR_GND": "Brussels Ground",
-  "EBBR_C_GND": "Brussels Ground Central",
-  "EBBR_C__GND": "Brussels Ground Central",
-  "EBBR_S_GND": "Brussels Ground South",
-  "EBBR_TWR": "Brussels Tower",
-  "EBBR_N_TWR": "Brussels Tower North",
-  "EBBR_APP": "Brussels Arrival",
-  "EBBR_DEP": "Brussels Departure",
-  "EBBR_F_APP": "Brussels Approach",
-  "EBCI_GND": "Charleroi Ground",
-  "EBCI_TWR": "Charleroi Tower",
-  "EBCI_APP": "Charleroi Approach",
-  "EBLG_GND": "Liège Ground",
-  "EBLG_TWR": "Liège Tower",
-  "EBLG_APP": "Liège Approach",
-  "EBOS_GND": "Oostende Ground",
-  "EBOS_TWR": "Oostende Tower",
-  "EBOS_APP": "Oostende Approach",
-  "ELLX_DEL": "Luxembourg Delivery",
-  "ELLX_TWR": "Luxembourg Tower",
-  "ELLX_APP": "Luxembourg Radar",
-  "ELLX_F_APP": "Luxembourg Arrival"
-};
+  const cells = document.querySelectorAll('.totals .cell');
 
-function getPositionName(callsign) {
-  return POSITION_NAMES[callsign] ?? null;
-}
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.2 });
 
-function getFlag(callsign) {
-  if (callsign.startsWith("EL")) return '<img src="flags/lu.png" class="flag">';
-  if (callsign.startsWith("EB")) return '<img src="flags/be.png" class="flag">';
-  return '';
-}
-
-function timeSince(logonTime) {
-  const s = Math.floor((Date.now() - new Date(logonTime)) / 1000);
-  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
-  return h > 0 ? `${h}h ${m}m` : `${m}m`;
-}
-
-function rows(pairs) {
-  return pairs.map(([k, v, keyStyle]) => `
-    <div class="info-item">
-      <span class="${keyStyle ?? 'key'}">${k}</span>
-      <span class="val">${v}</span>
-    </div>
-  `).join('');
-}
-
-function renderOnline(entry, type) {
-  const fp = entry.flight_plan;
-  const positionName = type === 'atc' ? getPositionName(entry.callsign) : null;
-  const pairs = type === 'pilot'
-    ? [
-        ['Position', `${getFlag(entry.callsign)}${entry.callsign}`],
-        fp ? ['Route', `${fp.departure} → ${fp.arrival}`] : null,
-        fp?.aircraft_short ? ['Aircraft', fp.aircraft_short] : null,
-        ['Altitude', `${Number(entry.altitude).toLocaleString()} ft`],
-        ['Ground speed', `${entry.groundspeed} kt`],
-        ['Online for', timeSince(entry.logon_time)],
-      ].filter(Boolean)
-    : [
-        [positionName ?? 'Position', `${getFlag(entry.callsign)}${entry.callsign}`, positionName ? 'val' : 'key'],
-        ['Frequency', entry.frequency],
-        ['Online for', timeSince(entry.logon_time)],
-      ];
-  return `
-    <div class="pill online">YES HE IS!</div>
-    <div class="status-label">${type === 'pilot' ? 'Flying' : 'Controlling'}</div>
-    <div class="info-list">${rows(pairs)}</div>
-  `;
-}
-
-function timeSinceDetailed(ts) {
-  const s = Math.floor((Date.now() - ts) / 1000);
-  if (s < 60) return `${s}s`;
-  const m = Math.floor(s / 60);
-  if (m < 60) return `${m}m`;
-  const h = Math.floor(m / 60), rm = m % 60;
-  if (h < 24) return rm > 0 ? `${h}h ${rm}m` : `${h}h`;
-  const d = Math.floor(h / 24), rh = h % 24;
-  return rh > 0 ? `${d}d ${rh}h` : `${d}d`;
-}
-
-function renderOffline() {
-  let lastSeenHtml = '';
-  try {
-    const raw = localStorage.getItem('nickieLastSeen');
-    if (raw) {
-      const { time, callsign, type } = JSON.parse(raw);
-      const posName = getPositionName(callsign);
-      const label = type === 'pilot' ? `flying as ${callsign}` : `controlling ${posName ?? callsign}`;
-      const dateStr = new Date(time).toLocaleString('en-GB', { day:'numeric', month:'numeric', hour:'2-digit', minute:'2-digit' });
-      lastSeenHtml = `
-        <div class="last-seen">
-          Last seen <strong>${timeSinceDetailed(time)} ago</strong> ${label}
-          <div class="last-seen-sub">${dateStr}</div>
-        </div>`;
-    }
-  } catch {}
-  return `
-    <div class="pill offline">NO HE ISN'T!</div>
-    ${lastSeenHtml}
-  `;
-}
-
-// ── Auto-refresh ────────────────────────────────────────────
-let refreshTimeout = null;
-
-function scheduleNextRefresh() {
-  clearTimeout(refreshTimeout);
-  const delay = Math.floor(Math.random() * 60000) + 120000; // 2–3 mins
-  refreshTimeout = setTimeout(() => checkStatus(), delay);
-}
-
-async function checkStatus() {
-  const area = document.getElementById('status-area');
-  area.innerHTML = `<div class="loading"><div class="spinner"></div>Checking...</div>`;
-  try {
-    const res = await fetch(API);
-    const data = await res.json();
-    const pilot = data.pilots.find(p => p.cid === CID);
-    const atc   = data.controllers.find(c => c.cid === CID);
-    if (pilot || atc) {
-      const entry = pilot ?? atc;
-      try {
-        localStorage.setItem('nickieLastSeen', JSON.stringify({
-          time: Date.now(),
-          callsign: entry.callsign,
-          type: pilot ? 'pilot' : 'atc'
-        }));
-      } catch {}
-    }
-    area.innerHTML = pilot ? renderOnline(pilot, 'pilot')
-                   : atc   ? renderOnline(atc, 'atc')
-                   : renderOffline();
-  } catch {
-    area.innerHTML = `<div>Error loading data</div>`;
-  }
-  const checkedAt = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-  document.getElementById('updated').textContent = `Last refresh: ${checkedAt}`;
-  scheduleNextRefresh();
-}
-
-// ── Settings logic ──────────────────────────────────────────
-
-let panelOpen = false;
-
-function toggleSettings() {
-  panelOpen = !panelOpen;
-  document.getElementById('settings-panel').classList.toggle('visible', panelOpen);
-  document.getElementById('settings-btn').classList.toggle('open', panelOpen);
-}
-
-// Close panel when clicking outside
-document.addEventListener('click', (e) => {
-  if (panelOpen &&
-      !e.target.closest('#settings-panel') &&
-      !e.target.closest('#settings-btn')) {
-    panelOpen = false;
-    document.getElementById('settings-panel').classList.remove('visible');
-    document.getElementById('settings-btn').classList.remove('open');
-  }
-});
-
-function randomDarkColor() {
-  const h = Math.floor(Math.random() * 360);
-  const s = Math.floor(Math.random() * 35) + 10;
-  const l = Math.floor(Math.random() * 20) + 18;
-  return hslToHex(h, s, l);
-}
-
-function hslToHex(h, s, l) {
-  s /= 100; l /= 100;
-  const a = s * Math.min(l, 1 - l);
-  const f = n => {
-    const k = (n + h / 30) % 12;
-    const c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
-    return Math.round(255 * c).toString(16).padStart(2, '0');
-  };
-  return `#${f(0)}${f(8)}${f(4)}`;
-}
-
-function randomiseBg() {
-  const colour = randomDarkColor();
-  document.body.style.background = colour;
-  document.getElementById('swatch').style.background = colour;
-}
-
-function revertBg() {
-  document.body.style.background = DEFAULT_BG;
-  document.getElementById('swatch').style.background = DEFAULT_BG;
-}
-
-// ── Positions list ──────────────────────────────────────────
-
-const POSITIONS = [
-  { name: 'Antwerp Ground',      callsign: 'EBAW_GND',   hours: 6   },
-  { name: 'Antwerp Tower',       callsign: 'EBAW_TWR',   hours: 55  },
-  { name: 'Brussels Delivery',   callsign: 'EBBR_DEL',   hours: 41  },
-  { name: 'Brussels Ground',     callsign: 'EBBR_GND',   hours: 215 },
-  { name: 'Brussels Tower',      callsign: 'EBBR_TWR',   hours: 149  },
-  { name: 'Charleroi Ground',    callsign: 'EBCI_GND',   hours: 44  },
-  { name: 'Charleroi Tower',     callsign: 'EBCI_TWR',   hours: 123 },
-  { name: 'Kortrijk Information',callsign: 'EBKT_I_TWR', hours: 68  },
-  { name: 'Liège Ground',        callsign: 'EBLG_GND',   hours: 16  },
-  { name: 'Liège Tower',         callsign: 'EBLG_TWR',   hours: 53  },
-  { name: 'Ostend Ground',       callsign: 'EBOS_GND',   hours: 15  },
-  { name: 'Ostend Tower',        callsign: 'EBOS_TWR',   hours: 63  },
-  { name: 'Luxembourg Delivery', callsign: 'ELLX_DEL',   hours: 16  },
-  { name: 'Luxembourg Tower',    callsign: 'ELLX_TWR',   hours: 175 },
-];
-
-let sortByHours = false;
-
-function renderPositions() {
-  const list = sortByHours
-    ? [...POSITIONS].sort((a, b) => b.hours - a.hours)
-    : POSITIONS;
-
-  document.getElementById('positions-list').innerHTML = list.map((p, i) => `
-    <div class="position-row" style="transition: opacity 0.2s; animation: fadeRow 0.18s ease both; animation-delay: ${i * 18}ms">
-      <span class="pos-name">${p.name}</span>
-      <div class="pos-right">
-        <span class="pos-hours">${p.hours}h</span>
-        <span class="pos-callsign">${p.callsign}</span>
-      </div>
-    </div>
-  `).join('');
-}
-
-function toggleSort() {
-  sortByHours = !sortByHours;
-  const btn = document.getElementById('sort-btn');
-  btn.classList.toggle('active', sortByHours);
-  btn.innerHTML = sortByHours
-    ? `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 18h6v-2H3v2zm0-5h12v-2H3v2zm0-7v2h18V6H3z"/></svg> Default`
-    : `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 18h6v-2H3v2zm0-5h12v-2H3v2zm0-7v2h18V6H3z"/></svg> By hours`;
-  renderPositions();
-}
-
-// Inject fade-in keyframe once
-const styleEl = document.createElement('style');
-styleEl.textContent = `@keyframes fadeRow { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }`;
-document.head.appendChild(styleEl);
-
-renderPositions();
-checkStatus();
+  strips.forEach(el => io.observe(el));
+  cells.forEach(el => io.observe(el));
 </script>
+
 </body>
 </html>
