@@ -343,6 +343,8 @@
     border:1px solid var(--line);
     background:var(--panel-alt);
     padding:clamp(1rem, 3vw, 2.4rem);
+    max-width:620px;
+    margin:0 auto;
   }
   .map-wrap svg{
     width:100%;
@@ -380,25 +382,6 @@
     color:var(--text-faint);
     padding:1rem 0;
   }
-  .map-legend{
-    margin-top:1.4rem;
-    display:flex;
-    gap:2.2rem;
-    flex-wrap:wrap;
-    align-items:center;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12px;
-    color:var(--text-dim);
-  }
-  .map-legend .item{ display:flex; align-items:center; gap:0.6rem; }
-  .map-legend .swatch{
-    display:inline-block;
-    border-radius:50%;
-    background:var(--green);
-  }
-  .map-legend .swatch.lux{ background:var(--amber); }
-  .map-legend .scale{ display:flex; align-items:center; gap:0.5rem; }
-  .map-legend .scale .swatch{ background:var(--text-faint); }
   .map-tooltip{
     position:absolute;
     left:0; top:0;
@@ -460,15 +443,6 @@
       <div class="t-name"></div>
       <div class="t-meta"></div>
     </div>
-  </div>
-  <div class="map-legend" id="map-legend">
-    <span class="item"><span class="swatch" style="width:9px;height:9px;"></span>Facility</span>
-    <span class="item"><span class="swatch lux" style="width:9px;height:9px;"></span>Luxembourg-flagged</span>
-    <span class="item scale">
-      <span class="swatch" style="width:6px;height:6px;"></span>
-      <span class="swatch" style="width:16px;height:16px;"></span>
-      Hours logged there
-    </span>
   </div>
 </div>
 
@@ -684,13 +658,13 @@
     const wrap = document.getElementById('map-wrap');
     const svgNS = "http://www.w3.org/2000/svg";
 
-    let maxHours = 0;
+    let maxPerc = 0;
     const placed = [];
     facilities.forEach(f => {
-      const h = parseFloat(f.hours) || 0;
-      if(h > maxHours) maxHours = h;
+      const p = parseFloat(f.perc) || 0;
+      if(p > maxPerc) maxPerc = p;
       const coord = resolveCoord(f.icao);
-      if(coord) placed.push({ f, h, coord });
+      if(coord) placed.push({ f, p, coord });
     });
 
     if(placed.length === 0){
@@ -699,11 +673,13 @@
       return;
     }
 
-    const minR = 4, maxR = 22;
-    placed.forEach(({ f, h, coord }) => {
+    const maxR = 22;
+    placed.forEach(({ f, p, coord }) => {
       const [lat, lon] = coord;
       const [x, y] = projectPoint(lat, lon);
-      const r = maxHours > 0 ? minR + (maxR - minR) * Math.sqrt(h / maxHours) : minR;
+      // radius is directly proportional to share of total hours:
+      // a facility with 10x the % gets a radius 10x as large.
+      const r = maxPerc > 0 ? maxR * (p / maxPerc) : 0;
       const lux = isLux(f.icao);
 
       const circle = document.createElementNS(svgNS, 'circle');
