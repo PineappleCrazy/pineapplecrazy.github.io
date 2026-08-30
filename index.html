@@ -676,9 +676,9 @@
     placed.forEach(({ f, p, coord }) => {
       const [lat, lon] = coord;
       const [x, y] = projectPoint(lat, lon);
-      // radius is directly proportional to share of total hours:
-      // a facility with 10x the % gets a radius 10x as large.
-      const r = maxPerc > 0 ? maxR * (p / maxPerc) : 0;
+      // area is directly proportional to share of total hours:
+      // a facility with 10x the % gets a circle 10x the area (radius scales as sqrt).
+      const r = maxPerc > 0 ? maxR * Math.sqrt(p / maxPerc) : 0;
       const lux = isLux(f.icao);
 
       const circle = document.createElementNS(svgNS, 'circle');
