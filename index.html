@@ -418,7 +418,7 @@
 </section>
 
 <section class="section-head">
-  <h2>Where I control.</h2>
+  <h2>Where I control</h2>
   <p id="facility-sub">Loading facility data from the log&hellip;</p>
 </section>
 
@@ -581,9 +581,6 @@
   function renderFacilities(facilities){
     const board = document.getElementById('board');
     const sub = document.getElementById('facility-sub');
-    sub.textContent = facilities.length + " facilities, " +
-      facilities.reduce((n,f)=>n+f.positions.length,0) +
-      " positions.";
 
     facilities.forEach((f, i) => {
       const lux = isLux(f.icao);
