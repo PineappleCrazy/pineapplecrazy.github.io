@@ -818,13 +818,13 @@
 
   function setOffline() {
     badge.classList.remove("live");
-    statusEl.textContent = "not on frequency";
+    statusEl.textContent = "offline";
     posEl.textContent = "";
   }
 
   function setLive(callsign, freqFromFeed) {
     badge.classList.add("live");
-    statusEl.textContent = "on frequency";
+    statusEl.textContent = "online now";
     var known = POSITIONS[callsign];
     if (known) {
       posEl.textContent = known[0] + "  ·  " + known[1];
