@@ -334,6 +334,76 @@
     .totals{ grid-template-columns:1fr; }
   }
 
+  /* ---------- TIMELINE ---------- */
+  .timeline-section{
+    padding:0 8vw 12vh;
+  }
+  .timeline{
+    position:relative;
+    max-width:760px;
+  }
+  .timeline::before{
+    content:'';
+    position:absolute;
+    left:7px;
+    top:6px;
+    bottom:6px;
+    width:1px;
+    background:var(--line);
+  }
+  .tl-item{
+    position:relative;
+    padding:0 0 2.1rem 2.6rem;
+    opacity:0;
+    transform:translateY(18px);
+    transition:transform 0.6s cubic-bezier(.16,.8,.3,1), opacity 0.6s ease;
+  }
+  .tl-item.visible{ opacity:1; transform:translateY(0); }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-dot{
+    position:absolute;
+    left:0;
+    top:5px;
+    width:15px;
+    height:15px;
+    border-radius:50%;
+    background:var(--bg);
+    border:2px solid var(--green-dim);
+  }
+  .tl-dot::after{
+    content:'';
+    position:absolute;
+    inset:3px;
+    border-radius:50%;
+    background:var(--green);
+  }
+  .tl-item.lux .tl-dot{ border-color:var(--amber-dim); }
+  .tl-item.lux .tl-dot::after{ background:var(--amber); }
+  .tl-date{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.05em;
+    color:var(--green);
+  }
+  .tl-item.lux .tl-date{ color:var(--amber); }
+  .tl-row{
+    margin-top:0.4rem;
+    display:flex;
+    align-items:baseline;
+    flex-wrap:wrap;
+    gap:0.6rem;
+  }
+  .tl-name{
+    font-size:1.05rem;
+    font-weight:600;
+  }
+  .tl-code{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    color:var(--text-faint);
+  }
+
   /* ---------- MAP ---------- */
   .map-section{
     padding:0 8vw 12vh;
@@ -496,6 +566,65 @@
 </div>
 
 <div class="totals" id="totals"></div>
+
+<section class="section-head">
+  <div class="kicker">Career</div>
+  <h2>How I got here</h2>
+  <p>Every checkout, in order &mdash; from first ground clearance to the latest approach endorsement.</p>
+</section>
+
+<div class="timeline-section">
+  <div class="timeline" id="timeline"></div>
+</div>
+
+<script>
+  const TIMELINE = [
+    { date: "05/01/2025", code: "EBCI_GND",   name: "Charleroi Ground" },
+    { date: "05/01/2025", code: "EBOS_GND",   name: "Oostende Ground" },
+    { date: "08/01/2025", code: "EBLG_GND",   name: "Li\u00e8ge Ground" },
+    { date: "11/01/2025", code: "EBAW_GND",   name: "Antwerp Ground" },
+    { date: "16/03/2025", code: "EBBR_DEL",   name: "Brussels Delivery" },
+    { date: "16/03/2025", code: "EBBR_GND",   name: "Brussels Ground" },
+    { date: "24/09/2025", code: "ELLX_TWR",   name: "L\u00ebtzebuerg Tower" },
+    { date: "30/11/2025", code: "EBKT_I_TWR", name: "Kortrijk Information" },
+    { date: "30/11/2025", code: "EBLG_TWR",   name: "Li\u00e8ge Tower" },
+    { date: "01/12/2025", code: "EBCI_TWR",   name: "Charleroi Tower" },
+    { date: "02/12/2025", code: "EBOS_TWR",   name: "Oostende Tower" },
+    { date: "04/12/2025", code: "EBAW_TWR",   name: "Antwerp Tower" },
+    { date: "08/04/2026", code: "EBBR_TWR",   name: "Brussels Tower" },
+    { date: "20/07/2026", code: "ELLX_APP",   name: "L\u00ebtzebuerg Radar" },
+    { date: "21/07/2026", code: "ELLX_F_APP", name: "L\u00ebtzebuerg Arrival" },
+    { date: "18/08/2026", code: "EBOS_APP",   name: "Oostende Approach" },
+    { date: "19/08/2026", code: "EBCI_APP",   name: "Charleroi Approach" },
+    { date: "19/08/2026", code: "EBLG_APP",   name: "Li\u00e8ge Approach" }
+  ];
+
+  (function renderTimeline(){
+    const el = document.getElementById('timeline');
+    if(!el) return;
+
+    el.innerHTML = TIMELINE.map(t => {
+      const lux = t.code.startsWith("ELLX") || t.code.toUpperCase().includes("LUX");
+      return `
+        <div class="tl-item${lux ? ' lux' : ''}">
+          <span class="tl-dot"></span>
+          <div class="tl-date">${t.date}</div>
+          <div class="tl-row">
+            <span class="tl-name">${t.name}</span>
+            <span class="tl-code">${t.code}</span>
+          </div>
+        </div>`;
+    }).join("");
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.2 });
+    el.querySelectorAll('.tl-item').forEach(item => io.observe(item));
+  })();
+</script>
+
 <script>
   const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRRIgLiYcm5xtVPnAXokgdpG0rcfA9cZ_YTEa4katIUzhggZdk_huFSKOwzb74HPMOQug08BX_6Ub8N/pub?gid=0&single=true&output=csv";
 
