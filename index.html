@@ -332,6 +332,9 @@
     .strip-total{ border-left:none; border-top:1px solid var(--line); flex-direction:row; justify-content:space-between; }
     .pos-row{ grid-template-columns:80px 1fr 50px 50px; }
     .totals{ grid-template-columns:1fr; }
+    .tl-map-row{ flex-direction:column; align-items:stretch; }
+    .map-section{ flex-basis:auto; padding:0 8vw 12vh; }
+    .map-wrap{ width:min(380px, 70vw); margin:0 auto; }
   }
 
   /* ---------- TIMELINE ---------- */
@@ -404,17 +407,25 @@
     color:var(--text-faint);
   }
 
+  /* ---------- TIMELINE + MAP ROW ---------- */
+  .tl-map-row{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+
   /* ---------- MAP ---------- */
   .map-section{
-    padding:0 8vw 12vh;
+    flex:1 1 260px;
+    padding:0 8vw 12vh 0;
   }
   .map-wrap{
     position:relative;
     border:1px solid var(--line);
     background:var(--panel-alt);
     padding:clamp(1rem, 3vw, 2.4rem);
-    max-width:42vw;
-    margin:0 auto;
+    width:min(380px, 34vw);
+    margin:0 0 0 auto;
   }
   .map-wrap svg{
     width:100%;
@@ -555,6 +566,7 @@
   <p>My first session on each position, starting from the ground up</p>
 </section>
 
+<div class="tl-map-row">
 <div class="timeline-section">
   <div class="timeline" id="timeline"></div>
 </div>
@@ -572,6 +584,7 @@
       <div class="t-meta"></div>
     </div>
   </div>
+</div>
 </div>
 
 <div class="totals" id="totals"></div>
