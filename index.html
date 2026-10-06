@@ -26,6 +26,7 @@
     --amber-tint:#F6E3AE;
     --r:20px;
     --scope:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%201000%201000%27%20fill%3D%27none%27%20stroke%3D%27%232E5E46%27%3E%3Cg%20stroke-opacity%3D%27.3%27%20stroke-width%3D%271.5%27%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27100%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27200%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27300%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27400%27/%3E%3C/g%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27490%27%20stroke-opacity%3D%27.4%27%20stroke-width%3D%273%27/%3E%3Cpath%20d%3D%27M500%2010V990M10%20500H990%27%20stroke-opacity%3D%27.22%27%20stroke-width%3D%271.5%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27474%27%20stroke-opacity%3D%27.45%27%20stroke-width%3D%2714%27%20stroke-dasharray%3D%272%2039.36%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27466%27%20stroke-opacity%3D%27.5%27%20stroke-width%3D%2730%27%20stroke-dasharray%3D%273.5%20240.50%27/%3E%3Cpath%20d%3D%27M500%20500L373%20973A490%20490%200%200%201%20154%20847Z%27%20fill%3D%27%232E5E46%27%20fill-opacity%3D%27.08%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M500%20500L154%20847%27%20stroke-opacity%3D%27.5%27%20stroke-width%3D%272%27/%3E%3Cg%20fill%3D%27%232E5E46%27%20fill-opacity%3D%27.4%27%20stroke%3D%27none%27%3E%3Ccircle%20cx%3D%27410%27%20cy%3D%27760%27%20r%3D%275%27/%3E%3Ccircle%20cx%3D%27250%27%20cy%3D%27820%27%20r%3D%275%27/%3E%3Ccircle%20cx%3D%27330%27%20cy%3D%27640%27%20r%3D%275%27/%3E%3Ccircle%20cx%3D%27620%27%20cy%3D%27880%27%20r%3D%275%27/%3E%3Ccircle%20cx%3D%27700%27%20cy%3D%27620%27%20r%3D%275%27/%3E%3C/g%3E%3Cg%20stroke-opacity%3D%27.6%27%20stroke-width%3D%272%27%3E%3Cpath%20d%3D%27M250%20600L200%20560%27/%3E%3C/g%3E%3Ccircle%20cx%3D%27250%27%20cy%3D%27600%27%20r%3D%278%27%20fill%3D%27%23D9A62E%27%20stroke%3D%27none%27/%3E%3C/svg%3E");
+    --rings:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%201000%201000%27%20fill%3D%27none%27%20stroke%3D%27%232E5E46%27%3E%3Cg%20stroke-opacity%3D%27.28%27%20stroke-width%3D%271.5%27%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%2770%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27140%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27210%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27280%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27350%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27420%27/%3E%3C/g%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27490%27%20stroke-opacity%3D%27.4%27%20stroke-width%3D%273%27/%3E%3C/svg%3E");
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{
@@ -307,7 +308,7 @@
     border:2px solid var(--line);
     border-radius:28px;
     box-shadow:0 4px 0 var(--line);
-    background:var(--scope) center/170% no-repeat, var(--panel-alt);
+    background:var(--rings) center/170% no-repeat, var(--panel-alt);
     padding:clamp(1rem,3vw,2.2rem);
     width:33.333vw;
     margin:0 0 0 auto;
@@ -695,9 +696,9 @@
     placed.forEach(({ f, p, coord }) => {
       const [lat, lon] = coord;
       const [x, y] = projectPoint(lat, lon);
-      // area is directly proportional to share of total hours:
-      // a facility with 10x the % gets a circle 10x the area (radius scales as sqrt).
-      const r = maxPerc > 0 ? maxR * Math.sqrt(p / maxPerc) : 0;
+      // radius is directly proportional to share of total hours:
+      // a facility with 10x the % gets a circle with 10x the radius.
+      const r = maxPerc > 0 ? maxR * (p / maxPerc) : 0;
       const lux = isLux(f.icao);
 
       const circle = document.createElementNS(svgNS, 'circle');
