@@ -25,6 +25,7 @@
     --amber-ink:#80590B;
     --amber-tint:#F6E3AE;
     --rust:#A63D2F;
+    --rust-tint:#F3DDD2;
     --r:20px;
     --scope:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%201000%201000%27%20fill%3D%27none%27%20stroke%3D%27%232E5E46%27%3E%3Cg%20stroke-opacity%3D%27.3%27%20stroke-width%3D%271.5%27%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27100%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27200%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27300%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27400%27/%3E%3C/g%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27490%27%20stroke-opacity%3D%27.4%27%20stroke-width%3D%273%27/%3E%3Cpath%20d%3D%27M500%2010V990M10%20500H990%27%20stroke-opacity%3D%27.22%27%20stroke-width%3D%271.5%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27474%27%20stroke-opacity%3D%27.45%27%20stroke-width%3D%2714%27%20stroke-dasharray%3D%272%2039.36%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27466%27%20stroke-opacity%3D%27.5%27%20stroke-width%3D%2730%27%20stroke-dasharray%3D%273.5%20240.50%27/%3E%3Cpath%20d%3D%27M500%20500L373%20973A490%20490%200%200%201%20154%20847Z%27%20fill%3D%27%232E5E46%27%20fill-opacity%3D%27.08%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M500%20500L154%20847%27%20stroke-opacity%3D%27.5%27%20stroke-width%3D%272%27/%3E%3Cg%20fill%3D%27%232E5E46%27%20fill-opacity%3D%27.4%27%20stroke%3D%27none%27%3E%3Ccircle%20cx%3D%27410%27%20cy%3D%27760%27%20r%3D%275%27/%3E%3Ccircle%20cx%3D%27250%27%20cy%3D%27820%27%20r%3D%275%27/%3E%3Ccircle%20cx%3D%27330%27%20cy%3D%27640%27%20r%3D%275%27/%3E%3Ccircle%20cx%3D%27620%27%20cy%3D%27880%27%20r%3D%275%27/%3E%3Ccircle%20cx%3D%27700%27%20cy%3D%27620%27%20r%3D%275%27/%3E%3C/g%3E%3Cg%20stroke-opacity%3D%27.6%27%20stroke-width%3D%272%27%3E%3Cpath%20d%3D%27M250%20600L200%20560%27/%3E%3C/g%3E%3Ccircle%20cx%3D%27250%27%20cy%3D%27600%27%20r%3D%278%27%20fill%3D%27%23D9A62E%27%20stroke%3D%27none%27/%3E%3C/svg%3E");
     --rings:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%201000%201000%27%20fill%3D%27none%27%20stroke%3D%27%232E5E46%27%3E%3Cg%20stroke-opacity%3D%27.28%27%20stroke-width%3D%271.5%27%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%2770%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27140%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27210%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27280%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27350%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27420%27/%3E%3C/g%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27490%27%20stroke-opacity%3D%27.4%27%20stroke-width%3D%273%27/%3E%3C/svg%3E");
@@ -192,6 +193,8 @@
   }
   .strip-card.lux .strip-id{ background:var(--amber); color:var(--green-deep); }
   .strip-card.lux .strip-total{ background:var(--amber-tint); }
+  .strip-card.lt .strip-id{ background:var(--rust); color:var(--bg); }
+  .strip-card.lt .strip-total{ background:var(--rust-tint); }
   .strip-id .code{
     font-size:12px;
     font-weight:500;
@@ -219,6 +222,7 @@
   .pos-row .hrs{ text-align:right; color:var(--text-dim); font-size:13px; }
   .pos-row .pct{ text-align:right; font-size:13px; font-weight:600; color:var(--green); }
   .strip-card.lux .pos-row .pct, .strip-card.lux .strip-total .pct{ color:var(--amber-ink); }
+  .strip-card.lt .pos-row .pct, .strip-card.lt .strip-total .pct{ color:var(--rust); }
 
   .strip-total{
     background:var(--green-tint);
@@ -296,8 +300,10 @@
     box-shadow:0 0 0 2px var(--green);
   }
   .tl-item.lux .tl-dot{ background:var(--amber); box-shadow:0 0 0 2px var(--amber-ink); }
+  .tl-item.lt .tl-dot{ background:var(--rust); box-shadow:0 0 0 2px var(--rust); }
   .tl-date{ font-size:13px; font-weight:600; color:var(--green); }
   .tl-item.lux .tl-date{ color:var(--amber-ink); }
+  .tl-item.lt .tl-date{ color:var(--rust); }
   .tl-row{ margin-top:0.25rem; display:flex; align-items:baseline; flex-wrap:wrap; gap:0.6rem; }
   .tl-name{ font-size:1.08rem; font-weight:600; }
   .tl-code{ font-size:12px; letter-spacing:0.04em; color:var(--text-faint); }
@@ -328,6 +334,7 @@
     cursor:pointer;
   }
   .map-dot.lux{ fill:var(--amber); fill-opacity:0.9; }
+  .map-dot.lt{ fill:var(--rust); fill-opacity:0.9; }
   .map-dot:hover, .map-dot.active{ fill-opacity:1; stroke:var(--green-deep); }
   .map-dot:focus-visible{ outline:2px solid var(--green-deep); outline-offset:2px; }
   .map-status{ font-size:14px; color:var(--text-faint); padding:1rem 0; }
@@ -467,8 +474,9 @@
 
     el.innerHTML = TIMELINE.map(t => {
       const lux = t.code.startsWith("ELLX") || t.code.toUpperCase().includes("LUX");
+      const lt = t.code.startsWith("EY");
       return `
-        <div class="tl-item${lux ? ' lux' : ''}">
+        <div class="tl-item${lux ? ' lux' : ''}${lt ? ' lt' : ''}">
           <span class="tl-dot"></span>
           <div class="tl-date">${t.date}</div>
           <div class="tl-row">
@@ -509,11 +517,14 @@
     return icao.startsWith("ELLX") || icao.toUpperCase().includes("LUX");
   }
 
+  function isLt(icao){
+    return icao.startsWith("EY") || icao.toUpperCase().includes("LITHUANIA");
+  }
+
   // colour used for a country in the hero bar + legend
   function countryColor(name){
-    const n = name.toUpperCase();
-    if(n.includes("LUX")) return "var(--amber)";
-    if(n.includes("LITHUANIA")) return "var(--rust)";
+    if(isLux(name)) return "var(--amber)";
+    if(isLt(name)) return "var(--rust)";
     return "var(--green)";
   }
 
@@ -656,8 +667,9 @@
 
     facilities.forEach((f, i) => {
       const lux = isLux(f.icao);
+      const lt = isLt(f.icao);
       const card = document.createElement('div');
-      card.className = "strip-card" + (lux ? " lux" : "");
+      card.className = "strip-card" + (lux ? " lux" : "") + (lt ? " lt" : "");
 
       const idHtml = `
         <div class="strip-id">
@@ -736,12 +748,13 @@
       // a facility with 10x the % gets a circle with 10x the radius.
       const r = maxPerc > 0 ? maxR * (p / maxPerc) : 0;
       const lux = isLux(f.icao);
+      const lt = isLt(f.icao);
 
       const circle = document.createElementNS(svgNS, 'circle');
       circle.setAttribute('cx', x.toFixed(1));
       circle.setAttribute('cy', y.toFixed(1));
       circle.setAttribute('r', r.toFixed(1));
-      circle.setAttribute('class', 'map-dot' + (lux ? ' lux' : ''));
+      circle.setAttribute('class', 'map-dot' + (lux ? ' lux' : '') + (lt ? ' lt' : ''));
       circle.setAttribute('tabindex', '0');
       circle.setAttribute('role', 'img');
       const label = titleCase(f.adName) + " \u2014 " + f.hours + " h \u00b7 " + f.perc;
