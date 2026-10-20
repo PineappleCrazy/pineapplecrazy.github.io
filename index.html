@@ -24,6 +24,7 @@
     --amber-dim:#D9A62E;
     --amber-ink:#80590B;
     --amber-tint:#F6E3AE;
+    --rust:#A63D2F;
     --r:20px;
     --scope:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%201000%201000%27%20fill%3D%27none%27%20stroke%3D%27%232E5E46%27%3E%3Cg%20stroke-opacity%3D%27.3%27%20stroke-width%3D%271.5%27%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27100%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27200%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27300%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27400%27/%3E%3C/g%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27490%27%20stroke-opacity%3D%27.4%27%20stroke-width%3D%273%27/%3E%3Cpath%20d%3D%27M500%2010V990M10%20500H990%27%20stroke-opacity%3D%27.22%27%20stroke-width%3D%271.5%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27474%27%20stroke-opacity%3D%27.45%27%20stroke-width%3D%2714%27%20stroke-dasharray%3D%272%2039.36%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27466%27%20stroke-opacity%3D%27.5%27%20stroke-width%3D%2730%27%20stroke-dasharray%3D%273.5%20240.50%27/%3E%3Cpath%20d%3D%27M500%20500L373%20973A490%20490%200%200%201%20154%20847Z%27%20fill%3D%27%232E5E46%27%20fill-opacity%3D%27.08%27%20stroke%3D%27none%27/%3E%3Cpath%20d%3D%27M500%20500L154%20847%27%20stroke-opacity%3D%27.5%27%20stroke-width%3D%272%27/%3E%3Cg%20fill%3D%27%232E5E46%27%20fill-opacity%3D%27.4%27%20stroke%3D%27none%27%3E%3Ccircle%20cx%3D%27410%27%20cy%3D%27760%27%20r%3D%275%27/%3E%3Ccircle%20cx%3D%27250%27%20cy%3D%27820%27%20r%3D%275%27/%3E%3Ccircle%20cx%3D%27330%27%20cy%3D%27640%27%20r%3D%275%27/%3E%3Ccircle%20cx%3D%27620%27%20cy%3D%27880%27%20r%3D%275%27/%3E%3Ccircle%20cx%3D%27700%27%20cy%3D%27620%27%20r%3D%275%27/%3E%3C/g%3E%3Cg%20stroke-opacity%3D%27.6%27%20stroke-width%3D%272%27%3E%3Cpath%20d%3D%27M250%20600L200%20560%27/%3E%3C/g%3E%3Ccircle%20cx%3D%27250%27%20cy%3D%27600%27%20r%3D%278%27%20fill%3D%27%23D9A62E%27%20stroke%3D%27none%27/%3E%3C/svg%3E");
     --rings:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%201000%201000%27%20fill%3D%27none%27%20stroke%3D%27%232E5E46%27%3E%3Cg%20stroke-opacity%3D%27.28%27%20stroke-width%3D%271.5%27%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%2770%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27140%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27210%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27280%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27350%27/%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27420%27/%3E%3C/g%3E%3Ccircle%20cx%3D%27500%27%20cy%3D%27500%27%20r%3D%27490%27%20stroke-opacity%3D%27.4%27%20stroke-width%3D%273%27/%3E%3C/svg%3E");
@@ -123,6 +124,9 @@
   .hero-strip div:last-child{ border-right:none; }
   .strip-seg{ color:var(--bg); }
   .strip-seg.lux{ color:var(--green-deep); }
+  .strip-seg .strip-label{ flex:none; }
+  /* label doesn't fit inside its segment -> hide it (still measurable, so it can reappear on resize) */
+  .strip-seg.label-hidden .strip-label{ visibility:hidden; }
   .hero-legend{
     margin-top:1rem;
     display:flex;
@@ -505,6 +509,28 @@
     return icao.startsWith("ELLX") || icao.toUpperCase().includes("LUX");
   }
 
+  // colour used for a country in the hero bar + legend
+  function countryColor(name){
+    const n = name.toUpperCase();
+    if(n.includes("LUX")) return "var(--amber)";
+    if(n.includes("LITHUANIA")) return "var(--rust)";
+    return "var(--green)";
+  }
+
+  // hide any bar label that can't fit fully inside its own segment
+  function fitStripLabels(){
+    document.querySelectorAll('#hero-strip .strip-seg').forEach(seg => {
+      const label = seg.querySelector('.strip-label');
+      if(!label) return;
+      const cs = getComputedStyle(seg);
+      const avail = seg.getBoundingClientRect().width
+        - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)
+        - parseFloat(cs.borderLeftWidth) - parseFloat(cs.borderRightWidth);
+      const needed = label.getBoundingClientRect().width;
+      seg.classList.toggle('label-hidden', needed > avail + 0.5);
+    });
+  }
+
   const CODE_OVERRIDES = {
     "EBKT_I_TWR": "AFIS"
   };
@@ -597,21 +623,31 @@
       const seg = document.createElement('div');
       seg.className = "strip-seg" + (lux ? " lux" : "");
       seg.style.width = (c.perc || "0%");
-      seg.style.background = lux ? "var(--amber-dim)" : "var(--green-dim)";
-      seg.textContent = titleCase(c.name);
+      seg.style.background = countryColor(c.name);
+      const label = document.createElement('span');
+      label.className = "strip-label";
+      label.textContent = titleCase(c.name);
+      seg.appendChild(label);
       seg.title = titleCase(c.name) + " \u2014 " + c.perc;
       stripEl.appendChild(seg);
 
       const legendItem = document.createElement('span');
       const dot = document.createElement('span');
       dot.className = "dot";
-      dot.style.background = lux ? "var(--amber)" : "var(--green)";
+      dot.style.background = countryColor(c.name);
       legendItem.appendChild(dot);
       legendItem.appendChild(document.createTextNode(
         titleCase(c.name) + " \u2014 " + c.hours + " h \u00b7 " + c.perc
       ));
       legendEl.appendChild(legendItem);
     });
+
+    fitStripLabels();
+    if(!stripEl._fitObserver){
+      stripEl._fitObserver = new ResizeObserver(fitStripLabels);
+      stripEl._fitObserver.observe(stripEl);
+    }
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitStripLabels);
   }
 
   function renderFacilities(facilities){
