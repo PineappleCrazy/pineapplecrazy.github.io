@@ -373,7 +373,22 @@
     padding:1rem 1.4rem;
     color:var(--text);
     max-width:calc(100vw - 80px);
+    overflow:hidden;
   }
+  /* flag band on the left edge: shows the country of the position being controlled */
+  #freq-badge .flag{
+    display:none;
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:22px;
+    border-right:2px solid var(--line);
+  }
+  #freq-badge.has-flag{ padding-left:calc(1.4rem + 22px); }
+  #freq-badge.has-flag .flag{ display:block; }
+  /* each flag is drawn at full band size, so all of its colours always show */
+  #freq-badge .flag[data-country="be"]{ background:linear-gradient(90deg,#000 0 33.333%,#FDDA24 33.333% 66.667%,#EF3340 66.667%); }
+  #freq-badge .flag[data-country="lu"]{ background:linear-gradient(180deg,#EF3340 0 33.333%,#fff 33.333% 66.667%,#00A3E0 66.667%); }
+  #freq-badge .flag[data-country="lt"]{ background:linear-gradient(180deg,#FDB913 0 33.333%,#006A44 33.333% 66.667%,#C1272D 66.667%); }
   #freq-badge .dot{
     width:12px; height:12px;
     border-radius:50%;
@@ -385,7 +400,8 @@
   #freq-badge .status{ font-size:13px; color:var(--text-faint); }
   #freq-badge .pos{ font-size:18px; font-weight:600; }
   @media (max-width:480px){
-    #freq-badge{ right:20px; bottom:20px; padding:0.7rem 1rem; }
+    #freq-badge{ right:20px; bottom:20px; padding:0.7rem 1rem; max-width:calc(100vw - 40px); }
+    #freq-badge.has-flag{ padding-left:calc(1rem + 22px); }
   }
 </style>
 </head>
@@ -396,6 +412,7 @@
   <div class="scope" aria-hidden="true"></div>
 
   <div id="freq-badge">
+    <span class="flag" id="freq-flag" role="img" aria-hidden="true"></span>
     <span class="dot"></span>
     <span class="text">
       <span class="status" id="freq-status">checking&hellip;</span>
@@ -831,18 +848,46 @@
     "EYVI_TWR":   ["Vilnius Tower", "118.205"]
   };
 
+  // ICAO prefix (first two letters of the callsign) -> [flag key used in the CSS, country name]
+  // To add a country: add a line here and a matching  .flag[data-country="xx"]  rule in the CSS.
+  var FLAGS = {
+    "EB": ["be", "Belgium"],
+    "EL": ["lu", "Luxembourg"],
+    "EY": ["lt", "Lithuania"]
+  };
+
   var badge = document.getElementById("freq-badge");
   var statusEl = document.getElementById("freq-status");
   var posEl = document.getElementById("freq-position");
+  var flagEl = document.getElementById("freq-flag");
+
+  function setFlag(callsign) {
+    var f = callsign ? FLAGS[callsign.slice(0, 2).toUpperCase()] : null;
+    if (f) {
+      flagEl.setAttribute("data-country", f[0]);
+      flagEl.setAttribute("aria-label", f[1]);
+      flagEl.title = f[1];
+      flagEl.removeAttribute("aria-hidden");
+      badge.classList.add("has-flag");
+    } else {
+      flagEl.removeAttribute("data-country");
+      flagEl.removeAttribute("aria-label");
+      flagEl.removeAttribute("title");
+      flagEl.setAttribute("aria-hidden", "true");
+      badge.classList.remove("has-flag");
+    }
+  }
 
   function setOffline() {
     badge.classList.remove("live");
+    setFlag(null);
     statusEl.textContent = "offline";
     posEl.textContent = "";
   }
 
   function setLive(callsign, freqFromFeed) {
     badge.classList.add("live");
+    setFlag(callsign);
     statusEl.textContent = "online now";
     var known = POSITIONS[callsign];
     if (known) {
@@ -855,6 +900,7 @@
 
   function setError() {
     badge.classList.remove("live");
+    setFlag(null);
     statusEl.textContent = "status unavailable";
     posEl.textContent = "";
   }
