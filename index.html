@@ -527,10 +527,20 @@
     });
   }
 
+  // acronyms that must stay fully capitalised (e.g. "Lithuania FIS")
+  const KEEP_UPPER = ["FIS"];
+
   function titleCase(str){
     return str.toLowerCase().split(' ').map(word =>
+      KEEP_UPPER.includes(word.toUpperCase()) ? word.toUpperCase() :
       word.length ? word.charAt(0).toUpperCase() + word.slice(1) : word
     ).join(' ');
+  }
+
+  // FIS groups (e.g. "Lithuania FIS") span several airports rather than one, so
+  // they show "FIS" as their code and list each position's full callsign.
+  function isFis(adName){
+    return /\bFIS\b/i.test(adName);
   }
 
   function isLux(icao){
@@ -618,7 +628,7 @@
           return;
         }
         if(ad){
-          current = { adName: ad, hours: adHours, perc: adPerc, icao: pos.split("_")[0], positions: [] };
+          current = { adName: ad, hours: adHours, perc: adPerc, icao: pos.split("_")[0], fis: isFis(ad), positions: [] };
           facilities.push(current);
         }
         if(current){
@@ -693,13 +703,13 @@
 
       const idHtml = `
         <div class="strip-id">
-          <div class="code">${f.icao}</div>
+          <div class="code">${f.fis ? "FIS" : f.icao}</div>
           <div class="name">${titleCase(f.adName)}</div>
         </div>`;
 
       const rowsHtml = f.positions.map(p => `
         <div class="pos-row">
-          <span class="code">${CODE_OVERRIDES[p.pos] || p.pos.replace(f.icao + "_","")}</span>
+          <span class="code">${CODE_OVERRIDES[p.pos] || (f.fis ? p.pos : p.pos.replace(f.icao + "_",""))}</span>
           <span class="label">${titleCase(p.name)}</span>
           <span class="hrs">${p.hours} h</span>
           <span class="pct">${p.perc}</span>
@@ -782,7 +792,7 @@
       circle.setAttribute('aria-label', label);
 
       const showTip = (evt) => {
-        tooltip.querySelector('.t-name').textContent = titleCase(f.adName) + " (" + f.icao + ")";
+        tooltip.querySelector('.t-name').textContent = titleCase(f.adName) + (f.fis ? "" : " (" + f.icao + ")");
         tooltip.querySelector('.t-meta').textContent = f.hours + " h \u00b7 " + f.perc + " of total";
         moveTip(evt);
         tooltip.classList.add('visible');
