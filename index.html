@@ -759,6 +759,9 @@
     let maxPerc = 0;
     const placed = [];
     facilities.forEach(f => {
+      // FIS groups (e.g. "Lithuania FIS") aren't based at a single aerodrome,
+      // so there's no sensible point to plot them at - keep them off the map.
+      if(f.fis) return;
       const p = parseFloat(f.perc) || 0;
       if(p > maxPerc) maxPerc = p;
       const coord = resolveCoord(f.icao);
