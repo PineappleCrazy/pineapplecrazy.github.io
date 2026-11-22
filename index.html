@@ -30,6 +30,10 @@
     background:#e8f0ff; border:1px solid #000; padding:6px 10px;
     max-width:calc(100vw - 48px);
   }
+  .flag{ display:inline-block; width:18px; height:12px; border:1px solid #000; vertical-align:middle; margin-right:6px; }
+  .flag.be{ background:linear-gradient(90deg,#000 0 33.333%,#FDDA24 33.333% 66.667%,#EF3340 66.667%); }
+  .flag.lu{ background:linear-gradient(180deg,#EF3340 0 33.333%,#fff 33.333% 66.667%,#00A3E0 66.667%); }
+  .flag.lt{ background:linear-gradient(180deg,#FDB913 0 33.333%,#006A44 33.333% 66.667%,#C1272D 66.667%); }
   .error{ color:red; }
 </style>
 </head>
@@ -160,6 +164,18 @@
   // AFIS groups bundle several aerodromes, each position is still plotted on the map
   function isAfis(adName){ return /\bAFIS\b/i.test(adName); }
 
+  // ICAO prefix -> [css class, country name]
+  const FLAGS = {
+    "EB": ["be", "Belgium"],
+    "EL": ["lu", "Luxembourg"],
+    "EY": ["lt", "Lithuania"]
+  };
+
+  function flagHtml(icao){
+    const f = FLAGS[icao.slice(0,2).toUpperCase()];
+    return f ? `<span class="flag ${f[0]}" title="${f[1]}"></span>` : "";
+  }
+
   const CODE_OVERRIDES = {
     "EBKT_I_TWR": "AFIS"
   };
@@ -255,7 +271,7 @@
       // facility row
       html.push(`
         <tr class="fac">
-          <td colspan="2">${titleCase(f.adName)}${groupCode ? "" : " (" + f.icao + ")"}</td>
+          <td colspan="2">${flagHtml(f.icao)}${titleCase(f.adName)}${groupCode ? "" : " (" + f.icao + ")"}</td>
           <td>${f.hours} h</td>
           <td>${f.perc}</td>
         </tr>`);
