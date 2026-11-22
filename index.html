@@ -20,9 +20,11 @@
     white-space:nowrap; transform:translate(-50%,calc(-100% - 12px));
   }
   #map-tooltip.visible{ display:block; }
-  th{ border:1px solid #000; padding:2px 8px; background:#eee; text-align:left; cursor:pointer; }
-  #all-positions{ width:100%; }
-  #all-positions tfoot td{ background:#eee; font-weight:bold; }
+  th{ border:1px solid #000; padding:2px 8px; background:#ddd; text-align:left; }
+  #board-table{ width:100%; }
+  #board-table tr.fac td{ background:#eee; font-weight:bold; }
+  #board-table tfoot td{ background:#ddd; font-weight:bold; }
+  #board-table td.indent{ padding-left:24px; }
   #freq-badge{
     position:fixed; right:12px; bottom:12px; z-index:10;
     background:#e8f0ff; border:1px solid #000; padding:6px 10px;
@@ -42,25 +44,16 @@
 <h2>Where I control</h2>
 <div id="board">
   <p id="board-status">Fetching live data from the sheet...</p>
+  <table id="board-table">
+    <thead>
+      <tr><th>Code</th><th>Position</th><th>Hours</th><th>Share</th></tr>
+    </thead>
+    <tbody id="board-body"></tbody>
+    <tfoot>
+      <tr><td colspan="2">Total</td><td id="board-total"></td><td>100%</td></tr>
+    </tfoot>
+  </table>
 </div>
-
-<h2>All positions</h2>
-<p>Click a column heading to sort.</p>
-<table id="all-positions">
-  <thead>
-    <tr>
-      <th data-key="pos">Callsign</th>
-      <th data-key="name">Position</th>
-      <th data-key="fac">Facility</th>
-      <th data-key="hours">Hours</th>
-      <th data-key="perc">Share</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-  <tfoot>
-    <tr><td colspan="3">Total</td><td id="all-total"></td><td>100%</td></tr>
-  </tfoot>
-</table>
 
 <h2>Timeline</h2>
 <p>My first session on each position, starting from the ground up</p>
@@ -232,8 +225,7 @@
       });
 
       renderHero(countries, totalHours);
-      renderFacilities(facilities);
-      renderAllPositions(facilities, totalHours);
+      renderFacilities(facilities, totalHours);
       renderTotals(facilities, totalHours);
       renderMap(facilities);
       statusEl.remove();
@@ -253,54 +245,36 @@
     ).join("");
   }
 
-  function renderFacilities(facilities){
-    const board = document.getElementById('board');
+  function renderFacilities(facilities, totalHours){
+    const body = document.getElementById('board-body');
+    const html = [];
 
     facilities.forEach(f => {
       const groupCode = f.fis ? "FIS" : f.afis ? "AFIS" : null;
 
-      const rowsHtml = f.positions.map(p => `
+      // facility row
+      html.push(`
+        <tr class="fac">
+          <td colspan="2">${titleCase(f.adName)} (${groupCode || f.icao})</td>
+          <td>${f.hours} h</td>
+          <td>${f.perc}</td>
+        </tr>`);
+
+      // position rows
+      f.positions.forEach(p => {
+        const code = groupCode ? p.pos : (CODE_OVERRIDES[p.pos] || p.pos.replace(f.icao + "_",""));
+        html.push(`
         <tr>
-          <td>${groupCode ? p.pos : (CODE_OVERRIDES[p.pos] || p.pos.replace(f.icao + "_",""))}</td>
+          <td class="indent">${code}</td>
           <td>${titleCase(p.name)}</td>
           <td>${p.hours} h</td>
           <td>${p.perc}</td>
-        </tr>`).join("");
-
-      const wrap = document.createElement('div');
-      wrap.innerHTML = `
-        <h3>${titleCase(f.adName)} (${groupCode || f.icao}) - ${f.hours} h, ${f.perc}</h3>
-        <table>${rowsHtml}</table>`;
-      board.appendChild(wrap);
-    });
-  }
-
-  function renderAllPositions(facilities, totalHours){
-    const rows = [];
-    facilities.forEach(f => f.positions.forEach(p => rows.push({
-      pos: p.pos, name: titleCase(p.name), fac: titleCase(f.adName), hours: p.hours, perc: p.perc
-    })));
-
-    const tbody = document.querySelector('#all-positions tbody');
-    const draw = list => {
-      tbody.innerHTML = list.map(r => `
-        <tr><td>${r.pos}</td><td>${r.name}</td><td>${r.fac}</td><td>${r.hours} h</td><td>${r.perc}</td></tr>`).join("");
-    };
-    draw(rows);
-    document.getElementById('all-total').textContent = (totalHours || "-") + " h";
-
-    document.querySelectorAll('#all-positions th').forEach(th => {
-      th.title = "Sort by " + th.textContent;
-      th.addEventListener('click', () => {
-        const k = th.dataset.key;
-        const num = (k === 'hours' || k === 'perc');
-        th._asc = (th._asc === undefined) ? !num : !th._asc;
-        const sorted = rows.slice().sort((a, b) =>
-          num ? parseFloat(a[k]) - parseFloat(b[k]) : a[k].localeCompare(b[k]));
-        if(!th._asc) sorted.reverse();
-        draw(sorted);
+        </tr>`);
       });
     });
+
+    body.innerHTML = html.join("");
+    document.getElementById('board-total').textContent = (totalHours || "-") + " h";
   }
 
   function renderTotals(facilities, totalHours){
