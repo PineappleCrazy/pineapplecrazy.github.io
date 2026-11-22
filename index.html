@@ -255,7 +255,7 @@
       // facility row
       html.push(`
         <tr class="fac">
-          <td colspan="2">${titleCase(f.adName)} (${groupCode || f.icao})</td>
+          <td colspan="2">${titleCase(f.adName)}${groupCode ? "" : " (" + f.icao + ")"}</td>
           <td>${f.hours} h</td>
           <td>${f.perc}</td>
         </tr>`);
